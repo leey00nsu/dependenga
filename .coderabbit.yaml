@@ -1,0 +1,34 @@
+# CodeRabbit 설정
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+
+language: "ko-KR"
+
+reviews:
+  # 리뷰 요청 자동 할당
+  request_changes_workflow: true
+  
+  # 리뷰 스타일
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  
+  # 자동 리뷰 범위
+  auto_review:
+    enabled: true
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+    drafts: false
+
+  # 경로별 설정
+  path_instructions:
+    - path: "**/*.ts"
+      instructions: "TypeScript strict mode를 준수하는지 확인하세요."
+    - path: "**/*.tsx"
+      instructions: "React 컴포넌트가 단일 책임 원칙을 따르는지 확인하세요."
+    - path: "docs/**"
+      instructions: "문서가 명확하고 일관성 있는지 확인하세요."
+
+chat:
+  auto_reply: true
