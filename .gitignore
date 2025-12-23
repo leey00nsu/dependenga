@@ -30,6 +30,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Prisma
+prisma.config.ts
+
 # Vercel
 .vercel
 
@@ -49,3 +52,5 @@ prisma/migrations/
 # Temporary files
 tmp/
 temp/
+
+/src/generated/prisma

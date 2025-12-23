@@ -91,10 +91,10 @@
 
 | 구분 | 기술 | 설명 |
 | --- | --- | --- |
-| Framework | Next.js 15 (App Router) | 풀스택 프레임워크, React 19 지원 |
+| Framework | Next.js 16 (App Router) | 풀스택 프레임워크, React 19 지원 |
 | 3D | React Three Fiber 9 + Drei | React 19 호환 3D 렌더링 |
 | DB | PostgreSQL 17 | 관계형 데이터 저장 |
-| ORM | Prisma 6 | 타입 안전 ORM |
+| ORM | Prisma 7 | 타입 안전 ORM |
 | Styling | Tailwind CSS 4 | 유틸리티 CSS |
 | Validation | Zod | 스키마 검증 |
 

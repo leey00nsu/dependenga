@@ -40,10 +40,10 @@
 
 | 기술 | 버전 | 이유 |
 | --- | --- | --- |
-| Next.js (App Router) | 15 | 풀스택, SSR, React 19 지원 |
+| Next.js (App Router) | 16 | 풀스택, SSR, React 19 지원 |
 | React | 19 | 최신 기능 (Suspense, Server Components) |
 | React Three Fiber | 9 | React 19 호환, 3D 렌더링 |
-| Prisma | 6 | 타입 안전 ORM, Rust-free Client |
+| Prisma | 7 | 타입 안전 ORM, Rust-free Client |
 | PostgreSQL | 17 | JSON 지원, 확장성 |
 | Tailwind CSS | 4 | 유틸리티 CSS |
 
