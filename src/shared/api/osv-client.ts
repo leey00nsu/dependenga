@@ -14,6 +14,37 @@ interface OSVQueryRequest {
 }
 
 /**
+ * 버전 문자열을 정규화합니다.
+ * 쿼리할 수 없는 버전은 null을 반환합니다.
+ */
+function normalizeVersion(version: string): string | null {
+  const trimmed = version.trim();
+
+  // 와일드카드, 태그, 범위 표현식은 쿼리 불가
+  if (
+    trimmed === "*" ||
+    trimmed === "latest" ||
+    trimmed === "next" ||
+    trimmed.includes("x") ||
+    trimmed.includes("||") ||
+    trimmed.includes(" - ") ||
+    /\s+(&&|\|\||\s)\s+/.test(trimmed)
+  ) {
+    return null;
+  }
+
+  // semver 범위 접두사 제거 (^, ~, >=, <=, >, <, =)
+  const cleaned = trimmed.replace(/^[\^~>=<]+/, "");
+
+  // 유효한 semver 형식인지 확인 (간단한 체크)
+  if (!/^\d/.test(cleaned)) {
+    return null;
+  }
+
+  return cleaned;
+}
+
+/**
  * OSV API를 통해 패키지의 취약점을 조회합니다.
  *
  * @param packageName - npm 패키지명
@@ -21,8 +52,13 @@ interface OSVQueryRequest {
  * @returns OSV API 응답
  */
 export async function queryOSV(packageName: string, version: string): Promise<OSVResponse> {
-  // 버전에서 semver 범위 문자 제거 (^, ~, >=, etc.)
-  const cleanVersion = version.replace(/^[\^~>=<]+/, "");
+  // 버전 정규화: semver 범위, 와일드카드, 태그 등 처리
+  const cleanVersion = normalizeVersion(version);
+
+  // 쿼리할 수 없는 버전은 빈 결과 반환
+  if (!cleanVersion) {
+    return { vulns: [] };
+  }
 
   const body: OSVQueryRequest = {
     package: {
