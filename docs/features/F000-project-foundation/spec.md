@@ -4,7 +4,7 @@
 
 - **기능 ID**: F000
 - **기능명**: project-foundation
-- **작성일**: 2024-12-24
+- **작성일**: 2025-12-24
 - **상태**: Draft
 - **GitHub Issue**: [#2](https://github.com/leey00nsu/dependenga/issues/2)
 
@@ -73,7 +73,7 @@ src/
 **목표**: 컴포넌트 문서화 및 시각적 테스트
 
 **설정**:
-- Storybook 8+
+- Storybook 10
 - Tailwind CSS 통합
 - shadcn 컴포넌트 스토리
 

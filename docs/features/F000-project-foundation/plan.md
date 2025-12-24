@@ -4,7 +4,7 @@
 
 - **기능 ID**: F000
 - **스펙 버전**: v1.0
-- **작성일**: 2024-12-24
+- **작성일**: 2025-12-24
 - **상태**: Approved
 
 ---
@@ -17,7 +17,7 @@
 | UI | shadcn/ui | latest |
 | 상태 관리 | TanStack Query | 5 |
 | 단위 테스트 | Vitest | latest |
-| 컴포넌트 문서 | Storybook | 8+ |
+| 컴포넌트 문서 | Storybook | 10 |
 | E2E 테스트 | Playwright | latest |
 | DB | PostgreSQL | 17 |
 | ORM | Prisma | 7 |
