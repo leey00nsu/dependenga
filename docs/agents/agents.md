@@ -8,6 +8,7 @@
 
 - 프로젝트 원칙: `/docs/agents/constitution.md`
 - **Git 워크플로우: `/docs/agents/git-workflow.md`**
+- **이슈 템플릿: `/docs/agents/issue-template.md`**
 - PRD: `/docs/prd/dependenga-prd.md`
 - 기능 스펙: `/docs/features/{feature-id}/`
 - 실행 계획: `/docs/agents/plan-template.md`

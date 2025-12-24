@@ -46,6 +46,18 @@
 | Prisma | 7 | 타입 안전 ORM, Rust-free Client |
 | PostgreSQL | 17 | JSON 지원, 확장성 |
 | Tailwind CSS | 4 | 유틸리티 CSS |
+| **shadcn/ui** | - | 일관된 UI 컴포넌트 |
+| **TanStack Query** | 5 | 서버 상태 관리 |
+| **Vitest** | - | 단위/통합 테스트 |
+| **Storybook** | 8+ | 컴포넌트 문서화 |
+| **Playwright** | - | E2E 테스트 |
+
+### 아키텍처
+
+| 패턴 | 설명 |
+| --- | --- |
+| **FSD (Feature-Sliced Design)** | 확장 가능한 폴더 구조 |
+| **No Barrel Files** | index.ts 사용 금지, 직접 경로 import |
 
 ### 지양
 
@@ -54,6 +66,7 @@
 | Three.js 직접 사용 | R3F가 React와 더 잘 통합 |
 | MongoDB | 관계형 데이터에 부적합 |
 | 클라이언트 전용 분석 | 보안, 캐싱 이슈 |
+| **배럴 파일 (index.ts)** | 순환 참조, 번들 사이즈 증가 |
 
 ---
 

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:17
+    container_name: dependenga-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dependenga
+      POSTGRES_PASSWORD: dependenga
+      POSTGRES_DB: dependenga
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dependenga"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
