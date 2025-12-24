@@ -1,5 +1,5 @@
 import type { Dependency, ParsedPackage } from "@/entities/dependency/model/types";
-import type { PackageJsonRawInput } from "@/features/dependency-parser/model/schemas";
+import { packageJsonSchema, type PackageJsonRawInput } from "@/features/dependency-parser/model/schemas";
 
 /**
  * package.json 객체에서 의존성 정보를 추출합니다.
@@ -60,7 +60,12 @@ export function parsePackageJsonString(jsonString: string): ParsedPackage {
     throw new Error("package.json은 객체 형식이어야 합니다.");
   }
 
-  const packageJson = parsed as PackageJsonRawInput;
+  // 런타임 스키마 검증
+  const result = packageJsonSchema.safeParse(parsed);
+  if (!result.success) {
+    throw new Error("package.json 형식이 올바르지 않습니다.");
+  }
 
-  return parseDependencies(packageJson);
+  return parseDependencies(result.data);
 }
+
