@@ -4,7 +4,7 @@
 
 - **기능 ID**: F001
 - **기능명**: dependency-parser
-- **작성일**: 2024-12-24
+- **작성일**: 2025-12-24
 - **상태**: Draft
 - **GitHub Issue**: [#1](https://github.com/leey00nsu/dependenga/issues/1)
 

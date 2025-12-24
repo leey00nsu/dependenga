@@ -1,60 +1,109 @@
-# Implementation Plan: {기능명}
-
-> 스펙이 승인된 후 작성합니다.
-> 기술적인 "어떻게"를 다룹니다.
-
----
+# Implementation Plan: 의존성 파서
 
 ## 개요
 
-- **기능 ID**: F{번호}
+- **기능 ID**: F001
 - **스펙 버전**: v1.0
-- **작성일**: YYYY-MM-DD
-- **상태**: Draft | Review | Approved
+- **작성일**: 2025-12-24
+- **상태**: Approved
 
 ---
 
 ## 기술 스택
 
-| 구분 | 선택 | 이유 |
+| 구분 | 기술 | 용도 |
 | --- | --- | --- |
-| (영역) | (기술) | (선택 이유) |
+| API | Next.js Server Actions | 서버 사이드 처리 |
+| 검증 | Zod | 입력 스키마 검증 |
+| HTTP | fetch | GitHub raw URL 요청 |
+| 상태 | TanStack Query | 서버 상태 관리 |
+| UI | shadcn/ui | 입력 폼, 탭 |
 
 ---
 
-## 아키텍처
+## FSD 구조
 
-(컴포넌트 구조, 데이터 흐름 등)
-
-```
-[입력] → [처리] → [출력]
-```
-
----
-
-## 파일 구조
-
-```
+```text
 src/
-├── app/
-│   └── (routes)
-├── components/
-│   └── {feature}/
-├── lib/
-│   └── {feature}/
-└── types/
+├── features/
+│   └── dependency-parser/
+│       ├── ui/
+│       │   └── DependencyParserForm.tsx
+│       ├── model/
+│       │   ├── types.ts
+│       │   └── schemas.ts
+│       ├── api/
+│       │   └── parsePackageJson.ts
+│       └── lib/
+│           ├── parseGithubUrl.ts
+│           └── parseDependencies.ts
+├── entities/
+│   └── dependency/
+│       └── model/
+│           └── types.ts
+└── shared/
+    └── api/
+        └── fetchGithubFile.ts
 ```
 
 ---
 
-## 데이터 모델
+## 주요 파일
 
-(필요시 Prisma 스키마 또는 타입 정의)
+### 1. entities/dependency/model/types.ts
 
-```prisma
-model Example {
-  id    Int    @id @default(autoincrement())
-  name  String
+```typescript
+export interface Dependency {
+  name: string;
+  version: string;
+  isDev: boolean;
+}
+
+export interface ParsedPackage {
+  name: string;
+  version: string;
+  dependencies: Dependency[];
+}
+```
+
+### 2. features/dependency-parser/model/schemas.ts
+
+```typescript
+import { z } from "zod";
+
+export const packageJsonSchema = z.object({
+  name: z.string().optional(),
+  version: z.string().optional(),
+  dependencies: z.record(z.string()).optional(),
+  devDependencies: z.record(z.string()).optional(),
+});
+
+export const githubUrlSchema = z.string().regex(
+  /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+$/,
+  "유효한 GitHub URL을 입력하세요"
+);
+```
+
+### 3. shared/api/fetchGithubFile.ts
+
+```typescript
+export async function fetchGithubFile(
+  owner: string,
+  repo: string,
+  path: string,
+  branch = "main"
+): Promise<string> {
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+  const res = await fetch(url);
+  
+  if (!res.ok) {
+    if (branch === "main") {
+      return fetchGithubFile(owner, repo, path, "master");
+    }
+    throw new Error("파일을 찾을 수 없습니다");
+  }
+  
+  return res.text();
 }
 ```
 
@@ -62,42 +111,66 @@ model Example {
 
 ## API 설계
 
-### `POST /api/example`
+### Server Action: parsePackageJson
 
-**Request:**
-```json
-{
-  "field": "value"
-}
-```
+**경로**: `src/features/dependency-parser/api/parsePackageJson.ts`
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {}
+```typescript
+"use server";
+
+import { packageJsonSchema } from "../model/schemas";
+import type { ParsedPackage } from "@/entities/dependency/model/types";
+
+export async function parsePackageJson(
+  input: string
+): Promise<ParsedPackage> {
+  const json = JSON.parse(input);
+  const validated = packageJsonSchema.parse(json);
+  
+  const dependencies = [
+    ...Object.entries(validated.dependencies ?? {}).map(([name, version]) => ({
+      name,
+      version,
+      isDev: false,
+    })),
+    ...Object.entries(validated.devDependencies ?? {}).map(([name, version]) => ({
+      name,
+      version,
+      isDev: true,
+    })),
+  ];
+
+  return {
+    name: validated.name ?? "unknown",
+    version: validated.version ?? "0.0.0",
+    dependencies,
+  };
 }
 ```
 
 ---
 
-## 테스트 전략
+## UI 컴포넌트
 
-- **단위 테스트**: (대상)
-- **통합 테스트**: (시나리오)
-- **E2E 테스트**: (필요시)
+### DependencyParserForm
+
+- 탭: `직접 입력` / `GitHub URL`
+- 입력: Textarea (직접 입력) / Input (URL)
+- 버튼: `분석하기`
+- 결과: 파싱된 의존성 목록 표시
 
 ---
 
-## 리스크 & 완화
+## 검증 계획
 
-| 리스크 | 완화 방안 |
+| 항목 | 방법 |
 | --- | --- |
-| (리스크) | (방안) |
+| 유닛 테스트 | `parseDependencies.test.ts` |
+| 컴포넌트 테스트 | `DependencyParserForm.test.tsx` |
+| E2E | Playwright로 폼 테스트 |
 
 ---
 
 ## 관련 문서
 
 - Spec: [spec.md](./spec.md)
-- Research: [research.md](./research.md)

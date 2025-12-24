@@ -57,7 +57,9 @@
 | 패턴 | 설명 |
 | --- | --- |
 | **FSD (Feature-Sliced Design)** | 확장 가능한 폴더 구조 |
+| **Views Layer** | `app/`은 라우팅만, `views/`가 페이지 조합 담당 |
 | **No Barrel Files** | index.ts 사용 금지, 직접 경로 import |
+| **Kebab Case Files** | 파일명은 `kebab-case.ts` 형식 사용 |
 
 ### 지양
 
