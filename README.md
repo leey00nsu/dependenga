@@ -15,24 +15,31 @@ GitHub 프로젝트의 의존성 취약점을 3D 젠가 형태로 시각화하�
 
 | 기술 | 버전 | 용도 |
 | --- | --- | --- |
-| Next.js | 15 | 풀스택 프레임워크 |
+| Next.js | 16 | 풀스택 프레임워크 |
 | React | 19 | UI 라이브러리 |
 | React Three Fiber | 9 | 3D 렌더링 |
-| Prisma | 6 | ORM |
+| Prisma | 7 | ORM |
 | PostgreSQL | 17 | 데이터베이스 |
 | Tailwind CSS | 4 | 스타일링 |
+| shadcn/ui | - | UI 컴포넌트 |
+| TanStack Query | 5 | 서버 상태 관리 |
+| Vitest | 4 | 테스트 |
+| Storybook | 10 | 컴포넌트 문서화 |
+| Playwright | 1 | E2E 테스트 |
 
 ## 📂 프로젝트 구조
 
-```
+```text
 dependenga/
 ├── docs/               # 프로젝트 문서
-│   ├── agents/         # 에이전트 운영 규칙
-│   ├── features/       # 기능별 스펙
-│   ├── db/             # DB 설계
-│   └── prd/            # PRD
-├── .github/            # GitHub Actions
-└── src/                # 소스 코드 (예정)
+├── src/
+│   ├── app/            # Next.js App Router
+│   ├── widgets/        # 독립적인 UI 블록
+│   ├── features/       # 비즈니스 기능
+│   ├── entities/       # 비즈니스 엔티티
+│   └── shared/         # 공유 리소스 (ui, lib, api)
+├── prisma/             # Prisma 스키마
+└── .storybook/         # Storybook 설정
 ```
 
 ## 📖 문서
@@ -45,10 +52,19 @@ dependenga/
 
 ```bash
 # 의존성 설치
-npm install
+pnpm install
+
+# 데이터베이스 시작
+pnpm db:up
 
 # 개발 서버 실행
-npm run dev
+pnpm dev
+
+# 테스트 실행
+pnpm test
+
+# Storybook 실행
+pnpm storybook
 ```
 
 ## 📝 License

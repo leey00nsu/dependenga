@@ -1,0 +1,23 @@
+# Docker Compose for Local Development
+# ⚠️ 로컬 개발 전용 - 프로덕션에서 사용하지 마세요
+
+services:
+  db:
+    image: postgres:17
+    container_name: dependenga-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dependenga}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dependenga}
+      POSTGRES_DB: ${POSTGRES_DB:-dependenga}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dependenga}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
