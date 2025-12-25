@@ -64,11 +64,62 @@
     - [x] 젠가 타워 렌더링 확인
     - [x] 인터랙션 동작 확인
 
+## Phase 6: UI 리디자인
+
+- [DONE][P2] T-F003-08 초기 화면 (Initial State)
+  - Owner: @agent
+  - Checklist:
+    - [x] 중앙 입력 카드 UI (GitHub URL / package.json 탭)
+    - [x] Analyze Dependencies CTA 버튼
+    - [x] 단색 민트 그린 배경 (#E8F5E9)
+
+- [TODO][P2] T-F003-09 분석 중 상태 (Loading State)
+  - Owner: @agent
+  - Checklist:
+    - [ ] 입력 카드 페이드 아웃
+    - [ ] 젠가 타워 쌓이는 애니메이션
+    - [ ] "Analyzing dependencies..." 텍스트
+
+- [DONE][P2] T-F003-10 분석 완료 화면 (Main State)
+  - Owner: @agent
+  - Checklist:
+    - [x] 60/40 분할 레이아웃
+    - [x] 왼쪽: 3D 젠가 (floating, shadowMaterial로 바닥 없음)
+    - [x] 오른쪽: Vulnerability Panel
+
+- [DONE][P2] T-F003-11 젠가 블록 비주얼 업데이트
+  - Owner: @agent
+  - Checklist:
+    - [x] Safe: #BFC2C7 (웜 그레이)
+    - [x] Critical: #E74C3C
+    - [x] High: #F39C12
+    - [x] Medium: #F1C40F
+    - [x] Low: #2ECC71
+    - [x] RoundedBox로 둥근 모서리
+    - [x] bumpMap으로 미세한 나뭇결 텍스처
+
+- [DONE][P2] T-F003-12 Vulnerability Panel
+  - Owner: @agent
+  - Checklist:
+    - [x] Severity 카운트 배지
+    - [x] 카드 기반 리스트
+    - [x] 호버 시 젠가 블록 연동 (isHighlighted prop)
+
+- [DONE][P2] T-F003-13 젠가 타워 구조 수정
+  - Owner: @agent
+  - Checklist:
+    - [x] 최상단/최하단만 Safe 블록 레이어
+    - [x] 중간 레이어는 취약 패키지 + Safe 블록 구조
+
 ---
 
 ## 완료 조건
 
-- [x] 모든 태스크 [DONE]
+- [x] Phase 1-5 태스크 [DONE]
+- [/] Phase 6 태스크 (Loading animation 제외 완료)
 - [x] `pnpm dev` 정상 실행
 - [x] `pnpm test` 통과 (23개)
 - [x] 3D 젠가 타워 표시 및 인터랙션 동작
+- [x] 패널-블록 호버 동기화 동작
+
+

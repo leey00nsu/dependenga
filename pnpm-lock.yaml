@@ -23,6 +23,9 @@ importers:
       '@react-three/fiber':
         specifier: ^9.4.2
         version: 9.4.2(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.182.0)
+      '@react-three/postprocessing':
+        specifier: ^3.0.4
+        version: 3.0.4(@react-three/fiber@9.4.2(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.182.0))(@types/three@0.182.0)(react@19.2.3)(three@0.182.0)
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.12(react@19.2.3)
@@ -1065,6 +1068,13 @@ packages:
         optional: true
       react-native:
         optional: true
+
+  '@react-three/postprocessing@3.0.4':
+    resolution: {integrity: sha512-e4+F5xtudDYvhxx3y0NtWXpZbwvQ0x1zdOXWTbXMK6fFLVDd4qucN90YaaStanZGS4Bd5siQm0lGL/5ogf8iDQ==}
+    peerDependencies:
+      '@react-three/fiber': ^9.0.0
+      react: ^19.0
+      three: '>= 0.156.0'
 
   '@rolldown/pluginutils@1.0.0-beta.53':
     resolution: {integrity: sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==}
@@ -2973,6 +2983,12 @@ packages:
       '@types/three': '>=0.134.0'
       three: '>=0.134.0'
 
+  maath@0.6.0:
+    resolution: {integrity: sha512-dSb2xQuP7vDnaYqfoKzlApeRcR2xtN8/f7WV/TMAkBC8552TwTLtOO0JTcSygkYMjNDPoo6V01jTw/aPi4JrMw==}
+    peerDependencies:
+      '@types/three': '>=0.144.0'
+      three: '>=0.144.0'
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -3041,6 +3057,12 @@ packages:
   mysql2@3.15.3:
     resolution: {integrity: sha512-FBrGau0IXmuqg4haEZRBfHNWB5mUARw6hNwPDXXGg0XzVJ50mr/9hb267lvpVMnhZ1FON3qNd4Xfcez1rbFwSg==}
     engines: {node: '>= 8.0'}
+
+  n8ao@1.10.1:
+    resolution: {integrity: sha512-hhI1pC+BfOZBV1KMwynBrVlIm8wqLxj/abAWhF2nZ0qQKyzTSQa1QtLVS2veRiuoBQXojxobcnp0oe+PUoxf/w==}
+    peerDependencies:
+      postprocessing: '>=6.30.0'
+      three: '>=0.137'
 
   named-placeholders@1.1.6:
     resolution: {integrity: sha512-Tz09sEL2EEuv5fFowm419c1+a/jSMiBjI9gHxVLrVdbUkkNUUfjsVYs9pVZu5oCon/kmRh9TfLEObFtkVxmY0w==}
@@ -3231,6 +3253,11 @@ packages:
   postgres@3.4.7:
     resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
     engines: {node: '>=12'}
+
+  postprocessing@6.38.2:
+    resolution: {integrity: sha512-7DwuT7Tkst41ZjSj287g7C9c5/D3Xx5rMgBosg0dadbUPoZD2HNzkadKPol1d2PJAoI9f+Jeh1/v9YfLzpFGVw==}
+    peerDependencies:
+      three: '>= 0.157.0 < 0.183.0'
 
   potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
@@ -4873,6 +4900,17 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - immer
+
+  '@react-three/postprocessing@3.0.4(@react-three/fiber@9.4.2(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.182.0))(@types/three@0.182.0)(react@19.2.3)(three@0.182.0)':
+    dependencies:
+      '@react-three/fiber': 9.4.2(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.182.0)
+      maath: 0.6.0(@types/three@0.182.0)(three@0.182.0)
+      n8ao: 1.10.1(postprocessing@6.38.2(three@0.182.0))(three@0.182.0)
+      postprocessing: 6.38.2(three@0.182.0)
+      react: 19.2.3
+      three: 0.182.0
+    transitivePeerDependencies:
+      - '@types/three'
 
   '@rolldown/pluginutils@1.0.0-beta.53': {}
 
@@ -6948,6 +6986,11 @@ snapshots:
       '@types/three': 0.182.0
       three: 0.182.0
 
+  maath@0.6.0(@types/three@0.182.0)(three@0.182.0):
+    dependencies:
+      '@types/three': 0.182.0
+      three: 0.182.0
+
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -7014,6 +7057,11 @@ snapshots:
       named-placeholders: 1.1.6
       seq-queue: 0.0.5
       sqlstring: 2.3.3
+
+  n8ao@1.10.1(postprocessing@6.38.2(three@0.182.0))(three@0.182.0):
+    dependencies:
+      postprocessing: 6.38.2(three@0.182.0)
+      three: 0.182.0
 
   named-placeholders@1.1.6:
     dependencies:
@@ -7206,6 +7254,10 @@ snapshots:
       source-map-js: 1.2.1
 
   postgres@3.4.7: {}
+
+  postprocessing@6.38.2(three@0.182.0):
+    dependencies:
+      three: 0.182.0
 
   potpack@1.0.2: {}
 

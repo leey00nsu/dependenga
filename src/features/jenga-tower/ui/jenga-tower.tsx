@@ -7,7 +7,9 @@ import { JengaBlock, type BlockData } from "./jenga-block";
 
 interface JengaTowerProps {
   packages: PackageVulnerability[];
+  onBlockHover?: (data: BlockData | null) => void;
   onBlockClick?: (data: BlockData) => void;
+  highlightedPackage?: string | null;
 }
 
 /**
@@ -42,21 +44,29 @@ function seededRandom(seed: number): number {
  * - 취약점 블록은 동→남→서→북 순서로 튀어나옴
  * - 맨 위에 정상 블록 층 추가
  */
-export function JengaTower({ packages, onBlockClick }: JengaTowerProps) {
+export function JengaTower({ 
+  packages, 
+  onBlockHover,
+  onBlockClick, 
+  highlightedPackage 
+}: JengaTowerProps) {
   const [hoveredBlock, setHoveredBlock] = useState<BlockData | null>(null);
 
   const handleHover = useCallback((isHovered: boolean, data: BlockData) => {
-    setHoveredBlock(isHovered ? data : null);
-  }, []);
+    const newHovered = isHovered ? data : null;
+    setHoveredBlock(newHovered);
+    onBlockHover?.(newHovered);
+  }, [onBlockHover]);
 
   // 취약점이 있는 패키지 분리
   const vulnerablePackages = useMemo(() => {
     return packages.filter(pkg => pkg.maxSeverity !== "safe");
   }, [packages]);
 
-  // 취약점 층 수 + 맨 아래 정상 층 + 맨 위 정상 층
-  const vulnerableLayerCount = Math.max(vulnerablePackages.length, 3);
-  const totalLayerCount = vulnerableLayerCount + 2; // 아래/위 정상 층 추가
+  // 취약점 층 수 계산 (최소 1층, 취약점마다 1층)
+  // 맨 아래/위 정상 층을 제외한 중간 층 수
+  const middleLayerCount = Math.max(vulnerablePackages.length, 1);
+  const totalLayerCount = middleLayerCount + 2; // 아래/위 정상 층 추가
 
   // 블록 생성
   const blocks: React.ReactElement[] = [];
@@ -75,14 +85,17 @@ export function JengaTower({ packages, onBlockClick }: JengaTowerProps) {
       ? [0, Math.PI / 2, 0]
       : [0, 0, 0];
 
-    // 첫 번째 층과 마지막 층은 정상 블록만
+    // 첫 번째 층과 마지막 층만 정상 블록으로 가득 채움
     const isBottomNormalLayer = layer === 0;
     const isTopNormalLayer = layer === totalLayerCount - 1;
     const isNormalLayer = isBottomNormalLayer || isTopNormalLayer;
     
     // 취약점 블록 (해당 층에 배치할 취약점이 있으면)
     // layer 1부터 취약점 블록 배치 (layer-1로 인덱싱)
-    const vulnPkg = !isNormalLayer ? vulnerablePackages[layer - 1] : null;
+    const vulnIndex = layer - 1;
+    const vulnPkg = (!isNormalLayer && vulnIndex < vulnerablePackages.length) 
+      ? vulnerablePackages[vulnIndex] 
+      : null;
     
     // 랜덤으로 취약점 블록 위치 결정 (0, 1, 2 중 하나)
     const vulnSlotIndex = vulnPkg 
@@ -139,6 +152,7 @@ export function JengaTower({ packages, onBlockClick }: JengaTowerProps) {
           onHover={handleHover}
           onClick={onBlockClick}
           dimensions={[BLOCK_LENGTH, BLOCK_HEIGHT, BLOCK_WIDTH]}
+          isHighlighted={pkg?.packageName === highlightedPackage}
         />
       );
     }
