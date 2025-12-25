@@ -60,6 +60,7 @@ export function HomeView() {
   const [vulnResult, setVulnResult] = useState<VulnerabilityAnalysisResult | null>(null);
   const [vulnError, setVulnError] = useState<string | null>(null);
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleParseSuccess = (result: ParsedPackage) => {
@@ -105,7 +106,20 @@ export function HomeView() {
     setVulnResult(null);
     setVulnError(null);
     setHighlightedPackage(null);
+    setSelectedPackage(null);
   };
+
+  // 블록 클릭 핸들러 - 상세 정보 표시
+  const handleBlockClick = useCallback((data: BlockData) => {
+    setSelectedPackage(data.packageName);
+    // TODO: 상세 정보 모달 또는 패널 확장 구현
+  }, []);
+
+  // 패키지 클릭 핸들러 - 상세 정보 표시
+  const handlePackageClick = useCallback((packageName: string) => {
+    setSelectedPackage(packageName);
+    // TODO: 상세 정보 모달 또는 패널 확장 구현
+  }, []);
 
   // Initial State - 입력 카드
   if (appState === "initial") {
@@ -196,6 +210,7 @@ export function HomeView() {
             <JengaScene 
               packages={vulnResult.packages}
               onBlockHover={handleBlockHover}
+              onBlockClick={handleBlockClick}
               highlightedPackage={highlightedPackage}
             />
           )}
@@ -207,6 +222,7 @@ export function HomeView() {
             <VulnerabilityPanel
               packages={vulnResult.packages}
               onPackageHover={handlePackageHover}
+              onPackageClick={handlePackageClick}
               highlightedPackage={highlightedPackage}
             />
           )}

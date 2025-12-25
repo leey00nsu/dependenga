@@ -19,8 +19,8 @@ const SEVERITY_COLORS: Record<SeverityWithSafe, string> = {
   safe: "#BFC2C7",     // 웜 그레이
 };
 
-// 나무 텍스처 URL
-const WOOD_TEXTURE_URL = "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg";
+// 나무 텍스처 URL (로컬 파일)
+const WOOD_TEXTURE_URL = "/textures/hardwood2_diffuse.jpg";
 
 export interface JengaBlockProps {
   packageName: string;
