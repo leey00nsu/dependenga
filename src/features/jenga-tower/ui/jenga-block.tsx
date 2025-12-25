@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, Suspense } from "react";
 import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
-import { TextureLoader, RepeatWrapping } from "three";
+import { TextureLoader, RepeatWrapping, Texture } from "three";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
@@ -46,15 +46,57 @@ export interface BlockData {
 /**
  * 젠가 블록 컴포넌트
  * 둥근 모서리 + 나무 텍스처
+ * Suspense로 텍스처 로딩 처리, 에러 시 fallback
  */
-export function JengaBlock({
+export function JengaBlock(props: JengaBlockProps) {
+  return (
+    <Suspense fallback={<JengaBlockFallback {...props} />}>
+      <JengaBlockWithTexture {...props} />
+    </Suspense>
+  );
+}
+
+/**
+ * 텍스처 없는 Fallback 블록 (로딩 중 또는 에러 시)
+ */
+function JengaBlockFallback({
+  severity,
+  position,
+  rotation,
+  dimensions = [3, 0.6, 1],
+}: JengaBlockProps) {
+  const color = SEVERITY_COLORS[severity];
+  
+  return (
+    <RoundedBox
+      args={dimensions}
+      radius={0.05}
+      smoothness={4}
+      position={position}
+      rotation={rotation}
+      castShadow
+      receiveShadow
+    >
+      <meshStandardMaterial
+        color={color}
+        roughness={0.7}
+        metalness={0.02}
+      />
+    </RoundedBox>
+  );
+}
+
+/**
+ * 텍스처가 있는 젠가 블록 (useLoader 사용)
+ */
+function JengaBlockWithTexture({
   packageName,
   version,
   severity,
   vulnerabilityCount,
   position,
   rotation,
-  dimensions = [3, 0.6, 1], // 기본값: 길이 3, 높이 0.6, 폭 1
+  dimensions = [3, 0.6, 1],
   onHover,
   onClick,
   isHighlighted = false,
@@ -62,11 +104,17 @@ export function JengaBlock({
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  // 나무 텍스처 로드
-  const woodTexture = useLoader(TextureLoader, WOOD_TEXTURE_URL);
+  // 나무 텍스처 로드 - 에러 시 null 반환
+  let woodTexture: Texture | null = null;
+  try {
+    woodTexture = useLoader(TextureLoader, WOOD_TEXTURE_URL);
+  } catch (error) {
+    console.error("Failed to load wood texture:", error);
+  }
   
   // 텍스처 설정
   const texture = useMemo(() => {
+    if (!woodTexture) return null;
     const tex = woodTexture.clone();
     tex.wrapS = tex.wrapT = RepeatWrapping;
     tex.repeat.set(0.5, 0.3);
@@ -120,7 +168,7 @@ export function JengaBlock({
       <meshStandardMaterial
         color={color}
         bumpMap={texture}
-        bumpScale={2}
+        bumpScale={texture ? 2 : 0}
         emissive={isCritical ? "#ff6666" : (showHighlight ? color : "#000000")}
         emissiveIntensity={isCritical ? 0.3 : (showHighlight ? 0.25 : 0)}
         roughness={0.6}

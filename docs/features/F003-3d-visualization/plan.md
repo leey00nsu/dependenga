@@ -2,7 +2,7 @@
 
 - Feature: F003-3d-visualization
 - Status: Approved
-- Date: 2024-12-25
+- Date: 2025-12-25
 
 ## 개요
 
