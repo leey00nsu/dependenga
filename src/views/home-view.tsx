@@ -7,6 +7,7 @@ import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model
 import { DependencyParserForm } from "@/features/dependency-parser/ui/dependency-parser-form";
 import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
+import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import { Button } from "@/shared/ui/button";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
 
@@ -140,32 +141,9 @@ export function HomeView() {
     );
   }
 
-  // Loading State - 젠가 빌딩 애니메이션
+  // Loading State - Lottie 또는 CSS 애니메이션
   if (appState === "loading") {
-    return (
-      <div 
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "#E8F5E9" }}
-      >
-        <div className="text-center animate-in fade-in duration-300">
-          <div className="flex flex-col items-center gap-3 mb-4">
-            {/* 간단한 블록 쌓기 애니메이션 */}
-            <div className="flex gap-1">
-              <div className="w-8 h-3 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "0ms" }} />
-              <div className="w-8 h-3 bg-gray-400 rounded-sm animate-bounce" style={{ animationDelay: "100ms" }} />
-              <div className="w-8 h-3 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "200ms" }} />
-            </div>
-            <div className="flex gap-1 -mt-1">
-              <div className="w-3 h-8 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "300ms" }} />
-              <div className="w-3 h-8 bg-gray-400 rounded-sm animate-bounce" style={{ animationDelay: "400ms" }} />
-              <div className="w-3 h-8 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "500ms" }} />
-            </div>
-          </div>
-          <p className="text-gray-600 font-medium">Analyzing dependencies...</p>
-          <p className="text-sm text-gray-400 mt-1">Building your Jenga tower</p>
-        </div>
-      </div>
-    );
+    return <LoadingAnimation />;
   }
 
   // Result State - 60/40 분할 레이아웃

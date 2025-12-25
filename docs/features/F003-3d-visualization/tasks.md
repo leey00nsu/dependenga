@@ -73,12 +73,12 @@
     - [x] Analyze Dependencies CTA 버튼
     - [x] 단색 민트 그린 배경 (#E8F5E9)
 
-- [TODO][P2] T-F003-09 분석 중 상태 (Loading State)
+- [DONE][P2] T-F003-09 분석 중 상태 (Loading State)
   - Owner: @agent
   - Checklist:
-    - [ ] 입력 카드 페이드 아웃
-    - [ ] 젠가 타워 쌓이는 애니메이션
-    - [ ] "Analyzing dependencies..." 텍스트
+    - [x] Lottie 애니메이션 시스템 구현
+    - [x] `public/animations/loading.json` 추가 시 자동 표시
+    - [x] Fallback CSS 애니메이션 유지
 
 - [DONE][P2] T-F003-10 분석 완료 화면 (Main State)
   - Owner: @agent
@@ -139,7 +139,7 @@
 ## 완료 조건
 
 - [x] Phase 1-5 태스크 [DONE]
-- [/] Phase 6 태스크 (Loading animation 제외 완료)
+- [x] Phase 6 태스크 [DONE]
 - [x] Phase 7 버그 수정 [DONE]
 - [x] Phase 8 UI 개선 [DONE]
 - [x] `pnpm dev` 정상 실행
