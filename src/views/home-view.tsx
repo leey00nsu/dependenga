@@ -17,14 +17,28 @@ const JengaScene = dynamic(
   { ssr: false, loading: () => <JengaLoadingPlaceholder /> }
 );
 
+// dotLottie 컴포넌트 동적 로드 (SSR 비활성화)
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  { ssr: false }
+);
+
 /**
- * 젠가 로딩 플레이스홀더
+ * 젠가 로딩 플레이스홀더 (3D 씬 로딩 중)
+ * LoadingAnimation과 동일한 dotLottie 애니메이션 사용
  */
 function JengaLoadingPlaceholder() {
   return (
     <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
       <div className="text-center">
-        <div className="w-16 h-16 mx-auto mb-4 border-4 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+        <div className="w-32 h-32 mx-auto mb-4">
+          <DotLottieReact
+            src="/animations/loading.lottie"
+            loop
+            autoplay
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
         <p className="text-gray-600 font-medium">Building tower...</p>
       </div>
     </div>
