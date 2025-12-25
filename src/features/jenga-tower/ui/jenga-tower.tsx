@@ -39,10 +39,9 @@ function seededRandom(seed: number): number {
 
 /**
  * 패키지 목록을 젠가 타워로 렌더링
- * - 취약점이 있는 패키지만 각 층에 1개씩 배치
- * - 각 층에는 2개의 정상 블록 + 1개의 취약점 블록 (랜덤 위치)
- * - 취약점 블록은 동→남→서→북 순서로 튀어나옴
- * - 맨 위에 정상 블록 층 추가
+ * - 취약점 패키지: 중간층에 층당 1개씩 배치
+ * - Safe 패키지: 중간층의 나머지 2개 슬롯을 채움
+ * - 맨 아래/위 층: 모두 Safe 블록 (filler)
  */
 export function JengaTower({ 
   packages, 
@@ -58,22 +57,38 @@ export function JengaTower({
     onBlockHover?.(newHovered);
   }, [onBlockHover]);
 
-  // 취약점이 있는 패키지 분리
+  // 취약점이 있는 패키지
   const vulnerablePackages = useMemo(() => {
     return packages.filter(pkg => pkg.maxSeverity !== "safe");
   }, [packages]);
 
-  // 취약점 층 수 계산 (최소 1층, 취약점마다 1층)
-  // 맨 아래/위 정상 층을 제외한 중간 층 수
-  const middleLayerCount = Math.max(vulnerablePackages.length, 1);
-  const totalLayerCount = middleLayerCount + 2; // 아래/위 정상 층 추가
+  // Safe 패키지
+  const safePackages = useMemo(() => {
+    return packages.filter(pkg => pkg.maxSeverity === "safe");
+  }, [packages]);
+
+  // 층 수 계산:
+  // - 중간층에 취약 패키지 1개 + Safe 패키지 2개 배치
+  // - 취약 패키지보다 Safe 패키지가 많으면 추가 층 필요
+  // - 취약 패키지 N개 → N개 층에서 2N개 Safe 슬롯 사용
+  // - 남은 Safe 패키지 → 3개씩 추가 층에 배치
+  const safeInMiddleLayers = vulnerablePackages.length * 2;
+  const remainingSafePackages = Math.max(0, safePackages.length - safeInMiddleLayers);
+  const additionalSafeLayers = Math.ceil(remainingSafePackages / 3);
+  
+  const middleLayerCount = Math.max(vulnerablePackages.length, 1) + additionalSafeLayers;
+  const totalLayerCount = middleLayerCount + 2; // 아래/위 filler 층 추가
 
   // 블록 생성
   const blocks: React.ReactElement[] = [];
+  
+  // 패키지명 → 블록 위치 맵 (패널 호버 시 3D 툴팁 표시용)
+  const packagePositions = new Map<string, [number, number, number]>();
+
+  // Safe 패키지 인덱스 (중간층에서 사용)
+  let safePackageIndex = 0;
 
   // X축 블록(짝수층)과 Z축 블록(홀수층)의 방향을 별도로 추적
-  // X축 블록: 첫번째는 동(+X), 두번째는 서(-X), 교대
-  // Z축 블록: 첫번째는 남(+Z), 두번째는 북(-Z), 교대
   let xAxisDirectionIndex = 0; // 짝수층: 0=동, 1=서
   let zAxisDirectionIndex = 0; // 홀수층: 0=남, 1=북
 
@@ -85,13 +100,12 @@ export function JengaTower({
       ? [0, Math.PI / 2, 0]
       : [0, 0, 0];
 
-    // 첫 번째 층과 마지막 층만 정상 블록으로 가득 채움
+    // 첫 번째 층과 마지막 층: 모두 safe 블록 (filler)
     const isBottomNormalLayer = layer === 0;
     const isTopNormalLayer = layer === totalLayerCount - 1;
     const isNormalLayer = isBottomNormalLayer || isTopNormalLayer;
     
-    // 취약점 블록 (해당 층에 배치할 취약점이 있으면)
-    // layer 1부터 취약점 블록 배치 (layer-1로 인덱싱)
+    // 중간층의 취약점 패키지
     const vulnIndex = layer - 1;
     const vulnPkg = (!isNormalLayer && vulnIndex < vulnerablePackages.length) 
       ? vulnerablePackages[vulnIndex] 
@@ -108,7 +122,22 @@ export function JengaTower({
     // 3개 블록 생성
     for (let slotIndex = 0; slotIndex < 3; slotIndex++) {
       const isVulnerableSlot = slotIndex === vulnSlotIndex;
-      const pkg = isVulnerableSlot && vulnPkg ? vulnPkg : null;
+      
+      // 패키지 결정
+      let pkg: PackageVulnerability | null = null;
+      
+      if (isVulnerableSlot && vulnPkg) {
+        // 취약점 블록
+        pkg = vulnPkg;
+      } else if (!isNormalLayer) {
+        // 중간층의 빈 슬롯: Safe 패키지로 채움
+        if (safePackageIndex < safePackages.length) {
+          pkg = safePackages[safePackageIndex];
+          safePackageIndex++;
+        }
+        // Safe 패키지가 부족하면 null (filler 블록)
+      }
+      // Normal Layer (맨 아래/위)는 filler 블록으로 채움
       
       // 슬롯의 기본 오프셋 (-1, 0, +1)
       const slotOffset = (slotIndex - 1) * BLOCK_WIDTH;
@@ -117,27 +146,25 @@ export function JengaTower({
       let z = 0;
 
       if (!isRotated) {
-        // 짝수 층: 블록이 X축 방향으로 길게 놓임
-        // 3개 블록이 Z축 방향으로 나열됨
         z = slotOffset;
-        
-        // X축 블록은 동(+X) 또는 서(-X)로 슬라이드
-        // 첫번째 X축 취약블록 → 동(+X), 두번째 X축 취약블록 → 서(-X), 교대
         if (isVulnerableSlot && vulnPkg) {
           const goEast = (xAxisDirectionIndex % 2) === 0;
           x = goEast ? pullOffset : -pullOffset;
         }
       } else {
-        // 홀수 층: 블록이 Z축 방향으로 길게 놓임 (90도 회전)
-        // 3개 블록이 X축 방향으로 나열됨
         x = slotOffset;
-        
-        // Z축 블록은 남(+Z) 또는 북(-Z)로 슬라이드
-        // 첫번째 Z축 취약블록 → 남(+Z), 두번째 Z축 취약블록 → 북(-Z), 교대
         if (isVulnerableSlot && vulnPkg) {
           const goSouth = (zAxisDirectionIndex % 2) === 0;
           z = goSouth ? pullOffset : -pullOffset;
         }
+      }
+
+      const blockPosition: [number, number, number] = [x, y, z];
+      const isHighlighted = pkg?.packageName === highlightedPackage;
+      
+      // 패키지 위치 저장 (패널 호버 시 툴팁용)
+      if (pkg) {
+        packagePositions.set(pkg.packageName, blockPosition);
       }
 
       blocks.push(
@@ -147,12 +174,12 @@ export function JengaTower({
           version={pkg?.version ?? ""}
           severity={pkg?.maxSeverity ?? "safe"}
           vulnerabilityCount={pkg?.vulnerabilities.length ?? 0}
-          position={[x, y, z]}
+          position={blockPosition}
           rotation={rotation}
           onHover={handleHover}
           onClick={onBlockClick}
           dimensions={[BLOCK_LENGTH, BLOCK_HEIGHT, BLOCK_WIDTH]}
-          isHighlighted={pkg?.packageName === highlightedPackage}
+          isHighlighted={isHighlighted}
         />
       );
     }
@@ -160,10 +187,30 @@ export function JengaTower({
     // 취약블록이 있는 층이면 방향 카운터 증가
     if (vulnPkg) {
       if (!isRotated) {
-        xAxisDirectionIndex++; // 짝수층(X축 블록) 카운터
+        xAxisDirectionIndex++;
       } else {
-        zAxisDirectionIndex++; // 홀수층(Z축 블록) 카운터
+        zAxisDirectionIndex++;
       }
+    }
+  }
+
+  // 툴팁에 표시할 데이터 결정
+  // 1. 3D 블록 직접 호버 (hoveredBlock)
+  // 2. 패널에서 호버 (highlightedPackage)
+  let tooltipData: { packageName: string; version: string; vulnerabilityCount: number; position?: [number, number, number] } | null = null;
+  
+  if (hoveredBlock && hoveredBlock.packageName !== "normal") {
+    tooltipData = hoveredBlock;
+  } else if (highlightedPackage) {
+    const position = packagePositions.get(highlightedPackage);
+    const pkg = packages.find(p => p.packageName === highlightedPackage);
+    if (position && pkg) {
+      tooltipData = {
+        packageName: pkg.packageName,
+        version: pkg.version,
+        vulnerabilityCount: pkg.vulnerabilities.length,
+        position,
+      };
     }
   }
 
@@ -171,28 +218,33 @@ export function JengaTower({
     <group>
       {blocks}
 
-      {/* 호버 툴팁 */}
-      {hoveredBlock && hoveredBlock.packageName !== "normal" && (
+      {/* 호버 툴팁 - 3D 블록 호버 또는 패널 호버 시 블록 위치에 표시 */}
+      {tooltipData && (
         <Html
-          position={[0, totalLayerCount * BLOCK_HEIGHT + 1.5, 0]}
+          position={[
+            tooltipData.position?.[0] ?? 0, 
+            (tooltipData.position?.[1] ?? 0) + BLOCK_HEIGHT + 0.5, 
+            tooltipData.position?.[2] ?? 0
+          ]}
           center
           style={{
             pointerEvents: "none",
             whiteSpace: "nowrap",
+            transform: "translateY(-100%)",
           }}
         >
-          <div className="bg-background/90 backdrop-blur-sm border border-border rounded-lg px-3 py-2 shadow-lg">
-            <div className="font-medium text-sm">{hoveredBlock.packageName}</div>
-            <div className="text-xs text-muted-foreground">
-              v{hoveredBlock.version}
+          <div className="bg-gray-900/95 backdrop-blur-sm text-white rounded-lg px-3 py-2 shadow-xl">
+            <div className="font-medium text-sm">{tooltipData.packageName}</div>
+            <div className="text-xs text-gray-300">
+              v{tooltipData.version}
             </div>
             <div className="text-xs mt-1">
-              {hoveredBlock.vulnerabilityCount > 0 ? (
-                <span className="text-destructive">
-                  {hoveredBlock.vulnerabilityCount}개 취약점
+              {tooltipData.vulnerabilityCount > 0 ? (
+                <span className="text-red-400">
+                  {tooltipData.vulnerabilityCount}개 취약점
                 </span>
               ) : (
-                <span className="text-green-600">안전</span>
+                <span className="text-green-400">✓ 안전</span>
               )}
             </div>
           </div>

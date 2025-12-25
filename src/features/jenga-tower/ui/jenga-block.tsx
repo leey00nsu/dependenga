@@ -40,6 +40,7 @@ export interface BlockData {
   version: string;
   severity: SeverityWithSafe;
   vulnerabilityCount: number;
+  position?: [number, number, number]; // 툴팁 위치용
 }
 
 /**
@@ -77,6 +78,7 @@ export function JengaBlock({
     version,
     severity,
     vulnerabilityCount,
+    position,
   };
 
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {

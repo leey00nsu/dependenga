@@ -51,16 +51,21 @@ export function HomeView() {
     setParsedResult(result);
     setVulnResult(null);
     setVulnError(null);
+    // 파싱 성공 시 바로 분석 시작
+    handleAnalyzeWithData(result, false);
   };
 
   const handleAnalyze = (testMode: boolean = false) => {
     if (!parsedResult) return;
+    handleAnalyzeWithData(parsedResult, testMode);
+  };
 
+  const handleAnalyzeWithData = (data: ParsedPackage, testMode: boolean) => {
     setAppState("loading");
     setVulnError(null);
     
     startTransition(async () => {
-      const result = await analyzePackageVulnerabilities(parsedResult, testMode);
+      const result = await analyzePackageVulnerabilities(data, testMode);
       if (result.success) {
         setVulnResult(result.data);
         setAppState("result");
@@ -109,21 +114,12 @@ export function HomeView() {
           <div className="bg-white rounded-2xl shadow-lg shadow-black/5 p-6 border border-gray-100">
             <DependencyParserForm onSuccess={handleParseSuccess} />
             
-            {/* 분석 버튼 */}
+            {/* 분석 버튼 - Test Mode만 표시 */}
             {parsedResult && (
               <div className="mt-6 space-y-3 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="text-sm text-gray-500 text-center">
-                  {parsedResult.dependencies.length} dependencies found
+                  {parsedResult.dependencies.length} dependencies found - analyzing...
                 </div>
-                
-                <Button
-                  onClick={() => handleAnalyze(false)}
-                  disabled={isPending}
-                  size="lg"
-                  className="w-full h-12 text-base font-medium bg-gray-800 hover:bg-gray-900"
-                >
-                  {isPending ? "Analyzing..." : "Analyze Dependencies"}
-                </Button>
                 
                 <button
                   onClick={() => handleAnalyze(true)}

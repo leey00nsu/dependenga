@@ -25,9 +25,21 @@ export function JengaScene({
   onBlockClick,
   highlightedPackage 
 }: JengaSceneProps) {
-  // 카메라 거리 계산 (패키지 수에 따라)
+  // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
   const towerHeight = Math.ceil(packages.length / 3);
-  const cameraDistance = Math.max(10, towerHeight * 2);
+  const blockHeight = 0.6;
+  const actualTowerHeight = towerHeight * blockHeight;
+  
+  // 타워가 높을수록 더 멀리, 더 높은 각도에서 봄
+  const cameraDistance = Math.max(12, actualTowerHeight * 1.2);
+  const cameraY = Math.max(8, actualTowerHeight * 0.8);
+  
+  // 카메라 타겟: 타워 중심 (높이의 40% 지점)
+  const targetY = actualTowerHeight * 0.4;
+  
+  // 줌 범위: 타워 높이에 따라 동적 조정
+  const minDistance = 5;
+  const maxDistance = Math.max(80, actualTowerHeight * 3);
 
   return (
     <div className="w-full h-full min-h-[500px]" style={{ backgroundColor: "#E8F5E9" }}>
@@ -40,11 +52,11 @@ export function JengaScene({
       >
         <color attach="background" args={["#E8F5E9"]} />
         <Suspense fallback={null}>
-          {/* 카메라 */}
+          {/* 카메라 - 타워 높이에 따라 자동 조정 */}
           <PerspectiveCamera
             makeDefault
-            position={[cameraDistance, cameraDistance * 0.6, cameraDistance]}
-            fov={45}
+            position={[cameraDistance, cameraY, cameraDistance]}
+            fov={50}
           />
 
           {/* 조명 - Soft studio lighting */}
@@ -82,13 +94,15 @@ export function JengaScene({
             <shadowMaterial transparent opacity={0.3} />
           </mesh>
 
-          {/* 카메라 컨트롤 */}
+          {/* 카메라 컨트롤 - 줌, 회전, 패닝 가능 */}
           <OrbitControls
-            enablePan={false}
-            minDistance={5}
-            maxDistance={50}
-            target={[0, towerHeight * 0.3, 0]}
+            enablePan={true}
+            minDistance={minDistance}
+            maxDistance={maxDistance}
+            target={[0, targetY, 0]}
             autoRotate={false}
+            maxPolarAngle={Math.PI * 0.85}
+            minPolarAngle={Math.PI * 0.1}
           />
         </Suspense>
       </Canvas>

@@ -113,13 +113,39 @@
 
 ---
 
+## Phase 7: 버그 수정
+
+- [DONE][P1] T-F003-14 UI 플로우 및 카메라 버그 수정
+  - Owner: @agent
+  - Checklist:
+    - [x] 의존성 분석 자동 진행 (한 번 클릭으로 분석까지)
+    - [x] 일반 모드에서도 젠가 표시 (safe 패키지 포함)
+    - [x] 큰 package.json 대응 카메라 컨트롤 개선
+
+---
+
+## Phase 8: UI 개선
+
+- [DONE][P2] T-F003-15 패널 및 툴팁 개선
+  - Owner: @agent
+  - Checklist:
+    - [x] 우측 패널에 Safe 패키지 포함 심각도별 그룹 표시
+    - [x] 패널 호버 시 마우스 위치에 툴팁 표시
+    - [x] 패널 호버 시 3D 블록 위치에도 툴팁 표시
+    - [x] 모든 Safe 패키지가 타워에 표시되도록 층 계산 수정
+
+---
+
 ## 완료 조건
 
 - [x] Phase 1-5 태스크 [DONE]
 - [/] Phase 6 태스크 (Loading animation 제외 완료)
+- [x] Phase 7 버그 수정 [DONE]
+- [x] Phase 8 UI 개선 [DONE]
 - [x] `pnpm dev` 정상 실행
 - [x] `pnpm test` 통과 (23개)
 - [x] 3D 젠가 타워 표시 및 인터랙션 동작
 - [x] 패널-블록 호버 동기화 동작
-
-
+- [x] 한 번 클릭 분석 동작
+- [x] 높은 타워 카메라 조작 가능
+- [x] Safe 패키지 심각도별 그룹 및 전체 표시
