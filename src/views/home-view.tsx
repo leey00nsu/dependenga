@@ -1,88 +1,232 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import dynamic from "next/dynamic";
+import { useState, useTransition, useCallback } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
 import { DependencyParserForm } from "@/features/dependency-parser/ui/dependency-parser-form";
-import { DependencyResult } from "@/features/dependency-parser/ui/dependency-result";
-import { VulnerabilityResult } from "@/features/vulnerability-analyzer/ui/vulnerability-result";
 import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
+import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
+import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import { Button } from "@/shared/ui/button";
+import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
+
+// 3D 씬은 SSR 비활성화 필요
+const JengaScene = dynamic(
+  () => import("@/features/jenga-tower/ui/jenga-scene").then((mod) => mod.JengaScene),
+  { ssr: false, loading: () => <JengaLoadingPlaceholder /> }
+);
+
+// dotLottie 컴포넌트 동적 로드 (SSR 비활성화)
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  { ssr: false }
+);
+
+/**
+ * 젠가 로딩 플레이스홀더 (3D 씬 로딩 중)
+ * LoadingAnimation과 동일한 dotLottie 애니메이션 사용
+ */
+function JengaLoadingPlaceholder() {
+  return (
+    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+      <div className="text-center">
+        <div className="w-32 h-32 mx-auto mb-4">
+          <DotLottieReact
+            src="/animations/loading.lottie"
+            loop
+            autoplay
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
+        <p className="text-gray-600 font-medium">Building tower...</p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 앱 상태 타입
+ */
+type AppState = "initial" | "loading" | "result";
 
 /**
  * 홈 페이지 뷰 컴포넌트
- * 의존성 파서 폼과 결과를 조합하여 표시합니다.
+ * Minimal, playful, modern developer tool
  */
 export function HomeView() {
+  const [appState, setAppState] = useState<AppState>("initial");
   const [parsedResult, setParsedResult] = useState<ParsedPackage | null>(null);
   const [vulnResult, setVulnResult] = useState<VulnerabilityAnalysisResult | null>(null);
   const [vulnError, setVulnError] = useState<string | null>(null);
+  const [highlightedPackage, setHighlightedPackage] = useState<string | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleParseSuccess = (result: ParsedPackage) => {
     setParsedResult(result);
     setVulnResult(null);
     setVulnError(null);
+    // 파싱 성공 시 바로 분석 시작
+    handleAnalyzeWithData(result, false);
   };
 
-  const handleAnalyzeVulnerabilities = () => {
+  const handleAnalyze = (testMode: boolean = false) => {
     if (!parsedResult) return;
+    handleAnalyzeWithData(parsedResult, testMode);
+  };
 
+  const handleAnalyzeWithData = (data: ParsedPackage, testMode: boolean) => {
+    setAppState("loading");
     setVulnError(null);
+    
     startTransition(async () => {
-      const result = await analyzePackageVulnerabilities(parsedResult);
+      const result = await analyzePackageVulnerabilities(data, testMode);
       if (result.success) {
         setVulnResult(result.data);
+        setAppState("result");
       } else {
         setVulnError(result.error);
+        setAppState("initial");
       }
     });
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-black">
-      <main className="container mx-auto max-w-2xl py-16 px-4">
-        {/* 헤더 */}
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
-            Dependenga
-          </h1>
-          <p className="mt-3 text-lg text-muted-foreground">
-            의존성을 분석하고 3D 젠가 타워로 시각화하세요
-          </p>
-        </header>
+  const handleBlockHover = useCallback((data: BlockData | null) => {
+    setHighlightedPackage(data?.packageName ?? null);
+  }, []);
 
-        {/* 파서 폼 */}
-        <section className="mb-8">
-          <DependencyParserForm onSuccess={handleParseSuccess} />
-        </section>
+  const handlePackageHover = useCallback((packageName: string | null) => {
+    setHighlightedPackage(packageName);
+  }, []);
 
-        {/* 의존성 결과 & 취약점 분석 버튼 */}
-        {parsedResult && (
-          <section className="space-y-6">
-            <DependencyResult result={parsedResult} />
+  const handleReset = () => {
+    setAppState("initial");
+    setParsedResult(null);
+    setVulnResult(null);
+    setVulnError(null);
+    setHighlightedPackage(null);
+    setSelectedPackage(null);
+  };
 
-            {/* 취약점 분석 버튼 */}
-            {!vulnResult && (
-              <div className="flex flex-col items-center gap-2">
-                <Button
-                  onClick={handleAnalyzeVulnerabilities}
+  // 블록 클릭 핸들러 - 상세 정보 표시
+  const handleBlockClick = useCallback((data: BlockData) => {
+    setSelectedPackage(data.packageName);
+    // TODO: 상세 정보 모달 또는 패널 확장 구현
+  }, []);
+
+  // 패키지 클릭 핸들러 - 상세 정보 표시
+  const handlePackageClick = useCallback((packageName: string) => {
+    setSelectedPackage(packageName);
+    // TODO: 상세 정보 모달 또는 패널 확장 구현
+  }, []);
+
+  // Initial State - 입력 카드
+  if (appState === "initial") {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center p-4"
+        style={{ backgroundColor: "#E8F5E9" }}
+      >
+        <div className="w-full max-w-xl animate-in fade-in duration-500">
+          {/* 로고 */}
+          <header className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
+              Dependenga
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Visualize your dependencies as a Jenga tower
+            </p>
+          </header>
+
+          {/* 입력 카드 */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-black/5 p-6 border border-gray-100">
+            <DependencyParserForm onSuccess={handleParseSuccess} />
+            
+            {/* 분석 버튼 - Test Mode만 표시 */}
+            {parsedResult && (
+              <div className="mt-6 space-y-3 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="text-sm text-gray-500 text-center">
+                  {parsedResult.dependencies.length} dependencies found - analyzing...
+                </div>
+                
+                <button
+                  onClick={() => handleAnalyze(true)}
                   disabled={isPending}
-                  size="lg"
-                  className="w-full"
+                  className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {isPending ? "취약점 분석 중..." : "🔍 취약점 분석"}
-                </Button>
+                  🧪 Test mode (simulate vulnerabilities)
+                </button>
+                
                 {vulnError && (
-                  <p className="text-sm text-destructive">{vulnError}</p>
+                  <p className="text-sm text-red-500 text-center">{vulnError}</p>
                 )}
               </div>
             )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-            {/* 취약점 결과 */}
-            {vulnResult && <VulnerabilityResult result={vulnResult} />}
-          </section>
-        )}
+  // Loading State - Lottie 또는 CSS 애니메이션
+  if (appState === "loading") {
+    return <LoadingAnimation />;
+  }
+
+  // Result State - 60/40 분할 레이아웃
+  return (
+    <div 
+      className="h-screen flex flex-col"
+      style={{ backgroundColor: "#E8F5E9" }}
+    >
+      {/* 헤더 */}
+      <header className="flex items-center justify-between px-6 py-4 bg-white/50 backdrop-blur-sm border-b border-gray-200/50">
+        <button
+          onClick={handleReset}
+          className="text-xl font-bold text-gray-800 hover:text-gray-600 transition-colors"
+        >
+          Dependenga
+        </button>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-500">
+            {parsedResult?.name || "package.json"}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+          >
+            New Analysis
+          </Button>
+        </div>
+      </header>
+
+      {/* 메인 콘텐츠 - 60/40 분할 */}
+      <main className="flex-1 flex overflow-hidden">
+        {/* 왼쪽: 3D 젠가 (60%) */}
+        <div className="w-[60%] h-full">
+          {vulnResult && (
+            <JengaScene 
+              packages={vulnResult.packages}
+              onBlockHover={handleBlockHover}
+              onBlockClick={handleBlockClick}
+              highlightedPackage={highlightedPackage}
+            />
+          )}
+        </div>
+
+        {/* 오른쪽: Vulnerability Panel (40%) */}
+        <div className="w-[40%] h-full p-4">
+          {vulnResult && (
+            <VulnerabilityPanel
+              packages={vulnResult.packages}
+              onPackageHover={handlePackageHover}
+              onPackageClick={handlePackageClick}
+              highlightedPackage={highlightedPackage}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
