@@ -3,7 +3,7 @@
 import { useRef, useState, useMemo, Suspense } from "react";
 import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
-import { TextureLoader, RepeatWrapping, Texture } from "three";
+import { TextureLoader, RepeatWrapping } from "three";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
@@ -104,17 +104,11 @@ function JengaBlockWithTexture({
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  // 나무 텍스처 로드 - 에러 시 null 반환
-  let woodTexture: Texture | null = null;
-  try {
-    woodTexture = useLoader(TextureLoader, WOOD_TEXTURE_URL);
-  } catch (error) {
-    console.error("Failed to load wood texture:", error);
-  }
+  // 나무 텍스처 로드 - Suspense가 로딩/에러 처리
+  const woodTexture = useLoader(TextureLoader, WOOD_TEXTURE_URL);
   
   // 텍스처 설정
   const texture = useMemo(() => {
-    if (!woodTexture) return null;
     const tex = woodTexture.clone();
     tex.wrapS = tex.wrapT = RepeatWrapping;
     tex.repeat.set(0.5, 0.3);
@@ -168,7 +162,7 @@ function JengaBlockWithTexture({
       <meshStandardMaterial
         color={color}
         bumpMap={texture}
-        bumpScale={texture ? 2 : 0}
+        bumpScale={2}
         emissive={isCritical ? "#ff6666" : (showHighlight ? color : "#000000")}
         emissiveIntensity={isCritical ? 0.3 : (showHighlight ? 0.25 : 0)}
         roughness={0.6}
