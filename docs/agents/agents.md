@@ -10,10 +10,36 @@
 - **Git 워크플로우: `/docs/agents/git-workflow.md`**
 - **이슈 템플릿: `/docs/agents/issue-template.md`**
 - **PR 템플릿: `/docs/agents/pr-template.md`**
-- PRD: `/docs/prd/dependenga-prd.md`
+- PRD: `/docs/prd/{project}-prd.md`
 - 기능 스펙: `/docs/features/{feature-id}/`
-- 실행 계획: `/docs/agents/plan-template.md`
-- DB 설계: `/docs/db/`
+- 실행 계획 템플릿: `/docs/agents/plan-template.md`
+
+---
+
+## 📁 docs 표준 구조
+
+에이전트 기반 개발을 위한 docs 폴더 구조입니다.
+
+```
+docs/
+├── README.md           # 문서 안내
+├── agents/             # 에이전트 운영 규칙
+│   ├── agents.md       # 메인 규칙 (이 파일)
+│   ├── constitution.md # 프로젝트 원칙
+│   └── git-workflow.md # Git 자동화
+├── prd/                # 제품 요구사항
+│   └── {project}-prd.md
+├── features/           # 기능별 문서 (FSD)
+│   ├── feature-base/   # 템플릿
+│   └── F00X-{name}/    # 각 기능
+└── scripts/            # 유틸리티 (선택)
+```
+
+### 규칙
+
+- **DB 설계**: Feature의 `plan.md`에 포함 (별도 `docs/db` 불필요)
+- **API 설계**: Feature의 `spec.md` 또는 OpenAPI spec으로 관리
+- **기술 결정**: Feature의 `decisions.md`에 기록 (ADR 스타일)
 
 ---
 
@@ -38,7 +64,7 @@
 
 1. 스펙이 명확한지 확인 (명확화 체크리스트)
 2. `plan.md` 작성 - 기술 스택, 아키텍처, 파일 구조
-3. 필요시 `research.md`에 기술 조사 기록
+3. **`decisions.md`에 주요 기술 결정 기록** (필수)
 4. 사용자 승인 후 태스크 분해
 
 ### 3. 태스크 분해 및 실행
@@ -114,3 +140,48 @@ gh pr create --title "feat(#{issue}): {title}" --body "Closes #{issue}"
 | `refactor` | `refactor(#123): 파서 로직 분리` |
 | `test` | `test(#123): 파서 테스트 추가` |
 | `docs` | `docs(#123): 스펙 명확화` |
+
+---
+
+## 📋 ADR (Architecture Decision Records) 규칙
+
+> `decisions.md`는 기술 결정과 그 이유를 기록하는 **필수** 문서입니다.
+
+### 언제 기록하는가?
+
+1. **기술/라이브러리 선택 시** (예: Three.js vs React Three Fiber)
+2. **아키텍처 결정 시** (예: Server Action vs API Route)
+3. **설계 트레이드오프 시** (예: 성능 vs 가독성)
+4. **코드 리뷰 피드백 반영 시** (예: React Hooks 규칙 위반 수정)
+5. **문제 해결 시** (예: 에러 핸들링 방식 변경)
+
+### 기록 형식
+
+```markdown
+## D{번호}: {결정 제목} ({YYYY-MM-DD})
+
+- **Context**: 문제 상황 또는 배경
+- **Options**: 고려한 대안들
+- **Decision**: 최종 선택
+- **Rationale**: 선택 이유
+- **Consequences**: 결과 및 영향 (선택사항)
+```
+
+### 예시
+
+```markdown
+## D001: 3D 렌더링 라이브러리 선택 (2025-12-24)
+
+- **Context**: 젠가 타워 3D 시각화 필요
+- **Options**: Three.js 직접 사용 vs React Three Fiber vs Babylon.js
+- **Decision**: React Three Fiber
+- **Rationale**: React 컴포넌트와 선언적 통합, drei 유틸리티, 커뮤니티 활성
+- **Consequences**: @react-three/fiber, @react-three/drei 의존성 추가
+```
+
+### 에이전트 행동 규칙
+
+- 태스크 진행 중 **기술 결정이 발생하면 즉시 `decisions.md`에 기록**
+- 코드 리뷰 피드백으로 **접근 방식이 변경되면 새 결정으로 추가**
+- **암묵적인 결정도 명시적으로 기록** (예: "기본값 사용" → 왜 기본값을 선택했는지)
+
