@@ -36,8 +36,21 @@
 
 ---
 
+## Phase 4: docs 구조 정리
+
+- [DONE][P2] T-F004-04 docs/db 삭제 및 표준 구조 확립
+  - Owner: @agent
+  - Checklist:
+    - [x] `docs/db` 폴더 삭제
+    - [x] `agents.md`에 docs 표준 구조 섹션 추가
+    - [x] DB/API 설계는 Feature에 포함됨을 명시
+
+---
+
 ## 완료 조건
 
 - [x] `agents.md` ADR 규칙 존재
 - [x] `feature-base/decisions.md` 템플릿 존재
 - [x] `research.md` 파일들 삭제됨
+- [x] `docs/db` 폴더 삭제됨
+- [x] docs 표준 구조 문서화됨

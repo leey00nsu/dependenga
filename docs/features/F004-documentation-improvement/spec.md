@@ -32,10 +32,12 @@
 
 ## 완료 조건
 
-- [ ] `decisions.md` 템플릿이 `feature-base`에 존재
-- [ ] `research.md`가 `feature-base`에서 제거됨
-- [ ] `agents.md`에 ADR 규칙 섹션 존재
-- [ ] F001, F002, F003에서 `research.md` 삭제됨
+- [x] `decisions.md` 템플릿이 `feature-base`에 존재
+- [x] `research.md`가 `feature-base`에서 제거됨
+- [x] `agents.md`에 ADR 규칙 섹션 존재
+- [x] F001, F002, F003에서 `research.md` 삭제됨
+- [x] `docs/db` 폴더 삭제됨
+- [x] `agents.md`에 docs 표준 구조 섹션 존재
 
 ## 제외 사항
 

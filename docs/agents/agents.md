@@ -10,10 +10,36 @@
 - **Git 워크플로우: `/docs/agents/git-workflow.md`**
 - **이슈 템플릿: `/docs/agents/issue-template.md`**
 - **PR 템플릿: `/docs/agents/pr-template.md`**
-- PRD: `/docs/prd/dependenga-prd.md`
+- PRD: `/docs/prd/{project}-prd.md`
 - 기능 스펙: `/docs/features/{feature-id}/`
-- 실행 계획: `/docs/agents/plan-template.md`
-- DB 설계: `/docs/db/`
+- 실행 계획 템플릿: `/docs/agents/plan-template.md`
+
+---
+
+## 📁 docs 표준 구조
+
+에이전트 기반 개발을 위한 docs 폴더 구조입니다.
+
+```
+docs/
+├── README.md           # 문서 안내
+├── agents/             # 에이전트 운영 규칙
+│   ├── agents.md       # 메인 규칙 (이 파일)
+│   ├── constitution.md # 프로젝트 원칙
+│   └── git-workflow.md # Git 자동화
+├── prd/                # 제품 요구사항
+│   └── {project}-prd.md
+├── features/           # 기능별 문서 (FSD)
+│   ├── feature-base/   # 템플릿
+│   └── F00X-{name}/    # 각 기능
+└── scripts/            # 유틸리티 (선택)
+```
+
+### 규칙
+
+- **DB 설계**: Feature의 `plan.md`에 포함 (별도 `docs/db` 불필요)
+- **API 설계**: Feature의 `spec.md` 또는 OpenAPI spec으로 관리
+- **기술 결정**: Feature의 `decisions.md`에 기록 (ADR 스타일)
 
 ---
 
