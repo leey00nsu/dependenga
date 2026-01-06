@@ -29,6 +29,7 @@ docs/
 │   └── git-workflow.md # Git 자동화
 ├── prd/                # 제품 요구사항
 │   └── {project}-prd.md
+├── designs/            # 디자인 산출물 (이미지/목업)
 ├── features/           # 기능별 문서 (FSD)
 │   ├── feature-base/   # 템플릿
 │   └── F00X-{name}/    # 각 기능
@@ -40,6 +41,7 @@ docs/
 - **DB 설계**: Feature의 `plan.md`에 포함 (별도 `docs/db` 불필요)
 - **API 설계**: Feature의 `spec.md` 또는 OpenAPI spec으로 관리
 - **기술 결정**: Feature의 `decisions.md`에 기록 (ADR 스타일)
+- **디자인 산출물**: `docs/designs/`에 저장 (이미지/목업 등)
 
 ---
 
@@ -184,4 +186,3 @@ gh pr create --title "feat(#{issue}): {title}" --body "Closes #{issue}"
 - 태스크 진행 중 **기술 결정이 발생하면 즉시 `decisions.md`에 기록**
 - 코드 리뷰 피드백으로 **접근 방식이 변경되면 새 결정으로 추가**
 - **암묵적인 결정도 명시적으로 기록** (예: "기본값 사용" → 왜 기본값을 선택했는지)
-
