@@ -6,13 +6,22 @@
 
 ## 참조 문서
 
-- 프로젝트 원칙: `/docs/agents/constitution.md`
-- **Git 워크플로우: `/docs/agents/git-workflow.md`**
-- **이슈 템플릿: `/docs/agents/issue-template.md`**
-- **PR 템플릿: `/docs/agents/pr-template.md`**
-- PRD: `/docs/prd/{project}-prd.md`
-- 기능 스펙: `/docs/features/{feature-id}/`
-- 실행 계획 템플릿: `/docs/agents/plan-template.md`
+### 핵심 문서
+
+- **프로젝트 원칙**: `/docs/agents/constitution.md`
+- **Git 워크플로우**: `/docs/agents/git-workflow.md`
+- **이슈 템플릿**: `/docs/agents/issue-template.md`
+- **PR 템플릿**: `/docs/agents/pr-template.md`
+- **실행 계획 템플릿**: `/docs/agents/plan-template.md`
+
+### PRD
+
+- **제품 요구사항**: `/docs/prd/`
+
+### Feature (기능별 문서)
+
+- **기능 문서**: `/docs/features/{feature-id}/`
+- **템플릿 (SSOT)**: `/docs/features/feature-base/`
 
 ---
 
@@ -26,7 +35,10 @@ docs/
 ├── agents/             # 에이전트 운영 규칙
 │   ├── agents.md       # 메인 규칙 (이 파일)
 │   ├── constitution.md # 프로젝트 원칙
-│   └── git-workflow.md # Git 자동화
+│   ├── git-workflow.md # Git 자동화
+│   ├── issue-template.md
+│   ├── pr-template.md
+│   └── plan-template.md
 ├── prd/                # 제품 요구사항
 │   └── {project}-prd.md
 ├── designs/            # 디자인 산출물 (이미지/목업)
@@ -61,6 +73,7 @@ docs/
 1. `/docs/features/feature-base/`를 복제하여 새 기능 폴더 생성 (F001, F002...)
 2. `spec.md` 작성 - 무엇을, 왜 만드는지 (기술 스택 X)
 3. 사용자에게 스펙 초안 확인 요청
+4. GitHub Issue 생성 (`agents/issue-template.md` 참조)
 
 ### 2. 기능 스펙 → 계획 수립
 
@@ -82,6 +95,14 @@ docs/
 1. 체크업 매크로 수행
 2. 분석 리포트 작성 (현재 상태, 문제점, 제안, 영향)
 3. 변경 필요시 새 기능/태스크 생성 권장
+
+### 5. 태스크 외 요청 처리
+
+> 사용자가 **tasks.md에 없는 작업**을 요청하면:
+
+1. 해당 작업을 **tasks.md에 반영할지** 사용자에게 확인
+2. 승인 시: tasks.md에 추가 후 실행
+3. 거부 시: 임시 작업으로 진행 (커밋에는 포함)
 
 ---
 
