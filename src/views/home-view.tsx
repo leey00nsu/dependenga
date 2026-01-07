@@ -1,10 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useTransition, useCallback } from "react";
+import { useState, useTransition, useCallback, useEffect, useRef } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
-import { DependencyParserForm } from "@/features/dependency-parser/ui/dependency-parser-form";
+import { DependencyParserForm, type DependencyParserFormHandle } from "@/features/dependency-parser/ui/dependency-parser-form";
 import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
@@ -62,6 +62,14 @@ export function HomeView() {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isGlobalDragging, setIsGlobalDragging] = useState(false);
+  const formRef = useRef<DependencyParserFormHandle | null>(null);
+  const dragCounterRef = useRef(0);
+
+  const resetGlobalDrag = useCallback(() => {
+    dragCounterRef.current = 0;
+    setIsGlobalDragging(false);
+  }, []);
 
   const handleParseSuccess = (result: ParsedPackage) => {
     setParsedResult(result);
@@ -121,49 +129,129 @@ export function HomeView() {
     // TODO: 상세 정보 모달 또는 패널 확장 구현
   }, []);
 
+  useEffect(() => {
+    const hasFiles = (event: DragEvent) =>
+      Array.from(event.dataTransfer?.types ?? []).includes("Files");
+
+    const handleDragEnter = (event: DragEvent) => {
+      if (!hasFiles(event)) return;
+      dragCounterRef.current += 1;
+      setIsGlobalDragging(true);
+    };
+
+    const handleDragLeave = (event: DragEvent) => {
+      if (!hasFiles(event)) return;
+      dragCounterRef.current = Math.max(0, dragCounterRef.current - 1);
+      if (dragCounterRef.current === 0) {
+        setIsGlobalDragging(false);
+      }
+    };
+
+    const handleDragOver = (event: DragEvent) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+    };
+
+    const handleDrop = (event: DragEvent) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      resetGlobalDrag();
+      if (appState !== "initial") return;
+      const file = event.dataTransfer?.files?.[0] ?? null;
+      if (file) {
+        formRef.current?.handleFileSelect(file);
+      }
+    };
+
+    window.addEventListener("dragenter", handleDragEnter);
+    window.addEventListener("dragleave", handleDragLeave);
+    window.addEventListener("dragover", handleDragOver);
+    window.addEventListener("drop", handleDrop);
+
+    return () => {
+      window.removeEventListener("dragenter", handleDragEnter);
+      window.removeEventListener("dragleave", handleDragLeave);
+      window.removeEventListener("dragover", handleDragOver);
+      window.removeEventListener("drop", handleDrop);
+    };
+  }, [appState, resetGlobalDrag]);
+
   // Initial State - 입력 카드
   if (appState === "initial") {
     return (
-      <div 
-        className="min-h-screen flex items-center justify-center p-4"
-        style={{ backgroundColor: "#E8F5E9" }}
-      >
-        <div className="w-full max-w-xl animate-in fade-in duration-500">
-          {/* 로고 */}
-          <header className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
+      <div className="relative min-h-screen overflow-x-hidden text-white">
+        <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
+        <div className="pointer-events-none absolute inset-0 landing-glow" />
+        <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
+        <div className="pointer-events-none absolute inset-0 landing-vignette" />
+
+        <div className="relative z-10 flex min-h-screen flex-col px-6 py-6 md:px-12">
+          {isGlobalDragging && (
+            <div className="pointer-events-none absolute inset-0 z-20 border border-dashed border-white/40 bg-white/5 backdrop-blur-sm">
+              <div className="flex h-full flex-col items-center justify-center gap-3 text-white/80">
+                <svg
+                  aria-hidden="true"
+                  className="h-10 w-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 4v10m0-10 4 4m-4-4-4 4M5 20h14"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+                <p className="text-sm">
+                  package.json 파일을 놓아 업로드하세요
+                </p>
+              </div>
+            </div>
+          )}
+          <header className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
               Dependenga
             </h1>
-            <p className="mt-2 text-gray-600">
-              Visualize your dependencies as a Jenga tower
-            </p>
           </header>
 
-          {/* 입력 카드 */}
-          <div className="bg-white rounded-2xl shadow-lg shadow-black/5 p-6 border border-gray-100">
-            <DependencyParserForm onSuccess={handleParseSuccess} />
-            
-            {/* 분석 버튼 - Test Mode만 표시 */}
-            {parsedResult && (
-              <div className="mt-6 space-y-3 animate-in slide-in-from-bottom-2 duration-300">
-                <div className="text-sm text-gray-500 text-center">
-                  {parsedResult.dependencies.length} dependencies found - analyzing...
+          <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12">
+            <div className="relative h-[220px] w-[220px] sm:h-[320px] sm:w-[320px] md:h-[420px] md:w-[420px]">
+              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-emerald-400/20 via-transparent to-rose-400/20 blur-2xl" />
+              <div className="absolute inset-0 rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-sm" />
+              <span className="sr-only">3D scene placeholder</span>
+            </div>
+
+            <div className="w-full max-w-3xl">
+              <DependencyParserForm
+                ref={formRef}
+                onSuccess={handleParseSuccess}
+                variant="landing"
+                onDropHandled={resetGlobalDrag}
+              />
+
+              {parsedResult && (
+                <div className="mt-4 space-y-3 text-center">
+                  <div className="text-sm text-white/60">
+                    {parsedResult.dependencies.length} dependencies found - analyzing...
+                  </div>
+
+                  <button
+                    onClick={() => handleAnalyze(true)}
+                    disabled={isPending}
+                    className="w-full text-sm text-white/40 transition-colors hover:text-white/70"
+                  >
+                    🧪 Test mode (simulate vulnerabilities)
+                  </button>
                 </div>
-                
-                <button
-                  onClick={() => handleAnalyze(true)}
-                  disabled={isPending}
-                  className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  🧪 Test mode (simulate vulnerabilities)
-                </button>
-                
-                {vulnError && (
-                  <p className="text-sm text-red-500 text-center">{vulnError}</p>
-                )}
-              </div>
-            )}
-          </div>
+              )}
+
+              {vulnError && (
+                <p className="mt-3 text-center text-sm text-red-200">
+                  {vulnError}
+                </p>
+              )}
+            </div>
+          </main>
         </div>
       </div>
     );
