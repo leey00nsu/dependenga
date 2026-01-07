@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef, useState, useMemo, Suspense } from "react";
-import { ThreeEvent, useLoader } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
-import { TextureLoader, RepeatWrapping } from "three";
+import { useRef, useState, Suspense } from "react";
+import { ThreeEvent } from "@react-three/fiber";
+import { Edges, RoundedBox } from "@react-three/drei";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
@@ -18,9 +17,6 @@ const SEVERITY_COLORS: Record<SeverityWithSafe, string> = {
   low: "#2ECC71",      // 그린
   safe: "#BFC2C7",     // 웜 그레이
 };
-
-// 나무 텍스처 URL (로컬 파일)
-const WOOD_TEXTURE_URL = "/textures/hardwood2_diffuse.jpg";
 
 export interface JengaBlockProps {
   packageName: string;
@@ -77,11 +73,20 @@ function JengaBlockFallback({
       castShadow
       receiveShadow
     >
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         color={color}
-        roughness={0.7}
-        metalness={0.02}
+        roughness={0.15}
+        metalness={0}
+        transmission={0.65}
+        thickness={0.6}
+        clearcoat={0.6}
+        clearcoatRoughness={0.2}
+        transparent
+        opacity={0.55}
+        emissive={color}
+        emissiveIntensity={0.12}
       />
+      <Edges scale={1.02} color="#F8FAFC" linewidth={2} />
     </RoundedBox>
   );
 }
@@ -103,17 +108,6 @@ function JengaBlockWithTexture({
 }: JengaBlockProps) {
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
-
-  // 나무 텍스처 로드 - Suspense가 로딩/에러 처리
-  const woodTexture = useLoader(TextureLoader, WOOD_TEXTURE_URL);
-  
-  // 텍스처 설정
-  const texture = useMemo(() => {
-    const tex = woodTexture.clone();
-    tex.wrapS = tex.wrapT = RepeatWrapping;
-    tex.repeat.set(0.5, 0.3);
-    return tex;
-  }, [woodTexture]);
 
   const blockData: BlockData = {
     packageName,
@@ -159,15 +153,20 @@ function JengaBlockWithTexture({
       castShadow
       receiveShadow
     >
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         color={color}
-        bumpMap={texture}
-        bumpScale={2}
-        emissive={isCritical ? "#ff6666" : (showHighlight ? color : "#000000")}
-        emissiveIntensity={isCritical ? 0.3 : (showHighlight ? 0.25 : 0)}
-        roughness={0.6}
-        metalness={0.02}
+        emissive={isCritical ? color : (showHighlight ? color : "#000000")}
+        emissiveIntensity={isCritical ? 0.35 : (showHighlight ? 0.22 : 0.08)}
+        roughness={0.12}
+        metalness={0}
+        transmission={0.7}
+        thickness={0.7}
+        clearcoat={0.7}
+        clearcoatRoughness={0.18}
+        transparent
+        opacity={0.6}
       />
+      <Edges scale={1.02} color="#F8FAFC" linewidth={2} />
     </RoundedBox>
   );
 }

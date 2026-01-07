@@ -16,48 +16,35 @@
 
 ## 태스크 목록
 
-### Phase 1: 라우트/레이아웃 구성
+### Phase 1: 결과 화면 레이아웃 리디자인
 
-- [TODO][P1] T-F006-01 대시보드 라우트 및 뷰 구성
+- [DONE][P1] T-F006-01 결과 화면 레이아웃 재구성
   - Owner: @me
-  - Status Log: 2026-01-07 [TODO]
+  - Status Log: 2026-01-07 [TODO] → 2026-01-07 [DOING] → 2026-01-07 [DONE]
   - Acceptance:
-    - `/dashboard` 라우트가 추가되고 대시보드 뷰가 렌더링된다
-    - 시안 기준 레이아웃/그리드 구조가 구성된다
+    - result state 레이아웃이 `dashboard.png` 기준으로 재배치된다
+    - 배경/그리드/톤이 시안과 일치한다
   - Checklist:
-    - [ ] `app/dashboard/page.tsx` 추가
-    - [ ] `views/dashboard-view.tsx` 생성 및 연결
-    - [ ] 기본 레이아웃/그리드 구성
+    - [x] `HomeView` result 레이아웃 수정
+    - [x] 배경/그리드/톤 조정
 
-### Phase 2: 섹션/스타일 반영
+### Phase 2: 우측 패널/스타일 반영
 
-- [TODO][P1] T-F006-02 대시보드 섹션 컴포넌트 구성
+- [DONE][P1] T-F006-02 취약점 패널 UI 리디자인
   - Owner: @me
-  - Status Log: 2026-01-07 [TODO]
+  - Status Log: 2026-01-07 [TODO] → 2026-01-07 [DOING] → 2026-01-07 [DONE]
   - Acceptance:
-    - 카드/리스트/차트 등 주요 섹션이 시안 구조로 구성된다
-    - 공통 UI 컴포넌트가 일관되게 적용된다
+    - 취약점 요약 카드와 패키지 목록이 시안 톤으로 변경된다
+    - 배지/프로그레스/상태 색상이 시안과 일치한다
   - Checklist:
-    - [ ] KPI/요약 카드 구성
-    - [ ] 리스트/테이블 섹션 구성
-    - [ ] 차트/그래프 영역 플레이스홀더 구성
-
-- [TODO][P1] T-F006-03 디자인 스타일 적용
-  - Owner: @me
-  - Status Log: 2026-01-07 [TODO]
-  - Acceptance:
-    - 색상/타이포/카드/배지 스타일이 `dashboard.png`와 일치한다
-    - 배경/구분선/여백이 시안 톤과 맞는다
-  - Checklist:
-    - [ ] 컬러/타이포 스케일 조정
-    - [ ] 카드/버튼/배지 스타일 반영
-    - [ ] 섹션 간 여백/구분선 정리
+    - [x] `VulnerabilityPanel` 스타일 조정
+    - [x] 배지/프로그레스 스타일 추가
 
 ### Phase 3: 반응형/디테일 폴리시
 
-- [TODO][P2] T-F006-04 반응형 레이아웃 정리
+- [TODO][P2] T-F006-03 반응형 레이아웃 정리
   - Owner: @me
-  - Status Log: 2026-01-07 [TODO]
+  - Status Log: 2026-01-07 [TODO] → 2026-01-07 [DOING]
   - Acceptance:
     - 모바일/태블릿에서 섹션 순서와 간격이 자연스럽다
     - 텍스트/숫자 오버플로가 발생하지 않는다
@@ -68,7 +55,7 @@
 
 ### Phase 4: 문서 업데이트
 
-- [TODO][P2] T-F006-05 문서 업데이트
+- [TODO][P2] T-F006-04 문서 업데이트
   - Owner: @me
   - Status Log: 2026-01-07 [TODO]
   - Acceptance:
