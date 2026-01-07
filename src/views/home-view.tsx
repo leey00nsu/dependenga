@@ -4,22 +4,28 @@ import dynamic from "next/dynamic";
 import { useState, useTransition, useCallback, useEffect, useRef } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
-import { DependencyParserForm, type DependencyParserFormHandle } from "@/features/dependency-parser/ui/dependency-parser-form";
+import {
+  DependencyParserForm,
+  type DependencyParserFormHandle,
+} from "@/features/dependency-parser/ui/dependency-parser-form";
 import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
-import { Button } from "@/shared/ui/button";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
 
 // 3D 씬은 SSR 비활성화 필요
 const JengaScene = dynamic(
-  () => import("@/features/jenga-tower/ui/jenga-scene").then((mod) => mod.JengaScene),
+  () =>
+    import("@/features/jenga-tower/ui/jenga-scene").then(
+      (mod) => mod.JengaScene
+    ),
   { ssr: false, loading: () => <JengaLoadingPlaceholder /> }
 );
 
 // dotLottie 컴포넌트 동적 로드 (SSR 비활성화)
 const DotLottieReact = dynamic(
-  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  () =>
+    import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
   { ssr: false }
 );
 
@@ -29,7 +35,7 @@ const DotLottieReact = dynamic(
  */
 function JengaLoadingPlaceholder() {
   return (
-    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+    <div className="w-full h-full flex items-center justify-center bg-transparent text-white/70">
       <div className="text-center">
         <div className="w-32 h-32 mx-auto mb-4">
           <DotLottieReact
@@ -39,7 +45,7 @@ function JengaLoadingPlaceholder() {
             style={{ width: "100%", height: "100%" }}
           />
         </div>
-        <p className="text-gray-600 font-medium">Building tower...</p>
+        <p className="font-medium">Building tower...</p>
       </div>
     </div>
   );
@@ -57,9 +63,12 @@ type AppState = "initial" | "loading" | "result";
 export function HomeView() {
   const [appState, setAppState] = useState<AppState>("initial");
   const [parsedResult, setParsedResult] = useState<ParsedPackage | null>(null);
-  const [vulnResult, setVulnResult] = useState<VulnerabilityAnalysisResult | null>(null);
+  const [vulnResult, setVulnResult] =
+    useState<VulnerabilityAnalysisResult | null>(null);
   const [vulnError, setVulnError] = useState<string | null>(null);
-  const [highlightedPackage, setHighlightedPackage] = useState<string | null>(null);
+  const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
+    null
+  );
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isGlobalDragging, setIsGlobalDragging] = useState(false);
@@ -87,7 +96,7 @@ export function HomeView() {
   const handleAnalyzeWithData = (data: ParsedPackage, testMode: boolean) => {
     setAppState("loading");
     setVulnError(null);
-    
+
     startTransition(async () => {
       const result = await analyzePackageVulnerabilities(data, testMode);
       if (result.success) {
@@ -202,9 +211,7 @@ export function HomeView() {
                     strokeWidth="1.5"
                   />
                 </svg>
-                <p className="text-sm">
-                  package.json 파일을 놓아 업로드하세요
-                </p>
+                <p className="text-sm">package.json 파일을 놓아 업로드하세요</p>
               </div>
             </div>
           )}
@@ -232,7 +239,8 @@ export function HomeView() {
               {parsedResult && (
                 <div className="mt-4 space-y-3 text-center">
                   <div className="text-sm text-white/60">
-                    {parsedResult.dependencies.length} dependencies found - analyzing...
+                    {parsedResult.dependencies.length} dependencies found -
+                    analyzing...
                   </div>
 
                   <button
@@ -262,50 +270,41 @@ export function HomeView() {
     return <LoadingAnimation />;
   }
 
-  // Result State - 60/40 분할 레이아웃
+  // Result State - dashboard.png 기준 레이아웃
   return (
-    <div 
-      className="h-screen flex flex-col"
-      style={{ backgroundColor: "#E8F5E9" }}
-    >
-      {/* 헤더 */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white/50 backdrop-blur-sm border-b border-gray-200/50">
-        <button
-          onClick={handleReset}
-          className="text-xl font-bold text-gray-800 hover:text-gray-600 transition-colors"
-        >
-          Dependenga
-        </button>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
-            {parsedResult?.name || "package.json"}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
+    <div className="relative min-h-screen overflow-hidden text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
+      <div className="pointer-events-none absolute inset-0 landing-glow" />
+      <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
+      <div className="pointer-events-none absolute inset-0 landing-vignette" />
+
+      {/* Jenga scene as full-screen background */}
+      <div className="absolute inset-0 z-0 lg:pr-[360px]">
+        {vulnResult && (
+          <JengaScene
+            packages={vulnResult.packages}
+            onBlockHover={handleBlockHover}
+            onBlockClick={handleBlockClick}
+            highlightedPackage={highlightedPackage}
+          />
+        )}
+      </div>
+
+      {/* Overlay content */}
+      <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-6 md:px-10">
+        <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
+          <button
             onClick={handleReset}
+            className="text-2xl font-semibold tracking-tight text-white"
           >
-            New Analysis
-          </Button>
-        </div>
-      </header>
+            Dependenga
+          </button>
+          <div className="text-sm text-white/50">
+            {parsedResult?.name || "package.json"}
+          </div>
+        </header>
 
-      {/* 메인 콘텐츠 - 60/40 분할 */}
-      <main className="flex-1 flex overflow-hidden">
-        {/* 왼쪽: 3D 젠가 (60%) */}
-        <div className="w-[60%] h-full">
-          {vulnResult && (
-            <JengaScene 
-              packages={vulnResult.packages}
-              onBlockHover={handleBlockHover}
-              onBlockClick={handleBlockClick}
-              highlightedPackage={highlightedPackage}
-            />
-          )}
-        </div>
-
-        {/* 오른쪽: Vulnerability Panel (40%) */}
-        <div className="w-[40%] h-full p-4">
+        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
           {vulnResult && (
             <VulnerabilityPanel
               packages={vulnResult.packages}
@@ -314,8 +313,10 @@ export function HomeView() {
               highlightedPackage={highlightedPackage}
             />
           )}
-        </div>
-      </main>
+        </aside>
+
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[360px] lg:block" />
+      </div>
     </div>
   );
 }

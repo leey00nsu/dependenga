@@ -46,8 +46,7 @@ export function LoadingAnimation({
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center"
-      style={{ backgroundColor: "#E8F5E9" }}
+      className="min-h-screen flex items-center justify-center bg-[#0b0f14]"
     >
       <div className="text-center animate-in fade-in duration-300">
         <div className="flex flex-col items-center gap-3 mb-4">
@@ -72,8 +71,8 @@ export function LoadingAnimation({
           </div>
         </div>
         
-        <p className="text-gray-600 font-medium">{message}</p>
-        <p className="text-sm text-gray-400 mt-1">{subMessage}</p>
+        <p className="text-white/70 font-medium">{message}</p>
+        <p className="mt-1 text-sm text-white/40">{subMessage}</p>
       </div>
     </div>
   );
@@ -88,14 +87,14 @@ function FallbackSpinner() {
     <div className="flex flex-col items-center gap-2">
       {/* 블록 쌓기 애니메이션 */}
       <div className="flex gap-1">
-        <div className="w-8 h-3 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "0ms" }} />
-        <div className="w-8 h-3 bg-gray-400 rounded-sm animate-bounce" style={{ animationDelay: "100ms" }} />
-        <div className="w-8 h-3 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "200ms" }} />
+        <div className="h-3 w-8 animate-bounce rounded-sm bg-white/30" style={{ animationDelay: "0ms" }} />
+        <div className="h-3 w-8 animate-bounce rounded-sm bg-white/45" style={{ animationDelay: "100ms" }} />
+        <div className="h-3 w-8 animate-bounce rounded-sm bg-white/30" style={{ animationDelay: "200ms" }} />
       </div>
       <div className="flex gap-1 -mt-1">
-        <div className="w-3 h-8 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "300ms" }} />
-        <div className="w-3 h-8 bg-gray-400 rounded-sm animate-bounce" style={{ animationDelay: "400ms" }} />
-        <div className="w-3 h-8 bg-gray-300 rounded-sm animate-bounce" style={{ animationDelay: "500ms" }} />
+        <div className="h-8 w-3 animate-bounce rounded-sm bg-white/30" style={{ animationDelay: "300ms" }} />
+        <div className="h-8 w-3 animate-bounce rounded-sm bg-white/45" style={{ animationDelay: "400ms" }} />
+        <div className="h-8 w-3 animate-bounce rounded-sm bg-white/30" style={{ animationDelay: "500ms" }} />
       </div>
     </div>
   );

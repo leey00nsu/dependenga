@@ -73,7 +73,8 @@ docs/
 1. `/docs/features/feature-base/`를 복제하여 새 기능 폴더 생성 (F001, F002...)
 2. `spec.md` 작성 - 무엇을, 왜 만드는지 (기술 스택 X)
 3. 사용자에게 스펙 초안 확인 요청
-4. GitHub Issue 생성 (`agents/issue-template.md` 참조)
+4. GitHub Issue 본문 초안 공유 및 사용자 승인
+5. GitHub Issue 생성 (`agents/issue-template.md` 참조)
 
 ### 2. 기능 스펙 → 계획 수립
 

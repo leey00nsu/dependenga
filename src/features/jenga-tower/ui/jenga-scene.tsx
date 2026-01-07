@@ -42,15 +42,14 @@ export function JengaScene({
   const maxDistance = Math.max(80, actualTowerHeight * 3);
 
   return (
-    <div className="w-full h-full min-h-[500px]" style={{ backgroundColor: "#E8F5E9" }}>
+    <div className="w-full h-full min-h-[500px] bg-transparent">
       <Canvas
         shadows
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => {
-          gl.setClearColor("#E8F5E9");
+          gl.setClearColor(0x000000, 0);
         }}
       >
-        <color attach="background" args={["#E8F5E9"]} />
         <Suspense fallback={null}>
           {/* 카메라 - 타워 높이에 따라 자동 조정 */}
           <PerspectiveCamera
