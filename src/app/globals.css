@@ -123,3 +123,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .landing-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 120px 120px;
+  }
+
+  .landing-glow {
+    background-image: radial-gradient(
+        60% 50% at 50% 35%,
+        rgba(90, 255, 170, 0.2),
+        rgba(11, 15, 20, 0) 65%
+      ),
+      radial-gradient(
+        40% 35% at 50% 45%,
+        rgba(255, 120, 120, 0.22),
+        rgba(11, 15, 20, 0) 70%
+      );
+  }
+
+  .landing-vignette {
+    background-image: radial-gradient(
+      100% 100% at 50% 50%,
+      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+}
