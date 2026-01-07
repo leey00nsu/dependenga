@@ -74,6 +74,7 @@ src/
 - `DependencyParserForm`에 랜딩 전용 변형(컴팩트 모드) 추가
 - 디자인 시안의 검색 입력 + CTA 버튼 스타일 맞춤
 - 기존 탭(직접 입력/URL) UI는 유지하고 스타일만 landing.png 기준으로 조정
+- package.json 드래그 앤 드롭 업로드 지원
 
 ### 3) 헤더/버튼 스타일 반영
 - 상단 좌측 로고 스타일링

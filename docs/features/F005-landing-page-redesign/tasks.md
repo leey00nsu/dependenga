@@ -58,14 +58,14 @@
 
 ### Phase 3: 문서 정리
 
-- [TODO][P2] T-F005-04 문서 업데이트
+- [DONE][P2] T-F005-04 문서 업데이트
   - Owner: @me
-  - Status Log: 2026-01-06 [TODO]
+  - Status Log: 2026-01-06 [TODO] → 2026-01-07 [DONE]
   - Acceptance:
     - 변경 사항이 관련 문서에 반영된다
   - Checklist:
-    - [ ] 필요 시 `decisions.md` 기록
-    - [ ] `spec.md` 또는 `plan.md` 업데이트 사항 정리
+    - [x] 필요 시 `decisions.md` 기록
+    - [x] `spec.md` 또는 `plan.md` 업데이트 사항 정리
 
 ---
 
