@@ -279,7 +279,7 @@ export function HomeView() {
       <div className="pointer-events-none absolute inset-0 landing-vignette" />
 
       {/* Jenga scene as full-screen background */}
-      <div className="absolute inset-0 z-0 pr-[360px]">
+      <div className="absolute inset-0 z-0 lg:pr-[360px]">
         {vulnResult && (
           <JengaScene
             packages={vulnResult.packages}
@@ -292,7 +292,7 @@ export function HomeView() {
 
       {/* Overlay content */}
       <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-6 md:px-10">
-        <header className="pointer-events-auto flex items-center justify-between">
+        <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
           <button
             onClick={handleReset}
             className="text-2xl font-semibold tracking-tight text-white"
@@ -304,7 +304,7 @@ export function HomeView() {
           </div>
         </header>
 
-        <aside className="pointer-events-auto absolute right-6 top-24 bottom-6 w-full max-w-sm md:right-10 lg:max-w-[320px]">
+        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
           {vulnResult && (
             <VulnerabilityPanel
               packages={vulnResult.packages}
