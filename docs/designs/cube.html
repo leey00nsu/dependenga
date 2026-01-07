@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>3x3x3 Spaced Isometric Cube</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: #1a1e23;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      svg {
+        width: 90vmin;
+        height: 90vmin;
+      }
+    </style>
+  </head>
+
+  <body>
+    <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.5" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        <g id="cube">
+          <path d="M 0 0 L 34.6 -20 L 69.2 0 L 34.6 20 Z" fill-opacity="0.6" />
+          <path d="M 0 0 L 0 40 L 34.6 60 L 34.6 20 Z" fill-opacity="0.4" />
+          <path
+            d="M 34.6 20 L 34.6 60 L 69.2 40 L 69.2 0 Z"
+            fill-opacity="0.5"
+          />
+        </g>
+      </defs>
+
+      <g transform="translate(400, 400)">
+        <script>
+          const container = document.currentScript.parentElement; const colors =
+          ["#f87171", "#fb923c", "#4ade80"]; const step = 85; for (let k = 0; k
+          < 3; k++) { for (let j = 0; j < 3; j++) { for (let i = 0; i < 3; i++)
+          { const x = (i - j) * 40; const y = (i + j) * 23 - (k * 50); const g =
+          document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("transform", `translate(${x}, ${y})`);
+          g.setAttribute("fill", colors[i]); g.setAttribute("stroke",
+          colors[i]); g.setAttribute("stroke-width", "1");
+          g.setAttribute("filter", "url(#glow)"); const use =
+          document.createElementNS("http://www.w3.org/2000/svg", "use");
+          use.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#cube");
+          g.appendChild(use); container.appendChild(g); } } }
+        </script>
+      </g>
+    </svg>
+  </body>
+</html>
