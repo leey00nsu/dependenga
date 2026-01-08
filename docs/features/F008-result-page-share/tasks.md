@@ -82,6 +82,34 @@
     - [x] 복사 버튼 추가
     - [x] 복사 성공/실패 피드백
 
+### Phase 4: 공유 UX 개선
+
+- [TODO][P1] T-F008-07 복사 토스트 개선 (sonner)
+  - Owner: @me
+  - Status Log: 2026-01-08 [TODO]
+  - Acceptance:
+    - 복사 클릭 시 sonner 토스트가 표시된다
+    - 토스트 스타일이 테마와 조화를 이룬다
+  - Checklist:
+    - [ ] sonner 토스트 연결
+    - [ ] 테마 스타일 조정
+
+- [TODO][P2] T-F008-08 로고 클릭 홈 이동
+  - Owner: @me
+  - Status Log: 2026-01-08 [TODO]
+  - Acceptance:
+    - Dependenga 로고 클릭 시 `/`로 이동한다
+  - Checklist:
+    - [ ] 로고 링크 처리
+
+- [TODO][P1] T-F008-09 뒤로가기 히스토리 보장
+  - Owner: @me
+  - Status Log: 2026-01-08 [TODO]
+  - Acceptance:
+    - `/` → `/result` 이동 후 브라우저 뒤로가기 시 `/`로 복귀한다
+  - Checklist:
+    - [ ] 라우팅 히스토리 동작 점검/수정
+
 ...
 
 ---
