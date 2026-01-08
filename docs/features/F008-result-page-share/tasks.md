@@ -102,15 +102,27 @@
   - Checklist:
     - [x] 로고 링크 처리
 
-- [TODO][P1] T-F008-09 뒤로가기 히스토리 보장
+- [DONE][P1] T-F008-09 뒤로가기 히스토리 보장
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - `/` → `/result` 이동 후 브라우저 뒤로가기 시 `/`로 복귀한다
   - Checklist:
-    - [ ] 라우팅 히스토리 동작 점검/수정
+    - [x] 라우팅 히스토리 동작 점검/수정
 
 ...
+
+### Phase 5: FSD 분리 분석
+
+- [TODO][P2] T-F008-10 위젯 책임 분리 분석
+  - Owner: @me
+  - Status Log: 2026-01-08 [TODO]
+  - Acceptance:
+    - 현재 widget 역할 과다 여부를 진단한다
+    - FSD 레이어별 분리 가능 지점을 정리한다
+  - Checklist:
+    - [ ] 분리 후보/근거 정리
+    - [ ] 최소 변경 경로 제안
 
 ---
 

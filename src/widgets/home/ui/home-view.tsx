@@ -13,13 +13,7 @@ import {
   SHARE_QUERY_LIMIT,
   SHARE_QUERY_PARAM,
 } from "@/shared/lib/share-query";
-import { LoadingAnimation } from "@/shared/ui/loading-animation";
 
-
-/**
- * 앱 상태 타입
- */
-type AppState = "initial" | "loading" | "result";
 
 interface ShareWarningState {
   length: number;
@@ -32,7 +26,6 @@ interface ShareWarningState {
  * Minimal, playful, modern developer tool
  */
 export function HomeView() {
-  const [appState, setAppState] = useState<AppState>("initial");
   const [parsedResult, setParsedResult] = useState<ParsedPackage | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isGlobalDragging, setIsGlobalDragging] = useState(false);
@@ -61,7 +54,6 @@ export function HomeView() {
   const goToResult = (data: ParsedPackage, testMode: boolean = false) => {
     const encoded = encodeDependencies(data.dependencies);
     const url = `/result?${SHARE_QUERY_PARAM}=${encoded}`;
-    setAppState("loading");
     startTransition(() => {
       router.push(testMode ? `${url}&test=1` : url);
     });
@@ -82,12 +74,6 @@ export function HomeView() {
     const { payload, testMode } = shareWarning;
     setShareWarning(null);
     goToResult(payload, testMode);
-  };
-
-  const handleReset = () => {
-    setAppState("initial");
-    setParsedResult(null);
-    setShareWarning(null);
   };
 
   useEffect(() => {
@@ -117,7 +103,7 @@ export function HomeView() {
       if (!hasFiles(event)) return;
       event.preventDefault();
       resetGlobalDrag();
-      if (appState !== "initial") return;
+      if (isPending) return;
       const file = event.dataTransfer?.files?.[0] ?? null;
       if (file) {
         formRef.current?.handleFileSelect(file);
@@ -135,109 +121,103 @@ export function HomeView() {
       window.removeEventListener("dragover", handleDragOver);
       window.removeEventListener("drop", handleDrop);
     };
-  }, [appState, resetGlobalDrag]);
+  }, [isPending, resetGlobalDrag]);
 
-  // Initial State - 입력 카드
-  if (appState === "initial") {
-    return (
-      <div className="relative min-h-screen overflow-x-hidden text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
-        <div className="pointer-events-none absolute inset-0 landing-glow" />
-        <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
-        <div className="pointer-events-none absolute inset-0 landing-vignette" />
+  return (
+    <div className="relative min-h-screen overflow-x-hidden text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
+      <div className="pointer-events-none absolute inset-0 landing-glow" />
+      <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
+      <div className="pointer-events-none absolute inset-0 landing-vignette" />
 
-        <div className="relative z-10 flex min-h-screen flex-col px-6 py-6 md:px-12">
-          {isGlobalDragging && (
-            <div className="pointer-events-none absolute inset-0 z-20 border border-dashed border-white/40 bg-white/5 backdrop-blur-sm">
-              <div className="flex h-full flex-col items-center justify-center gap-3 text-white/80">
-                <svg
-                  aria-hidden="true"
-                  className="h-10 w-10"
-                  fill="none"
-                  viewBox="0 0 24 24"
+      <div className="relative z-10 flex min-h-screen flex-col px-6 py-6 md:px-12">
+        {isGlobalDragging && (
+          <div className="pointer-events-none absolute inset-0 z-20 border border-dashed border-white/40 bg-white/5 backdrop-blur-sm">
+            <div className="flex h-full flex-col items-center justify-center gap-3 text-white/80">
+              <svg
+                aria-hidden="true"
+                className="h-10 w-10"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 4v10m0-10 4 4m-4-4-4 4M5 20h14"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="1.5"
+                />
+              </svg>
+              <p className="text-sm">package.json 파일을 놓아 업로드하세요</p>
+            </div>
+          </div>
+        )}
+        <header className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            Dependenga
+          </h1>
+        </header>
+
+        <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12 ">
+          <div className="relative h-[min(33vw,33vh)] w-[min(33vw,33vh)]">
+            <CubeVisual
+              className="drop-shadow-[0_0_30px_rgba(16,185,129,0.25)]"
+              idPrefix="landing-cube"
+              title="3x3x3 큐브 비주얼"
+            />
+          </div>
+
+          <div className="w-full max-w-3xl">
+            <DependencyParserForm
+              ref={formRef}
+              onSuccess={handleParseSuccess}
+              variant="landing"
+              onDropHandled={resetGlobalDrag}
+            />
+
+            {parsedResult && (
+              <div className="mt-4 space-y-3 text-center">
+                <div className="text-sm text-white/60">
+                  {parsedResult.dependencies.length} dependencies found -
+                  analyzing...
+                </div>
+
+                <button
+                  onClick={() => handleAnalyze(true)}
+                  disabled={isPending}
+                  className="w-full text-sm text-white/40 transition-colors hover:text-white/70"
                 >
-                  <path
-                    d="M12 4v10m0-10 4 4m-4-4-4 4M5 20h14"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-                <p className="text-sm">package.json 파일을 놓아 업로드하세요</p>
+                  🧪 Test mode (simulate vulnerabilities)
+                </button>
               </div>
-            </div>
-          )}
-          <header className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-              Dependenga
-            </h1>
-          </header>
+            )}
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12 ">
-            <div className="relative h-[min(33vw,33vh)] w-[min(33vw,33vh)]">
-              <CubeVisual
-                className="drop-shadow-[0_0_30px_rgba(16,185,129,0.25)]"
-                idPrefix="landing-cube"
-                title="3x3x3 큐브 비주얼"
-              />
-            </div>
-
-            <div className="w-full max-w-3xl">
-              <DependencyParserForm
-                ref={formRef}
-                onSuccess={handleParseSuccess}
-                variant="landing"
-                onDropHandled={resetGlobalDrag}
-              />
-
-              {parsedResult && (
-                <div className="mt-4 space-y-3 text-center">
-                  <div className="text-sm text-white/60">
-                    {parsedResult.dependencies.length} dependencies found -
-                    analyzing...
-                  </div>
-
+            {shareWarning && (
+              <div className="mt-4 rounded-2xl border border-amber-300/30 bg-amber-200/10 p-4 text-sm text-amber-100/90">
+                <p className="font-medium">공유 URL이 길어질 수 있습니다.</p>
+                <p className="mt-2 text-xs text-amber-100/70">
+                  현재 길이: {shareWarning.length}자 (권장 최대: {SHARE_QUERY_LIMIT}자)
+                </p>
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
                   <button
-                    onClick={() => handleAnalyze(true)}
-                    disabled={isPending}
-                    className="w-full text-sm text-white/40 transition-colors hover:text-white/70"
+                    type="button"
+                    onClick={() => setShareWarning(null)}
+                    className="rounded-full border border-white/15 px-4 py-2 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
                   >
-                    🧪 Test mode (simulate vulnerabilities)
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleShareWarningContinue}
+                    className="rounded-full border border-amber-300/40 bg-amber-200/20 px-4 py-2 text-xs text-white transition hover:bg-amber-200/30"
+                  >
+                    계속 진행
                   </button>
                 </div>
-              )}
-
-              {shareWarning && (
-                <div className="mt-4 rounded-2xl border border-amber-300/30 bg-amber-200/10 p-4 text-sm text-amber-100/90">
-                  <p className="font-medium">공유 URL이 길어질 수 있습니다.</p>
-                  <p className="mt-2 text-xs text-amber-100/70">
-                    현재 길이: {shareWarning.length}자 (권장 최대: {SHARE_QUERY_LIMIT}자)
-                  </p>
-                  <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setShareWarning(null)}
-                      className="rounded-full border border-white/15 px-4 py-2 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
-                    >
-                      취소
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleShareWarningContinue}
-                      className="rounded-full border border-amber-300/40 bg-amber-200/20 px-4 py-2 text-xs text-white transition hover:bg-amber-200/30"
-                    >
-                      계속 진행
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </main>
-        </div>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
-    );
-  }
-
-  // Loading State - 이동 중 로딩
-  return <LoadingAnimation />;
+    </div>
+  );
 }
