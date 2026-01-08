@@ -9,15 +9,9 @@ interface LoadingAnimationProps {
 
 /**
  * 로딩 애니메이션 컴포넌트
- * 
- * dotLottie 애니메이션을 표시합니다.
- * `public/animations/loading.lottie`에 dotLottie 파일을 추가하면 자동으로 표시됩니다.
- * 파일 로딩 실패 시 CSS fallback 애니메이션을 표시합니다.
- * 
- * @example
- * // 1. LottieFiles에서 .lottie 파일 다운로드
- * // 2. public/animations/loading.lottie로 저장
- * // 3. 자동으로 로딩 화면에 표시됨!
+ *
+ * cube.html 기반 큐브 모티프를 사용합니다.
+ * 분석 로딩 화면에서 다크 톤과 일관된 비주얼을 제공합니다.
  */
 export function LoadingAnimation({ 
   message = "Analyzing dependencies...", 
