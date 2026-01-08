@@ -11,6 +11,7 @@ import {
 import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
+import { CubeVisual } from "@/shared/ui/cube-visual";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
 
 // 3D 씬은 SSR 비활성화 필요
@@ -221,11 +222,13 @@ export function HomeView() {
             </h1>
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12">
-            <div className="relative h-[220px] w-[220px] sm:h-[320px] sm:w-[320px] md:h-[420px] md:w-[420px]">
-              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-emerald-400/20 via-transparent to-rose-400/20 blur-2xl" />
-              <div className="absolute inset-0 rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-sm" />
-              <span className="sr-only">3D scene placeholder</span>
+          <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12 ">
+            <div className="relative h-[min(33vw,33vh)] w-[min(33vw,33vh)]">
+              <CubeVisual
+                className="drop-shadow-[0_0_30px_rgba(16,185,129,0.25)]"
+                idPrefix="landing-cube"
+                title="3x3x3 큐브 비주얼"
+              />
             </div>
 
             <div className="w-full max-w-3xl">
