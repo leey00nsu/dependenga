@@ -8,13 +8,8 @@ import {
   type DependencyParserFormHandle,
 } from "@/features/dependency-parser/ui/dependency-parser-form";
 import { CubeVisual } from "@/shared/ui/cube-visual";
-import {
-  encodeDependencies,
-  SHARE_QUERY_LIMIT,
-  SHARE_QUERY_PARAM,
-} from "@/shared/lib/share-query";
-
-
+import { SHARE_QUERY_LIMIT } from "@/shared/lib/share-query";
+import { buildShareUrl, getShareEncoding } from "@/features/result-share/model/share-utils";
 interface ShareWarningState {
   length: number;
   payload: ParsedPackage;
@@ -52,17 +47,16 @@ export function HomeView() {
   };
 
   const goToResult = (data: ParsedPackage, testMode: boolean = false) => {
-    const encoded = encodeDependencies(data.dependencies);
-    const url = `/result?${SHARE_QUERY_PARAM}=${encoded}`;
+    const { url } = buildShareUrl(data.dependencies);
     startTransition(() => {
       router.push(testMode ? `${url}&test=1` : url);
     });
   };
 
   const checkShareLength = (data: ParsedPackage, testMode: boolean) => {
-    const encoded = encodeDependencies(data.dependencies);
-    if (encoded.length > SHARE_QUERY_LIMIT) {
-      setShareWarning({ length: encoded.length, payload: data, testMode });
+    const { length, tooLong } = getShareEncoding(data.dependencies);
+    if (tooLong) {
+      setShareWarning({ length, payload: data, testMode });
       return false;
     }
     setShareWarning(null);

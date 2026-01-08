@@ -114,15 +114,29 @@
 
 ### Phase 5: FSD 분리 분석
 
-- [TODO][P2] T-F008-10 위젯 책임 분리 분석
+- [DONE][P2] T-F008-10 위젯 책임 분리 분석
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 현재 widget 역할 과다 여부를 진단한다
     - FSD 레이어별 분리 가능 지점을 정리한다
   - Checklist:
-    - [ ] 분리 후보/근거 정리
-    - [ ] 최소 변경 경로 제안
+    - [x] 분리 후보/근거 정리
+    - [x] 최소 변경 경로 제안
+
+### Phase 6: FSD 분리 적용
+
+- [DONE][P1] T-F008-11 위젯 책임 분리 적용
+  - Owner: @me
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
+  - Acceptance:
+    - 공유 URL 로직이 feature 레이어로 이동한다
+    - 분석 실행 로직이 model 레이어로 분리된다
+    - widgets는 조합/렌더 역할에 집중한다
+  - Checklist:
+    - [x] 공유 URL 유틸/버튼 분리
+    - [x] 분석 hook 분리
+    - [x] widgets에서 직접 로직 제거
 
 ---
 

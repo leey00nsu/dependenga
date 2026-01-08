@@ -2,15 +2,13 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
-import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
-import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
+import { useVulnerabilityAnalysis } from "@/features/vulnerability-analyzer/model/use-vulnerability-analysis";
+import { ShareUrlButton } from "@/features/result-share/ui/share-url-button";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
-import { encodeDependencies, SHARE_QUERY_LIMIT, SHARE_QUERY_PARAM } from "@/shared/lib/share-query";
-import { toast } from "sonner";
 
 const JengaScene = dynamic(
   () =>
@@ -29,9 +27,6 @@ interface ResultViewProps {
  * 결과 페이지 뷰 컴포넌트
  */
 export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
-  const [vulnResult, setVulnResult] =
-    useState<VulnerabilityAnalysisResult | null>(null);
-  const [vulnError, setVulnError] = useState<string | null>(null);
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
@@ -44,22 +39,11 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     setHighlightedPackage(packageName);
   }, []);
 
-  const handleCopyUrl = async () => {
-    if (!parsedResult) return;
-    const encoded = encodeDependencies(parsedResult.dependencies);
-    if (encoded.length > SHARE_QUERY_LIMIT) {
-      toast.error(`URL 길이가 ${SHARE_QUERY_LIMIT}자를 초과했습니다.`);
-      return;
-    }
-
-    try {
-      const url = `${window.location.origin}/result?${SHARE_QUERY_PARAM}=${encoded}`;
-      await navigator.clipboard.writeText(url);
-      toast.success("URL이 복사되었습니다.");
-    } catch {
-      toast.error("URL 복사에 실패했습니다.");
-    }
-  };
+  const {
+    data: vulnResult,
+    error: vulnError,
+    isLoading,
+  } = useVulnerabilityAnalysis(parsedResult, { testMode: false });
 
   if (!parsedResult) {
     return (
@@ -73,26 +57,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     );
   }
 
-  useEffect(() => {
-    if (!parsedResult || vulnResult || vulnError) return;
-
-    let isActive = true;
-
-    void analyzePackageVulnerabilities(parsedResult, false).then((result) => {
-      if (!isActive) return;
-      if (result.success) {
-        setVulnResult(result.data);
-      } else {
-        setVulnError(result.error);
-      }
-    });
-
-    return () => {
-      isActive = false;
-    };
-  }, [parsedResult, vulnError, vulnResult]);
-
-  if (!vulnResult && !vulnError) {
+  if (isLoading) {
     return <LoadingAnimation />;
   }
 
@@ -137,13 +102,10 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
             <div className="text-sm text-white/50">
               {parsedResult.name || "package.json"}
             </div>
-            <button
-              type="button"
-              onClick={handleCopyUrl}
+            <ShareUrlButton
+              dependencies={parsedResult.dependencies}
               className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
-            >
-              URL 복사
-            </button>
+            />
           </div>
         </header>
 
