@@ -18,15 +18,15 @@
 
 ### Phase 1: 라우팅 분리 & FSD 구조 정리
 
-- [TODO][P1] T-F008-01 라우팅 분리 및 결과 페이지 생성
+- [DONE][P1] T-F008-01 라우팅 분리 및 결과 페이지 생성
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - `/`는 입력 화면만 렌더한다
     - `/result`는 결과 화면을 렌더한다
   - Checklist:
-    - [ ] `/result` 라우트 생성
-    - [ ] 기존 결과 렌더 분리
+    - [x] `/result` 라우트 생성
+    - [x] 기존 결과 렌더 분리
 
 - [TODO][P1] T-F008-02 FSD 뷰 분리
   - Owner: @me
