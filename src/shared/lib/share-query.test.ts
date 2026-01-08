@@ -17,6 +17,6 @@ describe("share-query", () => {
 
   it("잘못된 인코딩 데이터는 에러를 던진다", () => {
     expect(() => decodeDependencies("invalid"))
-      .toThrow("공유 데이터 형식이 올바르지 않습니다.");
+      .toThrow("공유 데이터 복원에 실패했습니다.");
   });
 });
