@@ -12,6 +12,7 @@ import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import { CubeVisual } from "@/shared/ui/cube-visual";
+import { encodeDependencies, SHARE_QUERY_LIMIT } from "@/shared/lib/share-query";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
 
 // 3D 씬은 SSR 비활성화 필요
@@ -57,6 +58,12 @@ function JengaLoadingPlaceholder() {
  */
 type AppState = "initial" | "loading" | "result";
 
+interface ShareWarningState {
+  length: number;
+  payload: ParsedPackage;
+  testMode: boolean;
+}
+
 /**
  * 홈 페이지 뷰 컴포넌트
  * Minimal, playful, modern developer tool
@@ -73,6 +80,7 @@ export function HomeView() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isGlobalDragging, setIsGlobalDragging] = useState(false);
+  const [shareWarning, setShareWarning] = useState<ShareWarningState | null>(null);
   const formRef = useRef<DependencyParserFormHandle | null>(null);
   const dragCounterRef = useRef(0);
 
@@ -85,12 +93,14 @@ export function HomeView() {
     setParsedResult(result);
     setVulnResult(null);
     setVulnError(null);
-    // 파싱 성공 시 바로 분석 시작
+    // 파싱 성공 시 URL 길이 체크 후 분석 시작
+    if (!checkShareLength(result, false)) return;
     handleAnalyzeWithData(result, false);
   };
 
   const handleAnalyze = (testMode: boolean = false) => {
     if (!parsedResult) return;
+    if (!checkShareLength(parsedResult, testMode)) return;
     handleAnalyzeWithData(parsedResult, testMode);
   };
 
@@ -110,6 +120,23 @@ export function HomeView() {
     });
   };
 
+  const checkShareLength = (data: ParsedPackage, testMode: boolean) => {
+    const encoded = encodeDependencies(data.dependencies);
+    if (encoded.length > SHARE_QUERY_LIMIT) {
+      setShareWarning({ length: encoded.length, payload: data, testMode });
+      return false;
+    }
+    setShareWarning(null);
+    return true;
+  };
+
+  const handleShareWarningContinue = () => {
+    if (!shareWarning) return;
+    const { payload, testMode } = shareWarning;
+    setShareWarning(null);
+    handleAnalyzeWithData(payload, testMode);
+  };
+
   const handleBlockHover = useCallback((data: BlockData | null) => {
     setHighlightedPackage(data?.packageName ?? null);
   }, []);
@@ -125,6 +152,7 @@ export function HomeView() {
     setVulnError(null);
     setHighlightedPackage(null);
     setSelectedPackage(null);
+    setShareWarning(null);
   };
 
   // 블록 클릭 핸들러 - 상세 정보 표시
@@ -260,6 +288,31 @@ export function HomeView() {
                 <p className="mt-3 text-center text-sm text-red-200">
                   {vulnError}
                 </p>
+              )}
+
+              {shareWarning && (
+                <div className="mt-4 rounded-2xl border border-amber-300/30 bg-amber-200/10 p-4 text-sm text-amber-100/90">
+                  <p className="font-medium">공유 URL이 길어질 수 있습니다.</p>
+                  <p className="mt-2 text-xs text-amber-100/70">
+                    현재 길이: {shareWarning.length}자 (권장 최대: {SHARE_QUERY_LIMIT}자)
+                  </p>
+                  <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setShareWarning(null)}
+                      className="rounded-full border border-white/15 px-4 py-2 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
+                    >
+                      취소
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleShareWarningContinue}
+                      className="rounded-full border border-amber-300/40 bg-amber-200/20 px-4 py-2 text-xs text-white transition hover:bg-amber-200/30"
+                    >
+                      계속 진행
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           </main>

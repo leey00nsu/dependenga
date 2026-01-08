@@ -51,15 +51,15 @@
     - [x] `share-query` 유틸 추가
     - [x] 정상/오류 케이스 테스트
 
-- [TODO][P1] T-F008-04 URL 길이 경고 처리
+- [DONE][P1] T-F008-04 URL 길이 경고 처리
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 4000자 초과 시 경고가 표시된다
     - 사용자가 진행 여부를 선택할 수 있다
   - Checklist:
-    - [ ] 길이 계산 로직 추가
-    - [ ] 경고 UI 추가
+    - [x] 길이 계산 로직 추가
+    - [x] 경고 UI 추가
 
 ### Phase 3: 결과 화면 복원 & 공유
 
