@@ -223,7 +223,7 @@ export function HomeView() {
           </header>
 
           <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12">
-            <div className="relative h-[220px] w-[220px] sm:h-[320px] sm:w-[320px] md:h-[420px] md:w-[420px]">
+            <div className="relative h-[260px] w-[260px] sm:h-[380px] sm:w-[380px] md:h-[520px] md:w-[520px]">
               <CubeVisual
                 className="drop-shadow-[0_0_30px_rgba(16,185,129,0.25)]"
                 idPrefix="landing-cube"
