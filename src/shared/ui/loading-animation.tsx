@@ -28,10 +28,10 @@ export function LoadingAnimation({
       className="min-h-screen flex items-center justify-center bg-[#0b0f14]"
     >
       <div className="text-center animate-in fade-in duration-300">
-        <div className="flex flex-col items-center gap-3 mb-4">
-          <div className="h-[200px] w-[200px] sm:h-[240px] sm:w-[240px]">
+        <div className="mb-4 flex flex-col items-center gap-3">
+          <div className="h-[min(32vw,32vh)] w-[min(32vw,32vh)] max-h-[260px] max-w-[260px] sm:max-h-[300px] sm:max-w-[300px]">
             <CubeVisual
-              className="cube-float drop-shadow-[0_0_40px_rgba(74,222,128,0.28)]"
+              className="cube-float drop-shadow-[0_0_45px_rgba(74,222,128,0.22)]"
               idPrefix="loading-cube"
               title="로딩 큐브"
             />

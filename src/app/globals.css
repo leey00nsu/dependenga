@@ -177,7 +177,7 @@
   }
 
   .cube-float {
-    animation: cube-float 3.6s ease-in-out infinite;
+    animation: cube-float 4.2s ease-in-out infinite;
     transform-origin: center;
   }
 
@@ -187,7 +187,7 @@
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-12px);
+      transform: translateY(-10px);
     }
   }
 }
