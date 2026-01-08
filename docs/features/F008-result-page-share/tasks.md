@@ -94,13 +94,13 @@
     - [x] sonner 토스트 연결
     - [x] 테마 스타일 조정
 
-- [TODO][P2] T-F008-08 로고 클릭 홈 이동
+- [DONE][P2] T-F008-08 로고 클릭 홈 이동
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - Dependenga 로고 클릭 시 `/`로 이동한다
   - Checklist:
-    - [ ] 로고 링크 처리
+    - [x] 로고 링크 처리
 
 - [TODO][P1] T-F008-09 뒤로가기 히스토리 보장
   - Owner: @me

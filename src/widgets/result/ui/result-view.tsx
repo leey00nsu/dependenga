@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useCallback, useState, useEffect } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
@@ -126,9 +127,12 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
       {/* Overlay content */}
       <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-6 md:px-10">
         <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="text-2xl font-semibold tracking-tight text-white">
+          <Link
+            href="/"
+            className="text-2xl font-semibold tracking-tight text-white transition hover:text-white/80"
+          >
             Dependenga
-          </div>
+          </Link>
           <div className="flex flex-col items-end gap-2 text-right sm:flex-row sm:items-center">
             <div className="text-sm text-white/50">
               {parsedResult.name || "package.json"}
