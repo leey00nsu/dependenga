@@ -1,17 +1,36 @@
 "use client";
 
 import clsx from "clsx";
+import { JSX } from "react";
 
 interface CubeVisualProps {
   className?: string;
   idPrefix?: string;
   title?: string;
+  scale?: number;
 }
 
 /**
  * cube.html 기반 3x3x3 아이소메트릭 큐브 비주얼
  */
-export function CubeVisual({ className, idPrefix = "cube", title }: CubeVisualProps) {
+export function CubeVisual({
+  className,
+  idPrefix = "cube",
+  title,
+  scale = 1,
+}: CubeVisualProps) {
+  const bounds = {
+    minX: -80,
+    minY: -120,
+    width: 229.2,
+    height: 272,
+  };
+  const centerX = bounds.minX + bounds.width / 2;
+  const centerY = bounds.minY + bounds.height / 2;
+  const scaleTransform =
+    scale === 1
+      ? undefined
+      : `translate(${centerX} ${centerY}) scale(${scale}) translate(${-centerX} ${-centerY})`;
   const filterId = `${idPrefix}-glow`;
   const cubeId = `${idPrefix}-shape`;
   const colors = ["#f87171", "#fb923c", "#4ade80"];
@@ -40,10 +59,12 @@ export function CubeVisual({ className, idPrefix = "cube", title }: CubeVisualPr
 
   return (
     <svg
-      viewBox="0 0 800 800"
+      viewBox={`${bounds.minX} ${bounds.minY} ${bounds.width} ${bounds.height}`}
       className={clsx("h-full w-full", className)}
       preserveAspectRatio="xMidYMid meet"
-      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
+      {...(title
+        ? { role: "img", "aria-label": title }
+        : { "aria-hidden": true })}
     >
       {title && <title>{title}</title>}
       <defs>
@@ -62,7 +83,7 @@ export function CubeVisual({ className, idPrefix = "cube", title }: CubeVisualPr
         </g>
       </defs>
 
-      <g transform="translate(400 400)">{cubes}</g>
+      <g transform={scaleTransform}>{cubes}</g>
     </svg>
   );
 }
