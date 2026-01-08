@@ -84,15 +84,15 @@
 
 ### Phase 4: 공유 UX 개선
 
-- [TODO][P1] T-F008-07 복사 토스트 개선 (sonner)
+- [DONE][P1] T-F008-07 복사 토스트 개선 (sonner)
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 복사 클릭 시 sonner 토스트가 표시된다
     - 토스트 스타일이 테마와 조화를 이룬다
   - Checklist:
-    - [ ] sonner 토스트 연결
-    - [ ] 테마 스타일 조정
+    - [x] sonner 토스트 연결
+    - [x] 테마 스타일 조정
 
 - [TODO][P2] T-F008-08 로고 클릭 홈 이동
   - Owner: @me

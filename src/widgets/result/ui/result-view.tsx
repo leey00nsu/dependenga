@@ -9,6 +9,7 @@ import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnera
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
 import { encodeDependencies, SHARE_QUERY_LIMIT, SHARE_QUERY_PARAM } from "@/shared/lib/share-query";
+import { toast } from "sonner";
 
 const JengaScene = dynamic(
   () =>
@@ -33,8 +34,6 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
-  const [shareStatus, setShareStatus] = useState<string | null>(null);
-  const [shareError, setShareError] = useState<string | null>(null);
 
   const handleBlockHover = useCallback((data: BlockData | null) => {
     setHighlightedPackage(data?.packageName ?? null);
@@ -48,19 +47,16 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     if (!parsedResult) return;
     const encoded = encodeDependencies(parsedResult.dependencies);
     if (encoded.length > SHARE_QUERY_LIMIT) {
-      setShareError(`URL 길이가 ${SHARE_QUERY_LIMIT}자를 초과했습니다.`);
-      setShareStatus(null);
+      toast.error(`URL 길이가 ${SHARE_QUERY_LIMIT}자를 초과했습니다.`);
       return;
     }
 
     try {
       const url = `${window.location.origin}/result?${SHARE_QUERY_PARAM}=${encoded}`;
       await navigator.clipboard.writeText(url);
-      setShareStatus("URL이 복사되었습니다.");
-      setShareError(null);
+      toast.success("URL이 복사되었습니다.");
     } catch {
-      setShareError("URL 복사에 실패했습니다.");
-      setShareStatus(null);
+      toast.error("URL 복사에 실패했습니다.");
     }
   };
 
@@ -146,13 +142,6 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
             </button>
           </div>
         </header>
-
-        {(shareStatus || shareError) && (
-          <div className="pointer-events-auto mt-3 text-right text-xs">
-            {shareStatus && <span className="text-emerald-200">{shareStatus}</span>}
-            {shareError && <span className="text-red-200">{shareError}</span>}
-          </div>
-        )}
 
         <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
           {vulnResult && (
