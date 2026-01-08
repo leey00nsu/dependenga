@@ -1,4 +1,4 @@
-# Implementation Plan: {기능명}
+# Implementation Plan: 결과 페이지 분리 및 공유 가능한 URL
 
 > 스펙이 승인된 후 작성합니다.
 > 기술적인 "어떻게"를 다룹니다.
@@ -7,10 +7,10 @@
 
 ## 개요
 
-- **기능 ID**: F{번호}
+- **기능 ID**: F008
 - **스펙 버전**: v1.0
-- **작성일**: YYYY-MM-DD
-- **상태**: Draft | Review | Approved
+- **작성일**: 2026-01-08
+- **상태**: Draft
 
 ---
 
@@ -18,16 +18,21 @@
 
 | 구분 | 선택 | 이유 |
 | --- | --- | --- |
-| (영역) | (기술) | (선택 이유) |
+| 라우팅 | Next.js App Router | `/`와 `/result` 분리 구성 |
+| 압축 | `lz-string` | URL 안전 인코딩 제공 (`compressToEncodedURIComponent`) |
+| 상태 | URL 쿼리스트링 | 서버 저장 없이 공유 가능 |
 
 ---
 
 ## 아키텍처
 
-(컴포넌트 구조, 데이터 흐름 등)
+- 입력 화면은 `HomeView`를 FSD 패턴에 맞게 `widgets`로 이동해 구성
+- 결과 화면은 `/result` 페이지에서 쿼리스트링 복원 후 분석 실행
+- URL 복사 버튼을 제공하여 공유 지원
 
 ```
-[입력] → [처리] → [출력]
+[입력(/)] → [의존성 파싱] → [쿼리스트링 생성] → [/result]
+[/result] → [쿼리 복원] → [분석 실행] → [결과 렌더]
 ```
 
 ---
@@ -37,55 +42,37 @@
 ```
 src/
 ├── app/
-│   └── (routes)
-├── components/
-│   └── {feature}/
-├── lib/
-│   └── {feature}/
-└── types/
+│   ├── page.tsx                 # 입력 페이지 (/)
+│   └── result/page.tsx          # 결과 페이지 (/result)
+├── shared/
+│   └── lib/
+│       └── share-query.ts       # 인코딩/디코딩 유틸
+├── widgets/
+│   ├── home/
+│   │   └── ui/home-view.tsx     # 입력 화면 전용 뷰(기존 views 이동)
+│   └── result/
+│       └── ui/result-view.tsx   # 결과 화면 전용 뷰(신규)
 ```
 
 ---
 
 ## 데이터 모델
 
-(필요시 Prisma 스키마 또는 타입 정의)
-
-```prisma
-model Example {
-  id    Int    @id @default(autoincrement())
-  name  String
-}
-```
+- 데이터 모델 변경 없음 (URL에 의존성 목록만 직렬화)
 
 ---
 
 ## API 설계
 
-### `POST /api/example`
-
-**Request:**
-```json
-{
-  "field": "value"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {}
-}
-```
+- API 변경 없음 (기존 서버 액션 재사용)
 
 ---
 
 ## 테스트 전략
 
-- **단위 테스트**: (대상)
-- **통합 테스트**: (시나리오)
-- **E2E 테스트**: (필요시)
+- **단위 테스트**: 인코딩/디코딩 유틸 (정상/실패 케이스)
+- **통합 테스트**: `/result`에서 복원 → 분석 실행 흐름
+- **E2E 테스트**: URL 복사 → 새 탭 결과 재현
 
 ---
 
@@ -93,11 +80,13 @@ model Example {
 
 | 리스크 | 완화 방안 |
 | --- | --- |
-| (리스크) | (방안) |
+| URL 길이 초과 | 4000자 초과 시 경고 및 사용자 선택 |
+| 복원 실패 | 오류 메시지 + `/` 복귀 안내 |
+| 데이터 노출 | URL 공유 안내 문구 제공 |
+| FSD 뷰 이동으로 경로 변경 | 페이지/컴포넌트 import 경로 일괄 정리 |
 
 ---
 
 ## 관련 문서
 
 - Spec: [spec.md](./spec.md)
-- Research: [research.md](./research.md)

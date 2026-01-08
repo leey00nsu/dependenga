@@ -61,6 +61,11 @@
 - `lz-string`의 `compressToEncodedURIComponent`/`decompressFromEncodedURIComponent`를 사용한다
 - 복원 실패 시 오류 메시지를 표시한다
 
+### FR-3: FSD 패턴에 맞는 뷰 분리
+
+- `views` 레이어를 FSD 구조에 맞게 분리한다
+- 입력/결과 화면 구성은 `widgets` 또는 `pages` 레이어로 이동한다
+
 ---
 
 ## 비기능 요구사항
