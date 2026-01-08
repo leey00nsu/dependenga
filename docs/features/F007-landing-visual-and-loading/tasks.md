@@ -18,17 +18,17 @@
 
 ### Phase 1: 랜딩 메인 비주얼 적용
 
-- [TODO][P1] T-F007-01 랜딩 중앙 큐브 비주얼 적용
+- [DONE][P1] T-F007-01 랜딩 중앙 큐브 비주얼 적용
   - Owner: @me
-  - Status Log: 2026-01-07 [TODO]
+  - Status Log: 2026-01-07 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 중앙 영역이 3x3x3 큐브 비주얼로 대체된다
     - 색상/글로우/간격이 `docs/designs/cube.html` 기준으로 반영된다
     - 반응형에서도 비율이 깨지지 않는다
   - Checklist:
-    - [ ] `cube.html` 구조를 JSX/SVG로 변환
-    - [ ] 홈 화면 중앙 플레이스홀더 교체
-    - [ ] 반응형 스케일링/정렬 확인
+    - [x] `cube.html` 구조를 JSX/SVG로 변환
+    - [x] 홈 화면 중앙 플레이스홀더 교체
+    - [x] 반응형 스케일링/정렬 확인
 
 - [TODO][P1] T-F007-02 큐브 비주얼 스타일 폴리시
   - Owner: @me
