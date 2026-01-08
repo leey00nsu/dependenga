@@ -41,15 +41,15 @@
 
 ### Phase 2: 공유 URL 인코딩/디코딩
 
-- [TODO][P1] T-F008-03 쿼리스트링 인코딩/디코딩 유틸
+- [DONE][P1] T-F008-03 쿼리스트링 인코딩/디코딩 유틸
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 의존성 목록이 lz-string으로 압축된다
     - 디코딩 실패 시 오류를 반환한다
   - Checklist:
-    - [ ] `share-query` 유틸 추가
-    - [ ] 정상/오류 케이스 테스트
+    - [x] `share-query` 유틸 추가
+    - [x] 정상/오류 케이스 테스트
 
 - [TODO][P1] T-F008-04 URL 길이 경고 처리
   - Owner: @me
