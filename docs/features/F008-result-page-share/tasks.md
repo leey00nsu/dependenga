@@ -73,14 +73,14 @@
     - [x] 복원 로직 연결
     - [x] 오류 화면/복귀 액션 추가
 
-- [TODO][P2] T-F008-06 결과 URL 복사 UI
+- [DONE][P2] T-F008-06 결과 URL 복사 UI
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - 결과 URL을 복사할 수 있다
   - Checklist:
-    - [ ] 복사 버튼 추가
-    - [ ] 복사 성공/실패 피드백
+    - [x] 복사 버튼 추가
+    - [x] 복사 성공/실패 피드백
 
 ...
 

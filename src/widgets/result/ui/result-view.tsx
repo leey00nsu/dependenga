@@ -8,6 +8,7 @@ import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
+import { encodeDependencies, SHARE_QUERY_LIMIT, SHARE_QUERY_PARAM } from "@/shared/lib/share-query";
 
 const JengaScene = dynamic(
   () =>
@@ -32,6 +33,8 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
+  const [shareError, setShareError] = useState<string | null>(null);
 
   const handleBlockHover = useCallback((data: BlockData | null) => {
     setHighlightedPackage(data?.packageName ?? null);
@@ -40,6 +43,26 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const handlePackageHover = useCallback((packageName: string | null) => {
     setHighlightedPackage(packageName);
   }, []);
+
+  const handleCopyUrl = async () => {
+    if (!parsedResult) return;
+    const encoded = encodeDependencies(parsedResult.dependencies);
+    if (encoded.length > SHARE_QUERY_LIMIT) {
+      setShareError(`URL 길이가 ${SHARE_QUERY_LIMIT}자를 초과했습니다.`);
+      setShareStatus(null);
+      return;
+    }
+
+    try {
+      const url = `${window.location.origin}/result?${SHARE_QUERY_PARAM}=${encoded}`;
+      await navigator.clipboard.writeText(url);
+      setShareStatus("URL이 복사되었습니다.");
+      setShareError(null);
+    } catch {
+      setShareError("URL 복사에 실패했습니다.");
+      setShareStatus(null);
+    }
+  };
 
   if (!parsedResult) {
     return (
@@ -110,10 +133,26 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
           <div className="text-2xl font-semibold tracking-tight text-white">
             Dependenga
           </div>
-          <div className="text-sm text-white/50">
-            {parsedResult.name || "package.json"}
+          <div className="flex flex-col items-end gap-2 text-right sm:flex-row sm:items-center">
+            <div className="text-sm text-white/50">
+              {parsedResult.name || "package.json"}
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyUrl}
+              className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
+            >
+              URL 복사
+            </button>
           </div>
         </header>
+
+        {(shareStatus || shareError) && (
+          <div className="pointer-events-auto mt-3 text-right text-xs">
+            {shareStatus && <span className="text-emerald-200">{shareStatus}</span>}
+            {shareError && <span className="text-red-200">{shareError}</span>}
+          </div>
+        )}
 
         <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
           {vulnResult && (
