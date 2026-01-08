@@ -3,12 +3,13 @@ import { decodeDependencies, SHARE_QUERY_PARAM } from "@/shared/lib/share-query"
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
-export default function ResultPage({
+export default async function ResultPage({
   searchParams,
 }: {
-  searchParams?: SearchParams;
+  searchParams?: SearchParams | Promise<SearchParams>;
 }) {
-  const raw = searchParams?.[SHARE_QUERY_PARAM];
+  const resolvedParams = searchParams ? await Promise.resolve(searchParams) : undefined;
+  const raw = resolvedParams?.[SHARE_QUERY_PARAM];
   const encoded = Array.isArray(raw) ? raw[0] : raw;
 
   if (!encoded) {

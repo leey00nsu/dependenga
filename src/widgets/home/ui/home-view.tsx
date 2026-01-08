@@ -1,57 +1,20 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useState, useTransition, useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
-import type { VulnerabilityAnalysisResult } from "@/entities/vulnerability/model/types";
 import {
   DependencyParserForm,
   type DependencyParserFormHandle,
 } from "@/features/dependency-parser/ui/dependency-parser-form";
-import { analyzePackageVulnerabilities } from "@/features/vulnerability-analyzer/api/analyze-package";
-import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
-import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import { CubeVisual } from "@/shared/ui/cube-visual";
-import { encodeDependencies, SHARE_QUERY_LIMIT } from "@/shared/lib/share-query";
-import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
+import {
+  encodeDependencies,
+  SHARE_QUERY_LIMIT,
+  SHARE_QUERY_PARAM,
+} from "@/shared/lib/share-query";
+import { LoadingAnimation } from "@/shared/ui/loading-animation";
 
-// 3D 씬은 SSR 비활성화 필요
-const JengaScene = dynamic(
-  () =>
-    import("@/features/jenga-tower/ui/jenga-scene").then(
-      (mod) => mod.JengaScene
-    ),
-  { ssr: false, loading: () => <JengaLoadingPlaceholder /> }
-);
-
-// dotLottie 컴포넌트 동적 로드 (SSR 비활성화)
-const DotLottieReact = dynamic(
-  () =>
-    import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
-  { ssr: false }
-);
-
-/**
- * 젠가 로딩 플레이스홀더 (3D 씬 로딩 중)
- * LoadingAnimation과 동일한 dotLottie 애니메이션 사용
- */
-function JengaLoadingPlaceholder() {
-  return (
-    <div className="w-full h-full flex items-center justify-center bg-transparent text-white/70">
-      <div className="text-center">
-        <div className="w-32 h-32 mx-auto mb-4">
-          <DotLottieReact
-            src="/animations/loading.lottie"
-            loop
-            autoplay
-            style={{ width: "100%", height: "100%" }}
-          />
-        </div>
-        <p className="font-medium">Building tower...</p>
-      </div>
-    </div>
-  );
-}
 
 /**
  * 앱 상태 타입
@@ -71,16 +34,10 @@ interface ShareWarningState {
 export function HomeView() {
   const [appState, setAppState] = useState<AppState>("initial");
   const [parsedResult, setParsedResult] = useState<ParsedPackage | null>(null);
-  const [vulnResult, setVulnResult] =
-    useState<VulnerabilityAnalysisResult | null>(null);
-  const [vulnError, setVulnError] = useState<string | null>(null);
-  const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
-    null
-  );
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isGlobalDragging, setIsGlobalDragging] = useState(false);
   const [shareWarning, setShareWarning] = useState<ShareWarningState | null>(null);
+  const router = useRouter();
   const formRef = useRef<DependencyParserFormHandle | null>(null);
   const dragCounterRef = useRef(0);
 
@@ -91,32 +48,22 @@ export function HomeView() {
 
   const handleParseSuccess = (result: ParsedPackage) => {
     setParsedResult(result);
-    setVulnResult(null);
-    setVulnError(null);
-    // 파싱 성공 시 URL 길이 체크 후 분석 시작
     if (!checkShareLength(result, false)) return;
-    handleAnalyzeWithData(result, false);
+    goToResult(result);
   };
 
   const handleAnalyze = (testMode: boolean = false) => {
     if (!parsedResult) return;
     if (!checkShareLength(parsedResult, testMode)) return;
-    handleAnalyzeWithData(parsedResult, testMode);
+    goToResult(parsedResult, testMode);
   };
 
-  const handleAnalyzeWithData = (data: ParsedPackage, testMode: boolean) => {
+  const goToResult = (data: ParsedPackage, testMode: boolean = false) => {
+    const encoded = encodeDependencies(data.dependencies);
+    const url = `/result?${SHARE_QUERY_PARAM}=${encoded}`;
     setAppState("loading");
-    setVulnError(null);
-
-    startTransition(async () => {
-      const result = await analyzePackageVulnerabilities(data, testMode);
-      if (result.success) {
-        setVulnResult(result.data);
-        setAppState("result");
-      } else {
-        setVulnError(result.error);
-        setAppState("initial");
-      }
+    startTransition(() => {
+      router.push(testMode ? `${url}&test=1` : url);
     });
   };
 
@@ -134,38 +81,14 @@ export function HomeView() {
     if (!shareWarning) return;
     const { payload, testMode } = shareWarning;
     setShareWarning(null);
-    handleAnalyzeWithData(payload, testMode);
+    goToResult(payload, testMode);
   };
-
-  const handleBlockHover = useCallback((data: BlockData | null) => {
-    setHighlightedPackage(data?.packageName ?? null);
-  }, []);
-
-  const handlePackageHover = useCallback((packageName: string | null) => {
-    setHighlightedPackage(packageName);
-  }, []);
 
   const handleReset = () => {
     setAppState("initial");
     setParsedResult(null);
-    setVulnResult(null);
-    setVulnError(null);
-    setHighlightedPackage(null);
-    setSelectedPackage(null);
     setShareWarning(null);
   };
-
-  // 블록 클릭 핸들러 - 상세 정보 표시
-  const handleBlockClick = useCallback((data: BlockData) => {
-    setSelectedPackage(data.packageName);
-    // TODO: 상세 정보 모달 또는 패널 확장 구현
-  }, []);
-
-  // 패키지 클릭 핸들러 - 상세 정보 표시
-  const handlePackageClick = useCallback((packageName: string) => {
-    setSelectedPackage(packageName);
-    // TODO: 상세 정보 모달 또는 패널 확장 구현
-  }, []);
 
   useEffect(() => {
     const hasFiles = (event: DragEvent) =>
@@ -284,12 +207,6 @@ export function HomeView() {
                 </div>
               )}
 
-              {vulnError && (
-                <p className="mt-3 text-center text-sm text-red-200">
-                  {vulnError}
-                </p>
-              )}
-
               {shareWarning && (
                 <div className="mt-4 rounded-2xl border border-amber-300/30 bg-amber-200/10 p-4 text-sm text-amber-100/90">
                   <p className="font-medium">공유 URL이 길어질 수 있습니다.</p>
@@ -321,58 +238,6 @@ export function HomeView() {
     );
   }
 
-  // Loading State - Lottie 또는 CSS 애니메이션
-  if (appState === "loading") {
-    return <LoadingAnimation />;
-  }
-
-  // Result State - dashboard.png 기준 레이아웃
-  return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
-      <div className="pointer-events-none absolute inset-0 landing-glow" />
-      <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
-      <div className="pointer-events-none absolute inset-0 landing-vignette" />
-
-      {/* Jenga scene as full-screen background */}
-      <div className="absolute inset-0 z-0 lg:pr-[360px]">
-        {vulnResult && (
-          <JengaScene
-            packages={vulnResult.packages}
-            onBlockHover={handleBlockHover}
-            onBlockClick={handleBlockClick}
-            highlightedPackage={highlightedPackage}
-          />
-        )}
-      </div>
-
-      {/* Overlay content */}
-      <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-6 md:px-10">
-        <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
-          <button
-            onClick={handleReset}
-            className="text-2xl font-semibold tracking-tight text-white"
-          >
-            Dependenga
-          </button>
-          <div className="text-sm text-white/50">
-            {parsedResult?.name || "package.json"}
-          </div>
-        </header>
-
-        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
-          {vulnResult && (
-            <VulnerabilityPanel
-              packages={vulnResult.packages}
-              onPackageHover={handlePackageHover}
-              onPackageClick={handlePackageClick}
-              highlightedPackage={highlightedPackage}
-            />
-          )}
-        </aside>
-
-        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[360px] lg:block" />
-      </div>
-    </div>
-  );
+  // Loading State - 이동 중 로딩
+  return <LoadingAnimation />;
 }
