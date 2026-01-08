@@ -175,4 +175,19 @@
   .glass-scroll::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.45);
   }
+
+  .cube-float {
+    animation: cube-float 3.6s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes cube-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
 }
