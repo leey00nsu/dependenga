@@ -19,12 +19,13 @@ const JengaScene = dynamic(
 
 interface ResultViewProps {
   parsedResult: ParsedPackage | null;
+  errorMessage?: string | null;
 }
 
 /**
  * 결과 페이지 뷰 컴포넌트
  */
-export function ResultView({ parsedResult }: ResultViewProps) {
+export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [vulnResult, setVulnResult] =
     useState<VulnerabilityAnalysisResult | null>(null);
   const [vulnError, setVulnError] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export function ResultView({ parsedResult }: ResultViewProps) {
       <div className="min-h-screen bg-[#0b0f14] text-white">
         <div className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6 text-center">
           <p className="text-sm text-white/60">
-            결과를 불러올 수 없습니다. 입력 화면으로 돌아가 주세요.
+            {errorMessage ?? "결과를 불러올 수 없습니다. 입력 화면으로 돌아가 주세요."}
           </p>
         </div>
       </div>
