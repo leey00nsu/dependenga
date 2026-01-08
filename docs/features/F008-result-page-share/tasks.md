@@ -28,16 +28,16 @@
     - [x] `/result` 라우트 생성
     - [x] 기존 결과 렌더 분리
 
-- [TODO][P1] T-F008-02 FSD 뷰 분리
+- [DONE][P1] T-F008-02 FSD 뷰 분리
   - Owner: @me
-  - Status Log: 2026-01-08 [TODO]
+  - Status Log: 2026-01-08 [TODO] → 2026-01-08 [DOING] → 2026-01-08 [DONE]
   - Acceptance:
     - `views`가 `widgets` 구조로 이동된다
     - 페이지에서 새 경로를 사용한다
   - Checklist:
-    - [ ] `views/home-view.tsx` 이동
-    - [ ] 신규 `widgets/result` 생성
-    - [ ] import 경로 정리
+    - [x] `views/home-view.tsx` 이동
+    - [x] 신규 `widgets/result` 생성
+    - [x] import 경로 정리
 
 ### Phase 2: 공유 URL 인코딩/디코딩
 
