@@ -21,12 +21,17 @@ const JengaScene = dynamic(
 interface ResultViewProps {
   parsedResult: ParsedPackage | null;
   errorMessage?: string | null;
+  testMode?: boolean;
 }
 
 /**
  * 결과 페이지 뷰 컴포넌트
  */
-export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
+export function ResultView({
+  parsedResult,
+  errorMessage,
+  testMode = false,
+}: ResultViewProps) {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
@@ -43,7 +48,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     data: vulnResult,
     error: vulnError,
     isLoading,
-  } = useVulnerabilityAnalysis(parsedResult, { testMode: false });
+  } = useVulnerabilityAnalysis(parsedResult, { testMode });
 
   if (!parsedResult) {
     return (
