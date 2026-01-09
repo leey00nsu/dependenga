@@ -13,7 +13,6 @@ import { buildShareUrl, getShareEncoding } from "@/features/result-share/model/s
 interface ShareWarningState {
   length: number;
   payload: ParsedPackage;
-  testMode: boolean;
 }
 
 /**
@@ -36,27 +35,21 @@ export function HomeView() {
 
   const handleParseSuccess = (result: ParsedPackage) => {
     setParsedResult(result);
-    if (!checkShareLength(result, false)) return;
+    if (!checkShareLength(result)) return;
     goToResult(result);
   };
 
-  const handleAnalyze = (testMode: boolean = false) => {
-    if (!parsedResult) return;
-    if (!checkShareLength(parsedResult, testMode)) return;
-    goToResult(parsedResult, testMode);
-  };
-
-  const goToResult = (data: ParsedPackage, testMode: boolean = false) => {
+  const goToResult = (data: ParsedPackage) => {
     const { url } = buildShareUrl(data.dependencies);
     startTransition(() => {
-      router.push(testMode ? `${url}&test=1` : url);
+      router.push(url);
     });
   };
 
-  const checkShareLength = (data: ParsedPackage, testMode: boolean) => {
+  const checkShareLength = (data: ParsedPackage) => {
     const { length, tooLong } = getShareEncoding(data.dependencies);
     if (tooLong) {
-      setShareWarning({ length, payload: data, testMode });
+      setShareWarning({ length, payload: data });
       return false;
     }
     setShareWarning(null);
@@ -65,9 +58,9 @@ export function HomeView() {
 
   const handleShareWarningContinue = () => {
     if (!shareWarning) return;
-    const { payload, testMode } = shareWarning;
+    const { payload } = shareWarning;
     setShareWarning(null);
-    goToResult(payload, testMode);
+    goToResult(payload);
   };
 
   useEffect(() => {
@@ -174,14 +167,6 @@ export function HomeView() {
                   {parsedResult.dependencies.length} dependencies found -
                   analyzing...
                 </div>
-
-                <button
-                  onClick={() => handleAnalyze(true)}
-                  disabled={isPending}
-                  className="w-full text-sm text-white/40 transition-colors hover:text-white/70"
-                >
-                  🧪 Test mode (simulate vulnerabilities)
-                </button>
               </div>
             )}
 

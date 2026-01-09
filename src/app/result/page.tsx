@@ -11,14 +11,11 @@ export default async function ResultPage({
   const resolvedParams = searchParams ? await Promise.resolve(searchParams) : undefined;
   const raw = resolvedParams?.[SHARE_QUERY_PARAM];
   const encoded = Array.isArray(raw) ? raw[0] : raw;
-  const rawTest = resolvedParams?.test;
-  const testValue = Array.isArray(rawTest) ? rawTest[0] : rawTest;
-  const testMode = testValue === "1" || testValue === "true";
   let errorMessage: string | null = null;
   let dependencies: ReturnType<typeof decodeDependencies> | null = null;
 
   if (!encoded) {
-    return <ResultView parsedResult={null} testMode={testMode} />;
+    return <ResultView parsedResult={null} />;
   }
 
   try {
@@ -29,19 +26,12 @@ export default async function ResultPage({
   }
 
   if (!dependencies) {
-    return (
-      <ResultView
-        parsedResult={null}
-        errorMessage={errorMessage}
-        testMode={testMode}
-      />
-    );
+    return <ResultView parsedResult={null} errorMessage={errorMessage} />;
   }
 
   return (
     <ResultView
       parsedResult={{ name: "shared", version: "0.0.0", dependencies }}
-      testMode={testMode}
     />
   );
 }
