@@ -108,14 +108,14 @@
     - [x] `tabs` 컴포넌트 스타일 점검
     - [x] `landing` 탭 UI 정렬 수정
 
-- [TODO][P1] T-F009-10 공유 버튼 제거
+- [DONE][P1] T-F009-10 "shared" 라벨 제거
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
-    - 화면 내 `shared` 버튼이 제거된다
+    - 결과 화면에서 `shared` 라벨이 표시되지 않는다
   - Checklist:
-    - [ ] `shared` 버튼 위치 확인
-    - [ ] 버튼 제거 및 레이아웃 정리
+    - [x] `shared` 라벨 노출 위치 확인
+    - [x] 라벨 제거 및 레이아웃 정리
 
 - [TODO][P1] T-F009-11 3D 젠가 블럭 형태/질감 개선
   - Owner: @me

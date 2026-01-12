@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useCallback, useState } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
@@ -74,6 +73,13 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     );
   }
 
+  const displayName =
+    parsedResult.name && parsedResult.name !== "shared"
+      ? parsedResult.name
+      : parsedResult.name
+        ? null
+        : "package.json";
+
   return (
     <div className="relative min-h-screen overflow-hidden text-slate-700">
       <div className="pointer-events-none absolute inset-0 v2-background" />
@@ -92,9 +98,11 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
         <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
           <DependengaLogo href="/" className="text-3xl sm:text-4xl" />
           <div className="flex flex-col items-end gap-2 text-right sm:flex-row sm:items-center">
-            <div className="v2-pill px-4 py-1 text-sm text-slate-600">
-              {parsedResult.name || "package.json"}
-            </div>
+            {displayName && (
+              <div className="v2-pill px-4 py-1 text-sm text-slate-600">
+                {displayName}
+              </div>
+            )}
             <ShareUrlButton
               dependencies={parsedResult.dependencies}
               className="v2-button-secondary px-4 py-2 text-xs text-sky-700 sm:text-sm"
