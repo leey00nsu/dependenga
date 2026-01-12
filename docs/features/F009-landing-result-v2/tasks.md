@@ -66,21 +66,21 @@
   - Checklist:
     - [x] `vulnerability-panel` 카드/배지 스타일 업데이트
 
-- [TODO][P1] T-F009-06 3D 젠가 블럭 v2 컬러 적용
+- [DONE][P1] T-F009-06 3D 젠가 블럭 v2 컬러 적용
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DONE]
   - Acceptance:
     - 블럭 색상/광택/엣지 톤이 result-v2 디자인과 일치한다
     - 색상은 critical(진한빨강), high(주황), medium(노랑), low(초록), safe(파랑)을 사용한다
   - Checklist:
-    - [ ] `jenga-block` 컬러 팔레트 교체
-    - [ ] 머티리얼/엣지 강조 튜닝
+    - [x] `jenga-block` 컬러 팔레트 교체
+    - [x] 머티리얼/엣지 강조 튜닝
 
 ---
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
+- [x] 모든 태스크 [DONE]
 - [ ] 모든 테스트 통과
-- [ ] 문서 업데이트 완료
+- [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
