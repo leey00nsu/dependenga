@@ -51,7 +51,7 @@ src/
 │   └── jenga-tower/ui/jenga-block.tsx
 public/
 └── images/
-    ├── background-v2.png
+    ├── background-v2.webp
     └── landing-image.png
 ```
 
