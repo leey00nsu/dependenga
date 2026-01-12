@@ -26,8 +26,10 @@ const SEVERITY_OFFSET: Record<SeverityWithSafe, number> = {
 
 // 블록 크기 상수 (실제 젠가 비율: 길이 = 두께 * 3)
 const BLOCK_LENGTH = 3;  // 블록 긴 방향 길이
-const BLOCK_HEIGHT = 0.6; // 블록 높이  
+const BLOCK_HEIGHT = 0.6; // 블록 높이
 const BLOCK_WIDTH = 1;   // 블록 두께 (3개가 나란히 서면 BLOCK_LENGTH와 같음)
+const BLOCK_GAP_XZ = 0.08; // 블록 사이 간격 (외곽선 가시성 확보)
+const BLOCK_GAP_Y = 0.05; // 층 사이 간격
 
 /**
  * 시드 기반 랜덤 생성 (슬롯 위치 결정용)
@@ -95,7 +97,7 @@ export function JengaTower({
   for (let layer = 0; layer < totalLayerCount; layer++) {
     // 층마다 90도 회전
     const isRotated = layer % 2 === 1;
-    const y = layer * BLOCK_HEIGHT;
+    const y = layer * (BLOCK_HEIGHT + BLOCK_GAP_Y);
     const rotation: [number, number, number] = isRotated
       ? [0, Math.PI / 2, 0]
       : [0, 0, 0];
@@ -140,7 +142,7 @@ export function JengaTower({
       // Normal Layer (맨 아래/위)는 filler 블록으로 채움
       
       // 슬롯의 기본 오프셋 (-1, 0, +1)
-      const slotOffset = (slotIndex - 1) * BLOCK_WIDTH;
+      const slotOffset = (slotIndex - 1) * (BLOCK_WIDTH + BLOCK_GAP_XZ);
 
       let x = 0;
       let z = 0;

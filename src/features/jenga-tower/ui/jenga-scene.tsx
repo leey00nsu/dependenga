@@ -27,7 +27,7 @@ export function JengaScene({
 }: JengaSceneProps) {
   // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
   const towerHeight = Math.ceil(packages.length / 3);
-  const blockHeight = 0.6;
+  const blockHeight = 0.65;
   const actualTowerHeight = towerHeight * blockHeight;
   
   // 타워가 높을수록 더 멀리, 더 높은 각도에서 봄
