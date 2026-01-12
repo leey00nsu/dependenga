@@ -148,7 +148,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
             className={cn(
               "inline-flex items-center justify-center rounded-md border border-border px-3 py-1 text-sm text-foreground/80 transition hover:border-ring hover:text-foreground",
               isLanding &&
-                "v2-button-secondary px-5 py-2 text-sm text-sky-700 hover:brightness-105"
+                "v2-button-secondary v2-pressable border-sky-200 px-5 py-2 text-sm text-sky-700 hover:border-sky-200 hover:text-sky-700 hover:bg-white hover:brightness-105"
             )}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -165,7 +165,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
               value="text"
               className={cn(
                 isLanding &&
-                  "v2-toggle-item text-sm text-sky-700 data-[state=active]:text-white"
+                  "v2-toggle-item v2-pressable text-sm text-sky-700 data-[state=active]:text-white"
               )}
             >
               직접 입력
@@ -174,7 +174,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
               value="github"
               className={cn(
                 isLanding &&
-                  "v2-toggle-item text-sm text-sky-700 data-[state=active]:text-white"
+                  "v2-toggle-item v2-pressable text-sm text-sky-700 data-[state=active]:text-white"
               )}
             >
               GitHub URL
@@ -219,7 +219,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="v2-button-primary h-11 px-7 text-sm"
+                  className="v2-button-primary v2-pressable h-11 px-7 text-sm"
                 >
                   {isPending ? "분석 중..." : "Analyze"}
                 </Button>
@@ -280,7 +280,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="v2-button-primary h-11 px-7 text-sm"
+                  className="v2-button-primary v2-pressable h-11 px-7 text-sm"
                 >
                   {isPending ? "분석 중..." : "Analyze"}
                 </Button>

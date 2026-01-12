@@ -10,7 +10,7 @@ interface DependengaLogoProps {
 export function DependengaLogo({ href, className, as = "div" }: DependengaLogoProps) {
   if (href) {
     return (
-      <Link href={href} className={cn("v2-logo", className)}>
+      <Link href={href} className={cn("v2-logo v2-logo-pressable", className)}>
         Dependenga
       </Link>
     );
@@ -18,7 +18,7 @@ export function DependengaLogo({ href, className, as = "div" }: DependengaLogoPr
 
   const Tag = as;
   return (
-    <Tag className={cn("v2-logo", className)}>
+    <Tag className={cn("v2-logo v2-logo-pressable", className)}>
       Dependenga
     </Tag>
   );

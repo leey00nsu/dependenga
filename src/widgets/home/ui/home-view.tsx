@@ -180,14 +180,14 @@ export function HomeView() {
                   <button
                     type="button"
                     onClick={() => setShareWarning(null)}
-                    className="v2-button-secondary px-4 py-2 text-xs text-amber-700"
+                    className="v2-button-secondary v2-pressable px-4 py-2 text-xs text-amber-700"
                   >
                     취소
                   </button>
                   <button
                     type="button"
                     onClick={handleShareWarningContinue}
-                    className="v2-button-primary px-4 py-2 text-xs"
+                    className="v2-button-primary v2-pressable px-4 py-2 text-xs"
                   >
                     계속 진행
                   </button>

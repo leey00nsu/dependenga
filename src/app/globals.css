@@ -260,6 +260,30 @@
     font-weight: 600;
   }
 
+  .v2-pressable {
+    transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+  }
+
+  .v2-pressable:hover {
+    transform: scale(1.03);
+  }
+
+  .v2-pressable:active {
+    transform: scale(0.97);
+  }
+
+  .v2-logo-pressable {
+    transition: transform 150ms ease;
+  }
+
+  .v2-logo-pressable:hover {
+    transform: scale(1.02);
+  }
+
+  .v2-logo-pressable:active {
+    transform: scale(0.98);
+  }
+
   .v2-button-secondary:disabled,
   .v2-button-primary:disabled {
     opacity: 0.6;

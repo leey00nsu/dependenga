@@ -153,16 +153,16 @@
   - Checklist:
     - [x] 복사 성공/실패 메시지 톤 정리
 
-- [TODO][P1] T-F009-15 버튼/로고 호버·클릭 애니메이션 통일
+- [DONE][P1] T-F009-15 버튼/로고 호버·클릭 애니메이션 통일
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - 모든 버튼과 로고에 스케일 기반 호버/클릭 애니메이션이 적용된다
     - 파일 업로드 버튼 호버 색상이 어색하지 않다
   - Checklist:
-    - [ ] 버튼 공통 hover/active 스타일 추가
-    - [ ] 파일 업로드 버튼 hover 톤 수정
-    - [ ] 로고 hover/active 애니메이션 추가
+    - [x] 버튼 공통 hover/active 스타일 추가
+    - [x] 파일 업로드 버튼 hover 톤 수정
+    - [x] 로고 hover/active 애니메이션 추가
 
 - [TODO][P1] T-F009-16 탭 전환 시 로고 위치 고정
   - Owner: @me

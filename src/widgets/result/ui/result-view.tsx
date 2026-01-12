@@ -105,7 +105,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
             )}
             <ShareUrlButton
               dependencies={parsedResult.dependencies}
-              className="v2-button-secondary px-4 py-2 text-xs text-sky-700 sm:text-sm"
+              className="v2-button-secondary v2-pressable px-4 py-2 text-xs text-sky-700 sm:text-sm"
             />
           </div>
         </header>

@@ -39,7 +39,7 @@ export function ShareUrlButton({
     <button
       type="button"
       onClick={handleCopy}
-      className={className}
+      className={className ? `${className} v2-pressable` : "v2-pressable"}
       disabled={dependencies.length === 0}
     >
       {label}
