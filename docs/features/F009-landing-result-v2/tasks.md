@@ -28,9 +28,9 @@
     - [ ] `public/images`에 v2 이미지 배치
     - [ ] `globals.css`에 v2 컬러/유틸리티 추가
 
-- [TODO][P1] T-F009-02 랜딩 화면 레이아웃 리팩토링
+- [DONE][P1] T-F009-02 랜딩 화면 레이아웃 리팩토링
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - 랜딩이 `landing-v2` 톤/구성을 반영한다
     - 메인 로고가 `landing-image`로 노출된다
