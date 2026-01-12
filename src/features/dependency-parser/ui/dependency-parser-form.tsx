@@ -182,7 +182,13 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
           </TabsList>
         </div>
 
-        <TabsContent value="text" className={cn("space-y-4", isLanding && "space-y-4")}>
+        <TabsContent
+          value="text"
+          className={cn(
+            "space-y-4",
+            isLanding && "space-y-4 min-h-[260px] sm:min-h-[300px]"
+          )}
+        >
           {isLanding ? (
             <div>
               <div
@@ -259,7 +265,13 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
           )}
         </TabsContent>
 
-        <TabsContent value="github" className={cn("space-y-4", isLanding && "space-y-4")}>
+        <TabsContent
+          value="github"
+          className={cn(
+            "space-y-4",
+            isLanding && "space-y-4 min-h-[260px] sm:min-h-[300px]"
+          )}
+        >
           {isLanding ? (
             <div className="v2-input-panel px-5 py-4">
               <label htmlFor="github-url" className="sr-only">
