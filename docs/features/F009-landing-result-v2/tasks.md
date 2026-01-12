@@ -38,9 +38,9 @@
     - [ ] `home-view` 레이아웃/배경 교체
     - [ ] 로고 이미지 적용
 
-- [TODO][P1] T-F009-03 입력 폼 컴포넌트 v2 스타일 적용
+- [DONE][P1] T-F009-03 입력 폼 컴포넌트 v2 스타일 적용
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DONE]
   - Acceptance:
     - 업로드/탭/입력/버튼이 component-v2 스타일을 따른다
     - 모바일/데스크톱에서 레이아웃이 유지된다
