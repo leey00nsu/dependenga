@@ -76,11 +76,62 @@
     - [x] `jenga-block` 컬러 팔레트 교체
     - [x] 머티리얼/엣지 강조 튜닝
 
+### Phase 2: 추가 개선 사항
+
+- [DONE][P1] T-F009-07 로딩 애니메이션 v2 톤 적용
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
+  - Acceptance:
+    - 로딩 화면이 v2 배경/톤과 일관된다
+    - 로딩 메시지/비주얼이 밝은 테마에 맞게 조정된다
+  - Checklist:
+    - [x] `loading-animation` 배경/텍스트 스타일 수정
+    - [x] 필요 시 로딩 비주얼(이미지/큐브) 톤 조정
+
+- [TODO][P1] T-F009-08 Dependenga 로고 컴포넌트 공통화 + Jua 폰트 적용
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 로고가 공통 컴포넌트로 제공된다
+    - 전역 폰트가 Jua로 적용된다
+  - Checklist:
+    - [ ] `shared` 로고 컴포넌트 생성
+    - [ ] `layout`에 Jua 폰트 적용
+    - [ ] 기존 로고 사용처 교체
+
+- [TODO][P1] T-F009-09 Tabs 선택 상태 수직 정렬 수정
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 선택된 탭의 텍스트/아이콘 수직 정렬이 정상화된다
+  - Checklist:
+    - [ ] `tabs` 컴포넌트 스타일 점검
+    - [ ] `landing` 탭 UI 정렬 수정
+
+- [TODO][P1] T-F009-10 공유 버튼 제거
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 화면 내 `shared` 버튼이 제거된다
+  - Checklist:
+    - [ ] `shared` 버튼 위치 확인
+    - [ ] 버튼 제거 및 레이아웃 정리
+
+- [TODO][P1] T-F009-11 3D 젠가 블럭 형태/질감 개선
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 블럭 형태가 더 둥글고 부드럽게 보인다
+    - 질감/투명도가 디자인 이미지와 유사하게 조정된다
+  - Checklist:
+    - [ ] `jenga-block` 라운딩/세그먼트 조정
+    - [ ] 머티리얼 투명도/광택 재조정
+
 ---
 
 ## 완료 조건
 
-- [x] 모든 태스크 [DONE]
+- [ ] 모든 태스크 [DONE]
 - [ ] 모든 테스트 통과
 - [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료

@@ -1,6 +1,6 @@
 "use client";
 
-import { CubeVisual } from "@/shared/ui/cube-visual";
+import Image from "next/image";
 
 interface LoadingAnimationProps {
   message?: string;
@@ -18,22 +18,22 @@ export function LoadingAnimation({
   subMessage = "Building your Jenga tower" 
 }: LoadingAnimationProps) {
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center bg-[#0b0f14]"
-    >
-      <div className="text-center animate-in fade-in duration-300">
-        <div className="mb-4 flex flex-col items-center gap-3">
-          <div className="h-[min(32vw,32vh)] w-[min(32vw,32vh)] max-h-[260px] max-w-[260px] sm:max-h-[300px] sm:max-w-[300px]">
-            <CubeVisual
-              className="cube-float drop-shadow-[0_0_45px_rgba(74,222,128,0.22)]"
-              idPrefix="loading-cube"
-              title="로딩 큐브"
+    <div className="min-h-screen v2-background flex items-center justify-center px-6 py-10">
+      <div className="v2-panel w-full max-w-xl rounded-3xl px-8 py-10 text-center animate-in fade-in duration-300">
+        <div className="mb-6 flex flex-col items-center gap-3">
+          <div className="relative h-[min(32vw,32vh)] w-[min(32vw,32vh)] max-h-[260px] max-w-[260px] sm:max-h-[300px] sm:max-w-[300px]">
+            <Image
+              src="/images/landing-image.png"
+              alt="Dependenga 로고 이미지"
+              fill
+              className="object-contain drop-shadow-[0_18px_30px_rgba(90,150,185,0.35)]"
+              priority
             />
           </div>
         </div>
-        
-        <p className="text-white/70 font-medium">{message}</p>
-        <p className="mt-1 text-sm text-white/40">{subMessage}</p>
+
+        <p className="text-slate-600 font-semibold">{message}</p>
+        <p className="mt-1 text-sm text-slate-500">{subMessage}</p>
       </div>
     </div>
   );
