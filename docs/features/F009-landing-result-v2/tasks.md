@@ -25,8 +25,8 @@
     - 랜딩/결과 화면에 `background-v2`가 적용된다
     - v2 톤에 필요한 전역 유틸리티가 준비된다
   - Checklist:
-    - [ ] `public/images`에 v2 이미지 배치
-    - [ ] `globals.css`에 v2 컬러/유틸리티 추가
+    - [x] `public/images`에 v2 이미지 배치
+    - [x] `globals.css`에 v2 컬러/유틸리티 추가
 
 - [DONE][P1] T-F009-02 랜딩 화면 레이아웃 리팩토링
   - Owner: @me
@@ -35,8 +35,8 @@
     - 랜딩이 `landing-v2` 톤/구성을 반영한다
     - 메인 로고가 `landing-image`로 노출된다
   - Checklist:
-    - [ ] `home-view` 레이아웃/배경 교체
-    - [ ] 로고 이미지 적용
+    - [x] `home-view` 레이아웃/배경 교체
+    - [x] 로고 이미지 적용
 
 - [DONE][P1] T-F009-03 입력 폼 컴포넌트 v2 스타일 적용
   - Owner: @me
@@ -45,8 +45,8 @@
     - 업로드/탭/입력/버튼이 component-v2 스타일을 따른다
     - 모바일/데스크톱에서 레이아웃이 유지된다
   - Checklist:
-    - [ ] 탭/버튼/입력 스타일 업데이트
-    - [ ] 오류 메시지 v2 톤 적용
+    - [x] 탭/버튼/입력 스타일 업데이트
+    - [x] 오류 메시지 v2 톤 적용
 
 - [DONE][P1] T-F009-04 결과 화면 레이아웃 리팩토링
   - Owner: @me
@@ -55,16 +55,16 @@
     - 결과 화면이 `result-v2` 톤/구성을 반영한다
     - 공유 버튼은 기존 위치(헤더 영역)를 유지한다
   - Checklist:
-    - [ ] `result-view` 레이아웃/헤더/배경 변경
-    - [ ] 공유 버튼 위치/스타일 확인
+    - [x] `result-view` 레이아웃/헤더/배경 변경
+    - [x] 공유 버튼 위치/스타일 확인
 
-- [TODO][P1] T-F009-05 결과 패널 v2 카드/배지 스타일 적용
+- [DONE][P1] T-F009-05 결과 패널 v2 카드/배지 스타일 적용
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DONE]
   - Acceptance:
     - 패널/카드/배지가 component-v2 스타일과 정합된다
   - Checklist:
-    - [ ] `vulnerability-panel` 카드/배지 스타일 업데이트
+    - [x] `vulnerability-panel` 카드/배지 스타일 업데이트
 
 - [TODO][P1] T-F009-06 3D 젠가 블럭 v2 컬러 적용
   - Owner: @me
