@@ -145,13 +145,13 @@
   - Checklist:
     - [x] 토스트 스타일 전역 테마화
 
-- [TODO][P1] T-F009-14 URL 복사 피드백 강화
+- [DONE][P1] T-F009-14 URL 복사 피드백 강화
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - URL 복사 성공/실패에 대한 시각적 피드백이 명확하다
   - Checklist:
-    - [ ] 복사 성공/실패 메시지 톤 정리
+    - [x] 복사 성공/실패 메시지 톤 정리
 
 - [TODO][P1] T-F009-15 버튼/로고 호버·클릭 애니메이션 통일
   - Owner: @me
