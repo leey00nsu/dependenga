@@ -47,11 +47,11 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
 
   if (!parsedResult) {
     return (
-      <div className="min-h-screen bg-[#0b0f14] text-white">
+      <div className="min-h-screen v2-background text-slate-600">
         <div className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6 text-center">
-          <p className="text-sm text-white/60">
+          <div className="v2-panel rounded-3xl px-6 py-5 text-sm">
             {errorMessage ?? "결과를 불러올 수 없습니다. 입력 화면으로 돌아가 주세요."}
-          </p>
+          </div>
         </div>
       </div>
     );
@@ -63,22 +63,20 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
 
   if (vulnError) {
     return (
-      <div className="min-h-screen bg-[#0b0f14] text-white">
+      <div className="min-h-screen v2-background text-slate-600">
         <div className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6 text-center">
-          <p className="text-sm text-red-200">{vulnError}</p>
+          <div className="v2-panel rounded-3xl border border-red-200 bg-red-50 px-6 py-5 text-sm text-red-600">
+            {vulnError}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[#0b0f14]" />
-      <div className="pointer-events-none absolute inset-0 landing-glow" />
-      <div className="pointer-events-none absolute inset-0 landing-grid opacity-40" />
-      <div className="pointer-events-none absolute inset-0 landing-vignette" />
+    <div className="relative min-h-screen overflow-hidden text-slate-700">
+      <div className="pointer-events-none absolute inset-0 v2-background" />
 
-      {/* Jenga scene as full-screen background */}
       <div className="absolute inset-0 z-0 lg:pr-[360px]">
         {vulnResult && (
           <JengaScene
@@ -89,27 +87,23 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
         )}
       </div>
 
-      {/* Overlay content */}
-      <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-6 md:px-10">
+      <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-8 md:px-10">
         <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="text-2xl font-semibold tracking-tight text-white transition hover:text-white/80"
-          >
+          <Link href="/" className="v2-logo text-3xl sm:text-4xl">
             Dependenga
           </Link>
           <div className="flex flex-col items-end gap-2 text-right sm:flex-row sm:items-center">
-            <div className="text-sm text-white/50">
+            <div className="v2-pill px-4 py-1 text-sm text-slate-600">
               {parsedResult.name || "package.json"}
             </div>
             <ShareUrlButton
               dependencies={parsedResult.dependencies}
-              className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
+              className="v2-button-secondary px-4 py-2 text-xs text-sky-700 sm:text-sm"
             />
           </div>
         </header>
 
-        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[320px]">
+        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px]">
           {vulnResult && (
             <VulnerabilityPanel
               packages={vulnResult.packages}
