@@ -10,6 +10,7 @@ import {
 } from "@/features/dependency-parser/ui/dependency-parser-form";
 import { SHARE_QUERY_LIMIT } from "@/shared/lib/share-query";
 import { buildShareUrl, getShareEncoding } from "@/features/result-share/model/share-utils";
+import { DependengaLogo } from "@/shared/ui/dependenga-logo";
 interface ShareWarningState {
   length: number;
   payload: ParsedPackage;
@@ -136,7 +137,7 @@ export function HomeView() {
           </div>
         )}
         <header className="flex items-center justify-between">
-          <h1 className="v2-logo text-3xl sm:text-4xl">Dependenga</h1>
+          <DependengaLogo as="h1" className="text-3xl sm:text-4xl" />
         </header>
 
         <main className="flex flex-1 flex-col items-center justify-center gap-8 sm:gap-10 md:gap-12">

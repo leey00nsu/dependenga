@@ -9,6 +9,7 @@ import { useVulnerabilityAnalysis } from "@/features/vulnerability-analyzer/mode
 import { ShareUrlButton } from "@/features/result-share/ui/share-url-button";
 import { LoadingAnimation } from "@/shared/ui/loading-animation";
 import type { BlockData } from "@/features/jenga-tower/ui/jenga-block";
+import { DependengaLogo } from "@/shared/ui/dependenga-logo";
 
 const JengaScene = dynamic(
   () =>
@@ -89,9 +90,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
 
       <div className="pointer-events-none relative z-10 mx-auto min-h-screen w-full max-w-6xl px-6 py-8 md:px-10">
         <header className="pointer-events-auto flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="v2-logo text-3xl sm:text-4xl">
-            Dependenga
-          </Link>
+          <DependengaLogo href="/" className="text-3xl sm:text-4xl" />
           <div className="flex flex-col items-end gap-2 text-right sm:flex-row sm:items-center">
             <div className="v2-pill px-4 py-1 text-sm text-slate-600">
               {parsedResult.name || "package.json"}
