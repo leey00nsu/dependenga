@@ -99,14 +99,14 @@
     - [x] `layout`에 Jua 폰트 적용
     - [x] 기존 로고 사용처 교체
 
-- [TODO][P1] T-F009-09 Tabs 선택 상태 수직 정렬 수정
+- [DONE][P1] T-F009-09 Tabs 선택 상태 수직 정렬 수정
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - 선택된 탭의 텍스트/아이콘 수직 정렬이 정상화된다
   - Checklist:
-    - [ ] `tabs` 컴포넌트 스타일 점검
-    - [ ] `landing` 탭 UI 정렬 수정
+    - [x] `tabs` 컴포넌트 스타일 점검
+    - [x] `landing` 탭 UI 정렬 수정
 
 - [TODO][P1] T-F009-10 공유 버튼 제거
   - Owner: @me
