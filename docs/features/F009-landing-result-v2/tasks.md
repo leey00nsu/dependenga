@@ -135,6 +135,43 @@
   - Checklist:
     - [x] `v2-logo` 스타일 조정
 
+### Phase 3: 인터랙션/피드백 개선
+
+- [DONE][P1] T-F009-13 토스트 메시지 v2 톤 적용
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE] → 2026-01-12 [DOING] → 2026-01-12 [DONE] → 2026-01-12 [DOING] → 2026-01-12 [DONE] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
+  - Acceptance:
+    - 토스트 메시지가 v2 테마 색상/타이포에 맞게 표시된다
+  - Checklist:
+    - [x] 토스트 스타일 전역 테마화
+
+- [TODO][P1] T-F009-14 URL 복사 피드백 강화
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - URL 복사 성공/실패에 대한 시각적 피드백이 명확하다
+  - Checklist:
+    - [ ] 복사 성공/실패 메시지 톤 정리
+
+- [TODO][P1] T-F009-15 버튼/로고 호버·클릭 애니메이션 통일
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 모든 버튼과 로고에 스케일 기반 호버/클릭 애니메이션이 적용된다
+    - 파일 업로드 버튼 호버 색상이 어색하지 않다
+  - Checklist:
+    - [ ] 버튼 공통 hover/active 스타일 추가
+    - [ ] 파일 업로드 버튼 hover 톤 수정
+    - [ ] 로고 hover/active 애니메이션 추가
+
+- [TODO][P1] T-F009-16 탭 전환 시 로고 위치 고정
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO]
+  - Acceptance:
+    - 탭 전환 시 로고 위치가 변하지 않는다
+  - Checklist:
+    - [ ] 탭 UI 높이/정렬 재확인
+
 ---
 
 ## 완료 조건
