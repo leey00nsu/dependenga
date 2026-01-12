@@ -18,9 +18,9 @@
 
 ### Phase 1: 랜딩/결과 v2 톤 적용
 
-- [TODO][P1] T-F009-01 v2 배경/전역 스타일 적용
+- [DONE][P1] T-F009-01 v2 배경/전역 스타일 적용
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - 랜딩/결과 화면에 `background-v2`가 적용된다
     - v2 톤에 필요한 전역 유틸리티가 준비된다
