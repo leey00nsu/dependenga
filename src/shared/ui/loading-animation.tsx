@@ -21,7 +21,7 @@ export function LoadingAnimation({
     <div className="min-h-screen v2-background flex items-center justify-center px-6 py-10">
       <div className="v2-panel w-full max-w-xl rounded-3xl px-8 py-10 text-center animate-in fade-in duration-300">
         <div className="mb-6 flex flex-col items-center gap-3">
-          <div className="relative h-[min(32vw,32vh)] w-[min(32vw,32vh)] max-h-[260px] max-w-[260px] sm:max-h-[300px] sm:max-w-[300px]">
+          <div className="relative h-[min(32vw,32vh)] w-[min(32vw,32vh)] max-h-[260px] max-w-[260px] animate-bounce sm:max-h-[300px] sm:max-w-[300px]">
             <Image
               src="/images/landing-image.png"
               alt="Dependenga 로고 이미지"
