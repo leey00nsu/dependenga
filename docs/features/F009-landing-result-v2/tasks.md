@@ -88,16 +88,16 @@
     - [x] `loading-animation` 배경/텍스트 스타일 수정
     - [x] 필요 시 로딩 비주얼(이미지/큐브) 톤 조정
 
-- [TODO][P1] T-F009-08 Dependenga 로고 컴포넌트 공통화 + Jua 폰트 적용
+- [DONE][P1] T-F009-08 Dependenga 로고 컴포넌트 공통화 + Jua 폰트 적용
   - Owner: @me
-  - Status Log: 2026-01-12 [TODO]
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DOING] → 2026-01-12 [DONE]
   - Acceptance:
     - 로고가 공통 컴포넌트로 제공된다
     - 전역 폰트가 Jua로 적용된다
   - Checklist:
-    - [ ] `shared` 로고 컴포넌트 생성
-    - [ ] `layout`에 Jua 폰트 적용
-    - [ ] 기존 로고 사용처 교체
+    - [x] `shared` 로고 컴포넌트 생성
+    - [x] `layout`에 Jua 폰트 적용
+    - [x] 기존 로고 사용처 교체
 
 - [TODO][P1] T-F009-09 Tabs 선택 상태 수직 정렬 수정
   - Owner: @me
@@ -126,6 +126,14 @@
   - Checklist:
     - [ ] `jenga-block` 라운딩/세그먼트 조정
     - [ ] 머티리얼 투명도/광택 재조정
+
+- [DONE][P1] T-F009-12 로고 두께 보정
+  - Owner: @me
+  - Status Log: 2026-01-12 [TODO] → 2026-01-12 [DONE]
+  - Acceptance:
+    - 로고 내부 두께가 얇지 않고 가독성이 확보된다
+  - Checklist:
+    - [x] `v2-logo` 스타일 조정
 
 ---
 
