@@ -15,9 +15,8 @@ const geistMono = Geist_Mono({
 
 const jua = Jua({
   variable: "--font-jua",
+  subsets: ["latin"],
   weight: "400",
-  preload: false,
-  display: "swap",
 });
 
 export const metadata: Metadata = {
