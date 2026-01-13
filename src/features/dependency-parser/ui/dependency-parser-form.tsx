@@ -124,7 +124,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isLanding && "space-y-6")}>
+    <form onSubmit={handleSubmit} className={cn("space-y-4", isLanding && "space-y-7")}>
       <input
         ref={fileInputRef}
         type="file"
@@ -137,13 +137,18 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
         }}
       />
       <Tabs value={mode} onValueChange={(v) => setMode(v as InputMode)}>
-        <div className={cn("flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between", isLanding && "sm:gap-4")}>
+        <div
+          className={cn(
+            "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between",
+            isLanding && "sm:gap-6"
+          )}
+        >
           <button
             type="button"
             className={cn(
               "inline-flex items-center justify-center rounded-md border border-border px-3 py-1 text-sm text-foreground/80 transition hover:border-ring hover:text-foreground",
               isLanding &&
-                "rounded-full border-white/15 px-4 py-2 text-white/70 hover:border-white/30 hover:text-white"
+                "v2-button-secondary v2-pressable border-sky-200 px-5 py-2 text-sm text-sky-700 hover:border-sky-200 hover:text-sky-700 hover:bg-white hover:brightness-105"
             )}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -153,14 +158,14 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
             className={cn(
               "grid w-full grid-cols-2 sm:w-auto",
               isLanding &&
-                "mx-auto w-full max-w-md rounded-full border border-white/10 bg-white/5 p-1 text-white/70 backdrop-blur sm:mx-0"
+                "v2-toggle mx-auto w-full max-w-[240px] sm:mx-0"
             )}
           >
             <TabsTrigger
               value="text"
               className={cn(
                 isLanding &&
-                  "rounded-full text-white/70 data-[state=active]:border-white/20 data-[state=active]:bg-white/15 data-[state=active]:text-white"
+                  "v2-toggle-item v2-pressable text-sm text-sky-700 data-[state=active]:text-white"
               )}
             >
               직접 입력
@@ -169,7 +174,7 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
               value="github"
               className={cn(
                 isLanding &&
-                  "rounded-full text-white/70 data-[state=active]:border-white/20 data-[state=active]:bg-white/15 data-[state=active]:text-white"
+                  "v2-toggle-item v2-pressable text-sm text-sky-700 data-[state=active]:text-white"
               )}
             >
               GitHub URL
@@ -177,13 +182,19 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
           </TabsList>
         </div>
 
-        <TabsContent value="text" className={cn("space-y-4", isLanding && "space-y-3")}>
+        <TabsContent
+          value="text"
+          className={cn(
+            "space-y-4",
+            isLanding && "space-y-4 min-h-[260px] sm:min-h-[300px]"
+          )}
+        >
           {isLanding ? (
             <div>
               <div
                 className={cn(
-                  "rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur transition",
-                  isDragging && "border-white/30 bg-white/10"
+                  "v2-input-panel p-5 sm:p-6 transition",
+                  isDragging && "border-sky-300 shadow-[0_0_0_4px_rgba(125,195,234,0.25)]"
                 )}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -201,20 +212,20 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
                     setUploadedFileName(null);
                   }}
                   rows={8}
-                  className="min-h-[140px] border-white/10 bg-white/5 font-mono text-sm text-white placeholder:text-white/35 focus-visible:border-white/30 focus-visible:ring-white/10 sm:min-h-[180px]"
+                  className="min-h-[160px] border-transparent bg-transparent font-mono text-sm text-slate-700 placeholder:text-slate-400 shadow-none focus-visible:border-transparent focus-visible:ring-0 sm:min-h-[200px]"
                 />
               </div>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-xs text-white/50">
+                <div className="text-xs text-slate-500">
                   <p>package.json 전체를 붙여넣거나 드래그하여 업로드하세요.</p>
                   {uploadedFileName && (
-                    <p className="mt-1 text-white/60">업로드됨: {uploadedFileName}</p>
+                    <p className="mt-1 text-slate-500">업로드됨: {uploadedFileName}</p>
                   )}
                 </div>
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="h-11 rounded-full border border-white/20 bg-white/10 px-6 text-white hover:bg-white/20"
+                  className="v2-button-primary v2-pressable h-11 px-7 text-sm"
                 >
                   {isPending ? "분석 중..." : "Analyze"}
                 </Button>
@@ -254,28 +265,34 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
           )}
         </TabsContent>
 
-        <TabsContent value="github" className={cn("space-y-4", isLanding && "space-y-3")}>
+        <TabsContent
+          value="github"
+          className={cn(
+            "space-y-4",
+            isLanding && "space-y-4 min-h-[260px] sm:min-h-[300px]"
+          )}
+        >
           {isLanding ? (
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+            <div className="v2-input-panel px-5 py-4">
               <label htmlFor="github-url" className="sr-only">
                 GitHub 레포지토리 URL
               </label>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="flex flex-1 items-center gap-3">
-                  <SearchIcon className="text-white/50" />
+                  <SearchIcon className="text-sky-500" />
                   <Input
                     id="github-url"
                     type="url"
                     placeholder="Paste GitHub URL..."
                     value={githubUrl}
                     onChange={(e) => setGithubUrl(e.target.value)}
-                    className="h-11 border-transparent bg-transparent px-0 text-base text-white placeholder:text-white/35 shadow-none focus-visible:border-transparent focus-visible:ring-0"
+                    className="h-11 border-transparent bg-transparent px-0 text-base text-slate-700 placeholder:text-slate-400 shadow-none focus-visible:border-transparent focus-visible:ring-0"
                   />
                 </div>
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="h-11 rounded-full border border-white/20 bg-white/10 px-6 text-white hover:bg-white/20"
+                  className="v2-button-primary v2-pressable h-11 px-7 text-sm"
                 >
                   {isPending ? "분석 중..." : "Analyze"}
                 </Button>
@@ -305,7 +322,9 @@ export const DependencyParserForm = forwardRef<DependencyParserFormHandle, Depen
         <div
           className={cn(
             "rounded-md p-3 text-sm",
-            isLanding ? "border border-red-500/20 bg-red-500/10 text-red-200" : "bg-destructive/10 text-destructive"
+            isLanding
+              ? "border border-red-200 bg-red-50 text-red-600"
+              : "bg-destructive/10 text-destructive"
           )}
         >
           {error}

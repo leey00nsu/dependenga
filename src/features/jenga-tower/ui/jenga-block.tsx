@@ -2,20 +2,42 @@
 
 import { useRef, useState, Suspense } from "react";
 import { ThreeEvent } from "@react-three/fiber";
-import { Edges, RoundedBox } from "@react-three/drei";
+import { Edges, Outlines, RoundedBox } from "@react-three/drei";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
 /**
- * 심각도별 색상 매핑 (디자인 가이드)
- * Safe: 웜 그레이, Severity: 명확한 대비 색상
+ * 심각도별 색상 매핑 (component-v2 배지 톤)
  */
-const SEVERITY_COLORS: Record<SeverityWithSafe, string> = {
-  critical: "#E74C3C", // 선명한 레드
-  high: "#F39C12",     // 주황
-  medium: "#F1C40F",   // 옐로우
-  low: "#2ECC71",      // 그린
-  safe: "#BFC2C7",     // 웜 그레이
+const SEVERITY_STYLES: Record<
+  SeverityWithSafe,
+  { base: string; edge: string; glow: string }
+> = {
+  critical: {
+    base: "#F6A3A3",
+    edge: "#7A1E1E",
+    glow: "#FFFFFF",
+  },
+  high: {
+    base: "#F8C38C",
+    edge: "#8B4A0D",
+    glow: "#FFFFFF",
+  },
+  medium: {
+    base: "#FAE3A0",
+    edge: "#8F6B0F",
+    glow: "#FFFFFF",
+  },
+  low: {
+    base: "#A7E3B8",
+    edge: "#1E6B3D",
+    glow: "#FFFFFF",
+  },
+  safe: {
+    base: "#A9D2F6",
+    edge: "#1F4F82",
+    glow: "#FFFFFF",
+  },
 };
 
 export interface JengaBlockProps {
@@ -61,32 +83,44 @@ function JengaBlockFallback({
   rotation,
   dimensions = [3, 0.6, 1],
 }: JengaBlockProps) {
-  const color = SEVERITY_COLORS[severity];
+  const { base, edge, glow } = SEVERITY_STYLES[severity];
   
   return (
     <RoundedBox
       args={dimensions}
-      radius={0.05}
-      smoothness={4}
+      radius={0.2}
+      smoothness={12}
       position={position}
       rotation={rotation}
       castShadow
       receiveShadow
     >
       <meshPhysicalMaterial
-        color={color}
-        roughness={0.15}
+        color={base}
+        roughness={0.32}
         metalness={0}
-        transmission={0.65}
-        thickness={0.6}
-        clearcoat={0.6}
-        clearcoatRoughness={0.2}
+        transmission={0.78}
+        thickness={0.9}
+        ior={1.35}
+        clearcoat={1}
+        clearcoatRoughness={0.18}
+        specularIntensity={1}
+        specularColor="#ffffff"
+        attenuationColor={base}
+        attenuationDistance={0.6}
+        emissive={glow}
+        emissiveIntensity={0.1}
         transparent
-        opacity={0.55}
-        emissive={color}
-        emissiveIntensity={0.12}
+        opacity={0.82}
       />
-      <Edges scale={1.02} color="#F8FAFC" linewidth={2} />
+      <Outlines
+        thickness={0.1}
+        color={edge}
+        opacity={1}
+        transparent={false}
+        screenspace
+      />
+      <Edges scale={1.01} color={edge} linewidth={1.5} />
     </RoundedBox>
   );
 }
@@ -134,7 +168,7 @@ function JengaBlockWithTexture({
     onClick?.(blockData);
   };
 
-  const color = SEVERITY_COLORS[severity];
+  const { base, edge, glow } = SEVERITY_STYLES[severity];
   const isCritical = severity === "critical";
   const showHighlight = hovered || isHighlighted;
 
@@ -142,31 +176,43 @@ function JengaBlockWithTexture({
     <RoundedBox
       ref={meshRef}
       args={dimensions}
-      radius={0.05} // 둥근 모서리 반경
-      smoothness={4} // 부드러움 (세그먼트 수)
+      radius={0.2} // 둥근 모서리 반경
+      smoothness={12} // 부드러움 (세그먼트 수)
       position={position}
       rotation={rotation}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       onClick={handleClick}
-      scale={showHighlight ? 1.05 : 1}
+      scale={showHighlight ? 1.04 : 1}
       castShadow
       receiveShadow
     >
       <meshPhysicalMaterial
-        color={color}
-        emissive={isCritical ? color : (showHighlight ? color : "#000000")}
-        emissiveIntensity={isCritical ? 0.35 : (showHighlight ? 0.22 : 0.08)}
-        roughness={0.12}
+        color={base}
+        roughness={0.32}
         metalness={0}
-        transmission={0.7}
-        thickness={0.7}
-        clearcoat={0.7}
+        transmission={0.8}
+        thickness={0.95}
+        ior={1.35}
+        clearcoat={1}
         clearcoatRoughness={0.18}
+        specularIntensity={1}
+        specularColor="#ffffff"
+        attenuationColor={base}
+        attenuationDistance={0.6}
+        emissive={isCritical ? glow : showHighlight ? glow : "#000000"}
+        emissiveIntensity={isCritical ? 0.14 : showHighlight ? 0.12 : 0}
         transparent
-        opacity={0.6}
+        opacity={0.84}
       />
-      <Edges scale={1.02} color="#F8FAFC" linewidth={2} />
+      <Outlines
+        thickness={showHighlight ? 0.12 : 0.1}
+        color={edge}
+        opacity={1}
+        transparent={false}
+        screenspace
+      />
+      <Edges scale={1.01} color={edge} linewidth={1.5} />
     </RoundedBox>
   );
 }
