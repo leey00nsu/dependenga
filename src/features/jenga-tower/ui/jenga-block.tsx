@@ -201,7 +201,7 @@ function JengaBlockWithTexture({
         attenuationColor={base}
         attenuationDistance={0.6}
         emissive={isCritical ? glow : showHighlight ? glow : "#000000"}
-        emissiveIntensity={isCritical ? 0.14 : showHighlight ? 0.12 : 0.08}
+        emissiveIntensity={isCritical ? 0.14 : showHighlight ? 0.12 : 0}
         transparent
         opacity={0.84}
       />

@@ -29,7 +29,7 @@
 - 랜딩/결과 뷰에서 v2 배경 클래스와 이미지 자산을 적용
 - 결과 패널 UI와 3D 블럭 머티리얼/색상 팔레트를 component-v2 기준으로 맞춤
 
-```
+```text
 [LandingView] -> [DependencyParserForm]
 [ResultView] -> [VulnerabilityPanel] + [JengaScene/JengaBlock]
 ```
@@ -38,7 +38,7 @@
 
 ## 파일 구조
 
-```
+```text
 src/
 ├── app/
 │   └── globals.css

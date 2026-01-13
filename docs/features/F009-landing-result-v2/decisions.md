@@ -29,3 +29,11 @@
 - **Decision**: component-v2 배지 컬러를 3D 블럭 색상으로 사용.
 - **Rationale**: 결과 화면과 3D 시각화의 톤을 일관되게 유지하기 위함.
 - **Consequences**: 배경 대비를 위해 엣지/하이라이트 튜닝 필요.
+
+## D004: Jua 폰트 preload 비활성화로 한글 로딩 유지 (2026-01-13)
+
+- **Context**: Jua의 `subsets` 타입에 "korean"이 포함되지 않아 TypeScript 에러가 발생함.
+- **Options**: (1) `subsets`에 "korean"을 추가하고 타입을 무시 (2) `preload: false`로 전환 (3) `next/font/local`로 전환
+- **Decision**: `preload: false`로 설정하고 `subsets` 지정 없이 Jua를 사용.
+- **Rationale**: 공식 문서의 권장 방식에 맞추면서 타입 에러 없이 한글 로딩을 유지하기 위함.
+- **Consequences**: 초기 폰트 로딩이 다소 늦어질 수 있어 필요 시 로컬 폰트 전환 검토.
