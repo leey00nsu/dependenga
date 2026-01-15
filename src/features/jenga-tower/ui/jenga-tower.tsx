@@ -35,7 +35,6 @@ export function JengaTower({
   const bodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const packageBodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const settledRef = useRef(false);
-  const lastLayoutKeyRef = useRef<string | null>(null);
   const spawnTimersRef = useRef<number[]>([]);
 
   const spawnPositions = useMemo(
@@ -66,11 +65,6 @@ export function JengaTower({
   }, []);
 
   useEffect(() => {
-    if (lastLayoutKeyRef.current === layout.key) {
-      return;
-    }
-    lastLayoutKeyRef.current = layout.key;
-
     clearSpawnTimers();
     bodiesRef.current.clear();
     packageBodiesRef.current.clear();
