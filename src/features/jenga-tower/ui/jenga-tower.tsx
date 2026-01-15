@@ -61,8 +61,6 @@ export function JengaTower({
   const bodyHandlesRef = useRef<Map<string, number>>(new Map());
   const settledRef = useRef(false);
   const collapseTriggeredRef = useRef(false);
-  const collapsePendingRef = useRef(false);
-  const settlePendingRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
   const { rigidBodyStates } = useRapier();
 
@@ -147,8 +145,6 @@ export function JengaTower({
     bodyHandlesRef.current.clear();
     settledRef.current = false;
     collapseTriggeredRef.current = false;
-    collapsePendingRef.current = false;
-    settlePendingRef.current = false;
     setHoveredBlock(null);
     setSpawnCount(0);
     onSettledChange?.(false);
@@ -199,46 +195,22 @@ export function JengaTower({
 
     if (allSleeping) {
       if (hasVulnerableBlocks) {
-        if (!collapseTriggeredRef.current && !collapsePendingRef.current) {
-          collapsePendingRef.current = true;
-          setTimeout(() => {
-            if (collapseTriggeredRef.current) {
-              collapsePendingRef.current = false;
-              return;
-            }
-            collapseTriggeredRef.current = true;
-            triggerCollapse();
-            collapsePendingRef.current = false;
-          }, 0);
+        if (!collapseTriggeredRef.current) {
+          collapseTriggeredRef.current = true;
+          triggerCollapse();
           return;
         }
 
-        if (!settledRef.current && !settlePendingRef.current) {
-          settlePendingRef.current = true;
-          setTimeout(() => {
-            if (settledRef.current) {
-              settlePendingRef.current = false;
-              return;
-            }
-            settledRef.current = true;
-            onSettledChange?.(true);
-            settlePendingRef.current = false;
-          }, 0);
+        if (!settledRef.current) {
+          settledRef.current = true;
+          onSettledChange?.(true);
         }
         return;
       }
 
-      if (!settledRef.current && !settlePendingRef.current) {
-        settlePendingRef.current = true;
-        setTimeout(() => {
-          if (settledRef.current) {
-            settlePendingRef.current = false;
-            return;
-          }
-          settledRef.current = true;
-          onSettledChange?.(true);
-          settlePendingRef.current = false;
-        }, 0);
+      if (!settledRef.current) {
+        settledRef.current = true;
+        onSettledChange?.(true);
       }
     }
   }, 1);
