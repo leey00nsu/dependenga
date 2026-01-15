@@ -89,6 +89,7 @@
     - [x] 2단계 정착 감지 로직 적용
     - [x] 최종 정착 시 Physics pause 처리
     - [x] 붕괴 후 이탈 방지용 경계 콜라이더 추가
+    - [x] Rapier unsafe aliasing 에러 방지 (physics step hook 사용)
 
 ---
 

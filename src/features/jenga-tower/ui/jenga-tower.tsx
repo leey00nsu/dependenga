@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { RigidBody, type RigidBodyApi } from "@react-three/rapier";
+import { RigidBody, type RigidBodyApi, useAfterPhysicsStep } from "@react-three/rapier";
 import { JengaBlock, type BlockData } from "./jenga-block";
 import type { JengaLayoutResult } from "../model/jenga-layout";
 import { BLOCK_HEIGHT } from "../model/jenga-layout";
@@ -170,7 +169,7 @@ export function JengaTower({
     };
   }, [layout.blocks.length, layout.key, clearSpawnTimers, onSettledChange]);
 
-  useFrame(() => {
+  useAfterPhysicsStep(() => {
     if (settledRef.current) {
       return;
     }
