@@ -3,6 +3,7 @@
 import { useRef, useState, Suspense } from "react";
 import { ThreeEvent } from "@react-three/fiber";
 import { Edges, Outlines, RoundedBox } from "@react-three/drei";
+import { Vector3 } from "three";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
@@ -151,21 +152,40 @@ function JengaBlockWithTexture({
     position,
   };
 
+  const resolveWorldPosition = (): [number, number, number] => {
+    if (!meshRef.current) {
+      return position;
+    }
+
+    const worldPosition = new Vector3();
+    meshRef.current.getWorldPosition(worldPosition);
+    return [worldPosition.x, worldPosition.y, worldPosition.z];
+  };
+
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
-    onHover?.(true, blockData);
+    onHover?.(true, {
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(false);
-    onHover?.(false, blockData);
+    onHover?.(false, {
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    onClick?.(blockData);
+    onClick?.({
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const { base, edge, glow } = SEVERITY_STYLES[severity];

@@ -1,10 +1,15 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import type { PackageVulnerability } from "@/entities/vulnerability/model/types";
+import {
+  buildJengaLayout,
+  createJengaLayoutKey,
+  BLOCK_HEIGHT,
+} from "../model/jenga-layout";
 import { JengaTower } from "./jenga-tower";
 import type { BlockData } from "./jenga-block";
 
@@ -26,12 +31,11 @@ export function JengaScene({
   onBlockClick,
   highlightedPackage 
 }: JengaSceneProps) {
-  // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
-  const towerHeight = Math.ceil(packages.length / 3);
-  const blockHeight = 0.65;
-  const actualTowerHeight = towerHeight * blockHeight;
+  const layoutKey = useMemo(() => createJengaLayoutKey(packages), [packages]);
+  const layout = useMemo(() => buildJengaLayout(packages), [layoutKey]);
 
-  const groundY = -0.5;
+  // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
+  const actualTowerHeight = layout.towerHeight;
   
   // 타워가 높을수록 더 멀리, 더 높은 각도에서 봄
   const cameraDistance = Math.max(12, actualTowerHeight * 1.2);
@@ -43,6 +47,8 @@ export function JengaScene({
   // 줌 범위: 타워 높이에 따라 동적 조정
   const minDistance = 5;
   const maxDistance = Math.max(80, actualTowerHeight * 3);
+  const groundY = -BLOCK_HEIGHT / 2;
+  const shadowPlaneY = groundY - 0.2;
 
   return (
     <div className="w-full h-full min-h-[500px] bg-transparent">
@@ -84,7 +90,7 @@ export function JengaScene({
               <CuboidCollider args={[50, 0.1, 50]} />
             </RigidBody>
             <JengaTower 
-              packages={packages} 
+              layout={layout}
               onBlockHover={onBlockHover}
               onBlockClick={onBlockClick}
               highlightedPackage={highlightedPackage}
@@ -94,7 +100,7 @@ export function JengaScene({
           {/* 투명 그림자 바닥 - 그림자만 보이고 바닥 자체는 투명 */}
           <mesh 
             rotation={[-Math.PI / 2, 0, 0]} 
-            position={[0, groundY, 0]} 
+            position={[0, shadowPlaneY, 0]} 
             receiveShadow
           >
             <planeGeometry args={[100, 100]} />

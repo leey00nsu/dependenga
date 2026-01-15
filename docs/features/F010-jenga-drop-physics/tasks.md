@@ -28,9 +28,9 @@
     - [ ] `package.json`에 `@react-three/rapier` 추가
     - [ ] `JengaScene`에 `<Physics>` 래핑 및 Ground 구성
 
-- [TODO][P1] T-F010-02 레이아웃 계산 분리 및 순차 스폰
+- [DONE][P1] T-F010-02 레이아웃 계산 분리 및 순차 스폰
   - Owner: @me
-  - Status Log: 2026-01-15 [TODO]
+  - Status Log: 2026-01-15 [DONE]
   - Acceptance:
     - 레이아웃 계산 로직이 분리된다
     - 블록이 위에서 순차적으로 스폰되어 떨어진다
