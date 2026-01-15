@@ -18,9 +18,9 @@
 
 ### Phase 1: 기반 구성
 
-- [TODO][P1] T-F010-01 물리 엔진 도입 및 씬 스캐폴딩
+- [DONE][P1] T-F010-01 물리 엔진 도입 및 씬 스캐폴딩
   - Owner: @me
-  - Status Log: 2026-01-15 [TODO]
+  - Status Log: 2026-01-15 [DONE]
   - Acceptance:
     - `@react-three/rapier` 의존성이 추가된다
     - JengaScene에 Physics 컨텍스트와 바닥 콜라이더가 적용된다

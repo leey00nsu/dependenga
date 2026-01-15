@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import type { PackageVulnerability } from "@/entities/vulnerability/model/types";
 import { JengaTower } from "./jenga-tower";
 import type { BlockData } from "./jenga-block";
@@ -29,6 +30,8 @@ export function JengaScene({
   const towerHeight = Math.ceil(packages.length / 3);
   const blockHeight = 0.65;
   const actualTowerHeight = towerHeight * blockHeight;
+
+  const groundY = -0.5;
   
   // 타워가 높을수록 더 멀리, 더 높은 각도에서 봄
   const cameraDistance = Math.max(12, actualTowerHeight * 1.2);
@@ -75,18 +78,23 @@ export function JengaScene({
           />
           <directionalLight position={[-5, 8, -5]} intensity={0.3} color="#e0f0ff" />
 
-          {/* 젠가 타워 - Floating */}
-          <JengaTower 
-            packages={packages} 
-            onBlockHover={onBlockHover}
-            onBlockClick={onBlockClick}
-            highlightedPackage={highlightedPackage}
-          />
+          {/* 젠가 타워 - Physics */}
+          <Physics gravity={[0, -9.81, 0]}>
+            <RigidBody type="fixed" colliders={false} position={[0, groundY, 0]}>
+              <CuboidCollider args={[50, 0.1, 50]} />
+            </RigidBody>
+            <JengaTower 
+              packages={packages} 
+              onBlockHover={onBlockHover}
+              onBlockClick={onBlockClick}
+              highlightedPackage={highlightedPackage}
+            />
+          </Physics>
 
           {/* 투명 그림자 바닥 - 그림자만 보이고 바닥 자체는 투명 */}
           <mesh 
             rotation={[-Math.PI / 2, 0, 0]} 
-            position={[0, -0.5, 0]} 
+            position={[0, groundY, 0]} 
             receiveShadow
           >
             <planeGeometry args={[100, 100]} />
