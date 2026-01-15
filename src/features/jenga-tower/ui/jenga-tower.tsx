@@ -17,7 +17,7 @@ interface JengaTowerProps {
 }
 
 const SPAWN_INTERVAL_MS = 120;
-const DROP_HEIGHT = 5;
+const DROP_HEIGHT = 8;
 const ZERO_VECTOR: [number, number, number] = [0, 0, 0];
 const MAX_COLLAPSE_TARGETS = 2;
 
