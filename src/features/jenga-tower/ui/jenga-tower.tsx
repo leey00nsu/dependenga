@@ -38,10 +38,10 @@ const PHYSICS_BY_SEVERITY = {
 };
 
 const IMPULSE_BY_SEVERITY = {
-  critical: { impulse: 3.0, torque: 2.0 },
-  high: { impulse: 2.4, torque: 1.6 },
-  medium: { impulse: 1.6, torque: 1.0 },
-  low: { impulse: 1.0, torque: 0.6 },
+  critical: { impulse: 4.5, torque: 3.0 },
+  high: { impulse: 3.6, torque: 2.4 },
+  medium: { impulse: 2.4, torque: 1.6 },
+  low: { impulse: 1.6, torque: 1.0 },
   safe: { impulse: 0, torque: 0 },
 };
 
