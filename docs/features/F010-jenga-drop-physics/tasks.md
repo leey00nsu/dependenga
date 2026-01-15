@@ -85,9 +85,11 @@
     - [x] 심각도별 물리 파라미터 설정
     - [x] 취약 블록 임펄스 트리거 구현
 
-- [REVIEW][P1] T-F010-07 붕괴 후 정착 감지 및 완료 상태 전환
+- [DONE][P1] T-F010-07 붕괴 후 정착 감지 및 완료 상태 전환
   - Owner: @me
-  - Status Log: 2026-01-15 [REVIEW]
+  - Status Log:
+    - 2026-01-15 [REVIEW]
+    - 2026-01-15 [DONE]
   - Acceptance:
     - 붕괴 이후 최종 정착 시 상호작용 상태로 전환된다
     - Physics pause가 최종 정착 시점에만 적용된다
@@ -95,7 +97,7 @@
     - [x] 2단계 정착 감지 로직 적용
     - [x] 최종 정착 시 Physics pause 처리
     - [x] 붕괴 후 이탈 방지용 경계 콜라이더 추가
-    - [ ] Rapier unsafe aliasing 에러 방지
+    - [x] Rapier unsafe aliasing 에러 방지
 
 - [DONE][P1] T-F010-08 OSV 심각도 매핑 보강
   - Owner: @me
@@ -112,7 +114,7 @@
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
+- [x] 모든 태스크 [DONE]
 - [ ] 모든 테스트 통과
-- [ ] 문서 업데이트 완료
+- [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
