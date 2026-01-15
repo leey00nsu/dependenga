@@ -9,6 +9,8 @@ import {
   buildJengaLayout,
   createJengaLayoutKey,
   BLOCK_HEIGHT,
+  BLOCK_LENGTH,
+  BLOCK_WIDTH,
 } from "../model/jenga-layout";
 import { JengaTower } from "./jenga-tower";
 import type { BlockData } from "./jenga-block";
@@ -54,6 +56,11 @@ export function JengaScene({
   const maxDistance = Math.max(80, actualTowerHeight * 3);
   const groundY = -BLOCK_HEIGHT / 2;
   const shadowPlaneY = groundY - 0.2;
+  const wallDistance = Math.max(BLOCK_LENGTH * 2, BLOCK_WIDTH * 6);
+  const wallThickness = 0.2;
+  const wallHeight = Math.max(actualTowerHeight + 2, 6);
+  const wallCenterY = wallHeight / 2;
+  const wallLength = wallDistance * 2;
 
   return (
     <div className="w-full h-full min-h-[500px] bg-transparent">
@@ -93,6 +100,22 @@ export function JengaScene({
           <Physics paused={isPhysicsPaused} gravity={[0, -9.81, 0]}>
             <RigidBody type="fixed" colliders={false} position={[0, groundY, 0]}>
               <CuboidCollider args={[50, 0.1, 50]} />
+              <CuboidCollider
+                args={[wallLength / 2, wallHeight / 2, wallThickness / 2]}
+                position={[0, wallCenterY, -wallDistance]}
+              />
+              <CuboidCollider
+                args={[wallLength / 2, wallHeight / 2, wallThickness / 2]}
+                position={[0, wallCenterY, wallDistance]}
+              />
+              <CuboidCollider
+                args={[wallThickness / 2, wallHeight / 2, wallLength / 2]}
+                position={[-wallDistance, wallCenterY, 0]}
+              />
+              <CuboidCollider
+                args={[wallThickness / 2, wallHeight / 2, wallLength / 2]}
+                position={[wallDistance, wallCenterY, 0]}
+              />
             </RigidBody>
             <JengaTower 
               layout={layout}

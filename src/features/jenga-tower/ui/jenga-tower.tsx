@@ -19,6 +19,15 @@ interface JengaTowerProps {
 const SPAWN_INTERVAL_MS = 120;
 const DROP_HEIGHT = 5;
 const ZERO_VECTOR: [number, number, number] = [0, 0, 0];
+const MAX_COLLAPSE_TARGETS = 2;
+
+const SEVERITY_RANK = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+  safe: 0,
+};
 
 const PHYSICS_BY_SEVERITY = {
   critical: { friction: 0.2, linearDamping: 0.2, angularDamping: 0.25, restitution: 0.08 },
@@ -66,13 +75,26 @@ export function JengaTower({
       ),
     [layout.blocks]
   );
-  const hasVulnerableBlocks = useMemo(
-    () => layout.blocks.some((block) => block.package?.maxSeverity !== "safe"),
-    [layout.blocks]
-  );
+  const collapseTargets = useMemo(() => {
+    const candidates = layout.blocks.filter(
+      (block) => block.package && block.package.maxSeverity !== "safe"
+    );
+    candidates.sort((a, b) => {
+      const severityDiff =
+        SEVERITY_RANK[b.package?.maxSeverity ?? "safe"] -
+        SEVERITY_RANK[a.package?.maxSeverity ?? "safe"];
+      if (severityDiff !== 0) {
+        return severityDiff;
+      }
+      return a.layer - b.layer;
+    });
+
+    return candidates.slice(0, MAX_COLLAPSE_TARGETS);
+  }, [layout.blocks]);
+  const hasVulnerableBlocks = collapseTargets.length > 0;
 
   const triggerCollapse = useCallback(() => {
-    layout.blocks.forEach((block) => {
+    collapseTargets.forEach((block) => {
       if (!block.package || block.package.maxSeverity === "safe") {
         return;
       }
@@ -100,7 +122,7 @@ export function JengaTower({
       body.applyImpulse(impulseVector, true);
       body.applyTorqueImpulse(torqueVector, true);
     });
-  }, [layout.blocks]);
+  }, [collapseTargets]);
 
   const handleHover = useCallback(
     (isHovered: boolean, data: BlockData) => {
