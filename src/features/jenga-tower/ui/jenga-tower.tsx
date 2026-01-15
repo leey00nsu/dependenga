@@ -170,16 +170,22 @@ export function JengaTower({
     }
 
     if (allSleeping) {
-      if (hasVulnerableBlocks && !collapseTriggeredRef.current) {
-        collapseTriggeredRef.current = true;
-        triggerCollapse();
+      if (hasVulnerableBlocks) {
+        if (!collapseTriggeredRef.current) {
+          collapseTriggeredRef.current = true;
+          triggerCollapse();
+          return;
+        }
+
+        if (!settledRef.current) {
+          settledRef.current = true;
+          onSettledChange?.(true);
+        }
         return;
       }
 
-      if (!hasVulnerableBlocks) {
-        settledRef.current = true;
-        onSettledChange?.(true);
-      }
+      settledRef.current = true;
+      onSettledChange?.(true);
     }
   });
 
