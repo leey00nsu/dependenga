@@ -25,8 +25,8 @@
     - `@react-three/rapier` 의존성이 추가된다
     - JengaScene에 Physics 컨텍스트와 바닥 콜라이더가 적용된다
   - Checklist:
-    - [ ] `package.json`에 `@react-three/rapier` 추가
-    - [ ] `JengaScene`에 `<Physics>` 래핑 및 Ground 구성
+    - [x] `package.json`에 `@react-three/rapier` 추가
+    - [x] `JengaScene`에 `<Physics>` 래핑 및 Ground 구성
 
 - [DONE][P1] T-F010-02 레이아웃 계산 분리 및 순차 스폰
   - Owner: @me
@@ -35,8 +35,8 @@
     - 레이아웃 계산 로직이 분리된다
     - 블록이 위에서 순차적으로 스폰되어 떨어진다
   - Checklist:
-    - [ ] `jenga-layout.ts` 생성 및 기존 배치 로직 분리
-    - [ ] `JengaTower`에서 스폰 타이밍 제어
+    - [x] `jenga-layout.ts` 생성 및 기존 배치 로직 분리
+    - [x] `JengaTower`에서 스폰 타이밍 제어
 
 ### Phase 2: 정착 감지 및 상호작용 정리
 
@@ -47,8 +47,8 @@
     - 모든 블록 정착 시 완료 상태로 전환된다
     - 정착 이후 Physics가 일시정지된다
   - Checklist:
-    - [ ] 블록 sleep/속도 기준 정착 판정
-    - [ ] 정착 완료 시 콜백 또는 상태 플래그 처리
+    - [x] 블록 sleep/속도 기준 정착 판정
+    - [x] 정착 완료 시 콜백 또는 상태 플래그 처리
 
 - [REVIEW][P2] T-F010-04 회귀 검증 및 간단 테스트
   - Owner: @me
