@@ -20,6 +20,22 @@ const SPAWN_INTERVAL_MS = 120;
 const DROP_HEIGHT = 5;
 const ZERO_VECTOR: [number, number, number] = [0, 0, 0];
 
+const PHYSICS_BY_SEVERITY = {
+  critical: { friction: 0.2, linearDamping: 0.2, angularDamping: 0.25, restitution: 0.08 },
+  high: { friction: 0.3, linearDamping: 0.25, angularDamping: 0.35, restitution: 0.06 },
+  medium: { friction: 0.45, linearDamping: 0.35, angularDamping: 0.5, restitution: 0.05 },
+  low: { friction: 0.6, linearDamping: 0.45, angularDamping: 0.6, restitution: 0.04 },
+  safe: { friction: 0.9, linearDamping: 0.6, angularDamping: 0.8, restitution: 0.05 },
+};
+
+const IMPULSE_BY_SEVERITY = {
+  critical: { impulse: 1.8, torque: 1.2 },
+  high: { impulse: 1.4, torque: 0.9 },
+  medium: { impulse: 1.0, torque: 0.6 },
+  low: { impulse: 0.7, torque: 0.4 },
+  safe: { impulse: 0, torque: 0 },
+};
+
 /**
  * 패키지 목록을 젠가 타워로 렌더링
  */
@@ -35,6 +51,7 @@ export function JengaTower({
   const bodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const packageBodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const settledRef = useRef(false);
+  const collapseTriggeredRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
 
   const spawnPositions = useMemo(
@@ -49,6 +66,41 @@ export function JengaTower({
       ),
     [layout.blocks]
   );
+  const hasVulnerableBlocks = useMemo(
+    () => layout.blocks.some((block) => block.package?.maxSeverity !== "safe"),
+    [layout.blocks]
+  );
+
+  const triggerCollapse = useCallback(() => {
+    layout.blocks.forEach((block) => {
+      if (!block.package || block.package.maxSeverity === "safe") {
+        return;
+      }
+
+      const body = bodiesRef.current.get(block.id);
+      if (!body) {
+        return;
+      }
+
+      const { impulse, torque } = IMPULSE_BY_SEVERITY[block.package.maxSeverity];
+      if (impulse === 0 && torque === 0) {
+        return;
+      }
+
+      const direction = (block.layer + block.slot) % 2 === 0 ? 1 : -1;
+      const upward = impulse * 0.3;
+      const isRotated = Math.abs(block.rotation[1]) > 0.1;
+
+      const impulseVector: [number, number, number] = isRotated
+        ? [direction * impulse, upward, 0]
+        : [0, upward, direction * impulse];
+      const torqueVector: [number, number, number] = [0, torque * direction, torque * 0.3];
+
+      body.wakeUp();
+      body.applyImpulse(impulseVector, true);
+      body.applyTorqueImpulse(torqueVector, true);
+    });
+  }, [layout.blocks]);
 
   const handleHover = useCallback(
     (isHovered: boolean, data: BlockData) => {
@@ -69,6 +121,7 @@ export function JengaTower({
     bodiesRef.current.clear();
     packageBodiesRef.current.clear();
     settledRef.current = false;
+    collapseTriggeredRef.current = false;
     setHoveredBlock(null);
     setSpawnCount(0);
     onSettledChange?.(false);
@@ -117,8 +170,16 @@ export function JengaTower({
     }
 
     if (allSleeping) {
-      settledRef.current = true;
-      onSettledChange?.(true);
+      if (hasVulnerableBlocks && !collapseTriggeredRef.current) {
+        collapseTriggeredRef.current = true;
+        triggerCollapse();
+        return;
+      }
+
+      if (!hasVulnerableBlocks) {
+        settledRef.current = true;
+        onSettledChange?.(true);
+      }
     }
   });
 
@@ -183,10 +244,10 @@ export function JengaTower({
             position={spawnPositions[index]}
             rotation={block.rotation}
             colliders="cuboid"
-            friction={0.9}
-            restitution={0.05}
-            linearDamping={0.6}
-            angularDamping={0.8}
+            friction={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].friction}
+            restitution={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].restitution}
+            linearDamping={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].linearDamping}
+            angularDamping={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].angularDamping}
             canSleep
           >
             <JengaBlock
