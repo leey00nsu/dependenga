@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
@@ -33,6 +33,11 @@ export function JengaScene({
 }: JengaSceneProps) {
   const layoutKey = useMemo(() => createJengaLayoutKey(packages), [packages]);
   const layout = useMemo(() => buildJengaLayout(packages), [layoutKey]);
+  const [isPhysicsPaused, setIsPhysicsPaused] = useState(false);
+
+  useEffect(() => {
+    setIsPhysicsPaused(false);
+  }, [layout.key]);
 
   // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
   const actualTowerHeight = layout.towerHeight;
@@ -85,7 +90,7 @@ export function JengaScene({
           <directionalLight position={[-5, 8, -5]} intensity={0.3} color="#e0f0ff" />
 
           {/* 젠가 타워 - Physics */}
-          <Physics gravity={[0, -9.81, 0]}>
+          <Physics paused={isPhysicsPaused} gravity={[0, -9.81, 0]}>
             <RigidBody type="fixed" colliders={false} position={[0, groundY, 0]}>
               <CuboidCollider args={[50, 0.1, 50]} />
             </RigidBody>
@@ -94,6 +99,7 @@ export function JengaScene({
               onBlockHover={onBlockHover}
               onBlockClick={onBlockClick}
               highlightedPackage={highlightedPackage}
+              onSettledChange={setIsPhysicsPaused}
             />
           </Physics>
 

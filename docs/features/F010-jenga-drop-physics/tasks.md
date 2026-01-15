@@ -40,9 +40,9 @@
 
 ### Phase 2: 정착 감지 및 상호작용 정리
 
-- [TODO][P1] T-F010-03 정착 감지 및 Physics 일시정지
+- [DONE][P1] T-F010-03 정착 감지 및 Physics 일시정지
   - Owner: @me
-  - Status Log: 2026-01-15 [TODO]
+  - Status Log: 2026-01-15 [DONE]
   - Acceptance:
     - 모든 블록 정착 시 완료 상태로 전환된다
     - 정착 이후 Physics가 일시정지된다

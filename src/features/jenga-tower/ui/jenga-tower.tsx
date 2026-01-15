@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { RigidBody, type RigidBodyApi } from "@react-three/rapier";
 import { JengaBlock, type BlockData } from "./jenga-block";
 import type { JengaLayoutResult } from "../model/jenga-layout";
@@ -12,6 +13,7 @@ interface JengaTowerProps {
   onBlockHover?: (data: BlockData | null) => void;
   onBlockClick?: (data: BlockData) => void;
   highlightedPackage?: string | null;
+  onSettledChange?: (isSettled: boolean) => void;
 }
 
 const SPAWN_INTERVAL_MS = 120;
@@ -26,11 +28,13 @@ export function JengaTower({
   onBlockHover,
   onBlockClick,
   highlightedPackage,
+  onSettledChange,
 }: JengaTowerProps) {
   const [hoveredBlock, setHoveredBlock] = useState<BlockData | null>(null);
   const [spawnCount, setSpawnCount] = useState(0);
   const bodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const packageBodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
+  const settledRef = useRef(false);
   const lastLayoutKeyRef = useRef<string | null>(null);
   const spawnTimersRef = useRef<number[]>([]);
 
@@ -70,8 +74,10 @@ export function JengaTower({
     clearSpawnTimers();
     bodiesRef.current.clear();
     packageBodiesRef.current.clear();
+    settledRef.current = false;
     setHoveredBlock(null);
     setSpawnCount(0);
+    onSettledChange?.(false);
 
     if (layout.blocks.length === 0) {
       return;
@@ -93,7 +99,34 @@ export function JengaTower({
     return () => {
       clearSpawnTimers();
     };
-  }, [layout.blocks.length, layout.key, clearSpawnTimers]);
+  }, [layout.blocks.length, layout.key, clearSpawnTimers, onSettledChange]);
+
+  useFrame(() => {
+    if (settledRef.current) {
+      return;
+    }
+
+    if (spawnCount < layout.blocks.length) {
+      return;
+    }
+
+    if (bodiesRef.current.size < layout.blocks.length) {
+      return;
+    }
+
+    let allSleeping = true;
+    for (const body of bodiesRef.current.values()) {
+      if (!body.isSleeping()) {
+        allSleeping = false;
+        break;
+      }
+    }
+
+    if (allSleeping) {
+      settledRef.current = true;
+      onSettledChange?.(true);
+    }
+  });
 
   const spawnedBlocks = layout.blocks.slice(0, spawnCount);
 
