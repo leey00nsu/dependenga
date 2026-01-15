@@ -91,6 +91,17 @@
     - [x] 붕괴 후 이탈 방지용 경계 콜라이더 추가
     - [ ] Rapier unsafe aliasing 에러 방지
 
+- [DONE][P1] T-F010-08 OSV 심각도 매핑 보강
+  - Owner: @me
+  - Status Log: 2026-01-15 [DONE]
+  - Acceptance:
+    - CVSS 벡터 문자열에서도 심각도가 올바르게 분류된다
+    - 샘플 package.json에서 critical/high/medium/low 분포가 반영된다
+  - Checklist:
+    - [x] OSV schema에 database_specific.severity 추가
+    - [x] 심각도 결정 로직에 fallback 추가
+    - [x] 관련 유닛 테스트 추가
+
 ---
 
 ## 완료 조건

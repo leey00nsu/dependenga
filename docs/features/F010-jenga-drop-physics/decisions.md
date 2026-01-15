@@ -37,3 +37,11 @@
 - **Decision**: 붕괴 이후 2차 정착 시 pause
 - **Rationale**: 연출을 살리면서 성능을 확보
 - **Consequences**: 정착 상태를 두 번 감지해야 함
+
+## D005: OSV 심각도는 database_specific.severity로 보강 (2026-01-15)
+
+- **Context**: OSV 응답의 CVSS 점수가 벡터 문자열로 제공되는 경우 파싱 실패로 `medium`으로만 분류됨
+- **Options**: CVSS 벡터 파서 도입, database_specific.severity 활용, 기본값 유지
+- **Decision**: database_specific.severity를 fallback으로 사용해 심각도 분류를 보강
+- **Rationale**: 추가 의존성 없이도 분류 정확도를 올리고 샘플 분포를 확보할 수 있음
+- **Consequences**: database_specific가 없는 경우는 기존과 동일하게 기본값(`medium`) 적용
