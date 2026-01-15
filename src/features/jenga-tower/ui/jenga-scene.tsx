@@ -97,7 +97,7 @@ export function JengaScene({
           <directionalLight position={[-5, 8, -5]} intensity={0.3} color="#e0f0ff" />
 
           {/* 젠가 타워 - Physics */}
-          <Physics paused={isPhysicsPaused} gravity={[0, -9.81, 0]} updatePriority={0}>
+          <Physics paused={isPhysicsPaused} gravity={[0, -9.81, 0]} updatePriority={-1}>
             <RigidBody type="fixed" colliders={false} position={[0, groundY, 0]}>
               <CuboidCollider args={[50, 0.1, 50]} />
               <CuboidCollider

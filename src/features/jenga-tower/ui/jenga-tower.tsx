@@ -213,7 +213,7 @@ export function JengaTower({
         onSettledChange?.(true);
       }
     }
-  }, 1);
+  });
 
   const spawnedBlocks = layout.blocks.slice(0, spawnCount);
 
