@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { RigidBody, type RigidBodyApi } from "@react-three/rapier";
+import { RigidBody, useRapier, type RapierRigidBody } from "@react-three/rapier";
 import { JengaBlock, type BlockData } from "./jenga-block";
 import type { JengaLayoutResult } from "../model/jenga-layout";
 import { BLOCK_HEIGHT } from "../model/jenga-layout";
@@ -57,13 +57,14 @@ export function JengaTower({
 }: JengaTowerProps) {
   const [hoveredBlock, setHoveredBlock] = useState<BlockData | null>(null);
   const [spawnCount, setSpawnCount] = useState(0);
-  const bodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
-  const packageBodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
+  const bodiesRef = useRef<Map<string, RapierRigidBody>>(new Map());
+  const bodyHandlesRef = useRef<Map<string, number>>(new Map());
   const settledRef = useRef(false);
   const collapseTriggeredRef = useRef(false);
   const collapsePendingRef = useRef(false);
   const settlePendingRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
+  const { rigidBodyStates } = useRapier();
 
   const spawnPositions = useMemo(
     () =>
@@ -143,7 +144,7 @@ export function JengaTower({
   useEffect(() => {
     clearSpawnTimers();
     bodiesRef.current.clear();
-    packageBodiesRef.current.clear();
+    bodyHandlesRef.current.clear();
     settledRef.current = false;
     collapseTriggeredRef.current = false;
     collapsePendingRef.current = false;
@@ -188,8 +189,9 @@ export function JengaTower({
     }
 
     let allSleeping = true;
-    for (const body of bodiesRef.current.values()) {
-      if (!body.isSleeping()) {
+    for (const handle of bodyHandlesRef.current.values()) {
+      const state = rigidBodyStates.get(handle);
+      if (!state || !state.isSleeping) {
         allSleeping = false;
         break;
       }
@@ -259,20 +261,11 @@ export function JengaTower({
       (item) => item.package?.packageName === highlightedPackage
     );
     if (block?.package) {
-      const body = packageBodiesRef.current.get(highlightedPackage);
-      const position = body
-        ? ([
-            body.translation().x,
-            body.translation().y,
-            body.translation().z,
-          ] as [number, number, number])
-        : block.position;
-
       tooltipData = {
         packageName: block.package.packageName,
         version: block.package.version,
         vulnerabilityCount: block.package.vulnerabilities.length,
-        position,
+        position: block.position,
       };
     }
   }
@@ -289,14 +282,10 @@ export function JengaTower({
             ref={(api) => {
               if (api) {
                 bodiesRef.current.set(block.id, api);
-                if (pkg) {
-                  packageBodiesRef.current.set(pkg.packageName, api);
-                }
+                bodyHandlesRef.current.set(block.id, api.handle);
               } else {
                 bodiesRef.current.delete(block.id);
-                if (pkg) {
-                  packageBodiesRef.current.delete(pkg.packageName);
-                }
+                bodyHandlesRef.current.delete(block.id);
               }
             }}
             position={spawnPositions[index]}
