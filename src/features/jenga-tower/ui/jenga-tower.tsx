@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
-import { RigidBody, type RigidBodyApi, useAfterPhysicsStep } from "@react-three/rapier";
+import { useFrame } from "@react-three/fiber";
+import { RigidBody, type RigidBodyApi } from "@react-three/rapier";
 import { JengaBlock, type BlockData } from "./jenga-block";
 import type { JengaLayoutResult } from "../model/jenga-layout";
 import { BLOCK_HEIGHT } from "../model/jenga-layout";
@@ -60,6 +61,8 @@ export function JengaTower({
   const packageBodiesRef = useRef<Map<string, RigidBodyApi>>(new Map());
   const settledRef = useRef(false);
   const collapseTriggeredRef = useRef(false);
+  const collapsePendingRef = useRef(false);
+  const settlePendingRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
 
   const spawnPositions = useMemo(
@@ -143,6 +146,8 @@ export function JengaTower({
     packageBodiesRef.current.clear();
     settledRef.current = false;
     collapseTriggeredRef.current = false;
+    collapsePendingRef.current = false;
+    settlePendingRef.current = false;
     setHoveredBlock(null);
     setSpawnCount(0);
     onSettledChange?.(false);
@@ -169,7 +174,7 @@ export function JengaTower({
     };
   }, [layout.blocks.length, layout.key, clearSpawnTimers, onSettledChange]);
 
-  useAfterPhysicsStep(() => {
+  useFrame(() => {
     if (settledRef.current) {
       return;
     }
@@ -192,23 +197,49 @@ export function JengaTower({
 
     if (allSleeping) {
       if (hasVulnerableBlocks) {
-        if (!collapseTriggeredRef.current) {
-          collapseTriggeredRef.current = true;
-          triggerCollapse();
+        if (!collapseTriggeredRef.current && !collapsePendingRef.current) {
+          collapsePendingRef.current = true;
+          setTimeout(() => {
+            if (collapseTriggeredRef.current) {
+              collapsePendingRef.current = false;
+              return;
+            }
+            collapseTriggeredRef.current = true;
+            triggerCollapse();
+            collapsePendingRef.current = false;
+          }, 0);
           return;
         }
 
-        if (!settledRef.current) {
-          settledRef.current = true;
-          onSettledChange?.(true);
+        if (!settledRef.current && !settlePendingRef.current) {
+          settlePendingRef.current = true;
+          setTimeout(() => {
+            if (settledRef.current) {
+              settlePendingRef.current = false;
+              return;
+            }
+            settledRef.current = true;
+            onSettledChange?.(true);
+            settlePendingRef.current = false;
+          }, 0);
         }
         return;
       }
 
-      settledRef.current = true;
-      onSettledChange?.(true);
+      if (!settledRef.current && !settlePendingRef.current) {
+        settlePendingRef.current = true;
+        setTimeout(() => {
+          if (settledRef.current) {
+            settlePendingRef.current = false;
+            return;
+          }
+          settledRef.current = true;
+          onSettledChange?.(true);
+          settlePendingRef.current = false;
+        }, 0);
+      }
     }
-  });
+  }, 1);
 
   const spawnedBlocks = layout.blocks.slice(0, spawnCount);
 
