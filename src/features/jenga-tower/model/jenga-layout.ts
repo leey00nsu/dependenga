@@ -16,10 +16,10 @@ export const BLOCK_DIMENSIONS: [number, number, number] = [
 ];
 
 const SEVERITY_OFFSET: Record<SeverityWithSafe, number> = {
-  critical: 1.5,
-  high: 1.2,
-  medium: 0.8,
-  low: 0.4,
+  critical: 2.4,
+  high: 1.8,
+  medium: 1.2,
+  low: 0.7,
   safe: 0,
 };
 
