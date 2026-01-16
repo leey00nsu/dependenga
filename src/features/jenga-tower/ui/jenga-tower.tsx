@@ -20,6 +20,7 @@ const SPAWN_INTERVAL_MS = 120;
 const DROP_HEIGHT = 8;
 const ZERO_VECTOR: [number, number, number] = [0, 0, 0];
 const MAX_COLLAPSE_TARGETS = 2;
+const SETTLE_CHECK_INTERVAL = 4;
 
 const SEVERITY_RANK = {
   critical: 4,
@@ -62,6 +63,7 @@ export function JengaTower({
   const settledRef = useRef(false);
   const collapseTriggeredRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
+  const settleFrameRef = useRef(0);
   const { rigidBodyStates } = useRapier();
 
   const spawnPositions = useMemo(
@@ -145,6 +147,7 @@ export function JengaTower({
     bodyHandlesRef.current.clear();
     settledRef.current = false;
     collapseTriggeredRef.current = false;
+    settleFrameRef.current = 0;
     setHoveredBlock(null);
     setSpawnCount(0);
     onSettledChange?.(false);
@@ -181,6 +184,11 @@ export function JengaTower({
     }
 
     if (bodiesRef.current.size < layout.blocks.length) {
+      return;
+    }
+
+    settleFrameRef.current = (settleFrameRef.current + 1) % SETTLE_CHECK_INTERVAL;
+    if (settleFrameRef.current !== 0) {
       return;
     }
 

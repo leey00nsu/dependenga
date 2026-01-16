@@ -110,11 +110,71 @@
     - [x] 심각도 결정 로직에 fallback 추가
     - [x] 관련 유닛 테스트 추가
 
+### Phase 3: 렌더링 성능 개선
+
+- [DONE][P2] T-F010-09 정착 감지 폴링 간격 최적화
+  - Owner: @me
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
+  - Acceptance:
+    - 정착 판정 타이밍이 기존과 동일하게 유지된다
+    - 정착 감지 루프의 CPU 사용량이 감소한다
+  - Checklist:
+    - [x] 정착 감지 프레임 샘플링 적용
+    - [x] 붕괴/최종 정착 흐름 정상 동작 확인
+
+- [DOING][P2] T-F010-10 블록 Suspense 경계 정리
+  - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
+  - Acceptance:
+    - 블록 렌더링/상호작용이 동일하게 유지된다
+    - 불필요한 Suspense 트리 오버헤드가 제거된다
+  - Checklist:
+    - [ ] 블록 컴포넌트의 Suspense 래핑 제거
+    - [ ] fallback 컴포넌트 유지 여부 정리
+
+- [TODO][P2] T-F010-11 호버 상태 업데이트 중복 방지
+  - Owner: @me
+  - Acceptance:
+    - 호버/툴팁 동작이 기존과 동일하다
+    - 동일 대상에 대한 상태 업데이트가 줄어든다
+  - Checklist:
+    - [ ] 최근 호버 대상 캐시로 중복 setState 방지
+    - [ ] 패널/블록 호버 연동 영향 확인
+
+- [TODO][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
+  - Owner: @me
+  - Acceptance:
+    - 정착 이후 idle 렌더링이 줄어든다
+    - 호버/클릭 등 상호작용 갱신이 유지된다
+  - Checklist:
+    - [ ] Canvas frameloop을 상태 기반으로 전환
+    - [ ] 새 결과 로드시 항상 모드 복구 확인
+
+- [TODO][P3] T-F010-13 고 DPI dpr 상한 설정
+  - Owner: @me
+  - Acceptance:
+    - 고해상도 환경에서 렌더링 비용이 감소한다
+    - 시각적 품질 변화가 미미하다
+  - Checklist:
+    - [ ] Canvas dpr 상한 설정
+    - [ ] 주요 UI/블록 렌더링 확인
+
+- [TODO][P3] T-F010-14 그림자 맵 해상도 조정
+  - Owner: @me
+  - Acceptance:
+    - 그림자 품질이 크게 훼손되지 않는다
+    - GPU 부하가 감소한다
+  - Checklist:
+    - [ ] 방향광 shadow-mapSize 축소
+    - [ ] 그림자 표시 정상 확인
+
 ---
 
 ## 완료 조건
 
-- [x] 모든 태스크 [DONE]
+- [ ] 모든 태스크 [DONE]
 - [ ] 모든 테스트 통과
 - [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
