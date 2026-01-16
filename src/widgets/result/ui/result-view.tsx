@@ -33,9 +33,15 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   useEffect(() => {
-    if (parsedResult) {
-      setIsPanelOpen(false);
+    if (!parsedResult) {
+      return;
     }
+    if (typeof window === "undefined") {
+      setIsPanelOpen(true);
+      return;
+    }
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    setIsPanelOpen(isDesktop);
   }, [parsedResult]);
 
   const handleBlockHover = useCallback((data: BlockData | null) => {
@@ -123,7 +129,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
         <aside className="pointer-events-auto mx-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px] lg:mx-0">
           {vulnResult && (
             <>
-              <div className="lg:hidden">
+              <div>
                 <button
                   type="button"
                   onClick={handlePanelToggle}
@@ -141,9 +147,9 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
                 id="vulnerability-panel"
                 className={`transition-[max-height,opacity] duration-300 ease-out ${
                   isPanelOpen
-                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 overflow-visible"
-                    : "mt-0 max-h-0 opacity-0 pointer-events-none overflow-hidden"
-                } lg:mt-0 lg:max-h-none lg:opacity-100 lg:pointer-events-auto lg:overflow-visible`}
+                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 overflow-visible lg:mt-4 lg:max-h-[calc(100dvh-120px)]"
+                    : "mt-0 max-h-0 opacity-0 pointer-events-none overflow-hidden lg:mt-0 lg:max-h-0"
+                }`}
               >
                 <VulnerabilityPanel
                   packages={vulnResult.packages}
