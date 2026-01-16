@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildJengaLayout } from "./jenga-layout";
+import { buildJengaLayout, createJengaLayoutKey } from "./jenga-layout";
 import type { PackageVulnerability } from "@/entities/vulnerability/model/types";
 
 const createPackage = (
@@ -56,5 +56,16 @@ describe("buildJengaLayout", () => {
     expect(layout.totalLayerCount).toBe(3);
     expect(layout.blocks).toHaveLength(9);
     expect(layout.blocks.filter((block) => block.package).length).toBe(0);
+  });
+
+  it("입력 순서와 무관하게 동일한 레이아웃 키를 생성한다", () => {
+    const pkgA = createPackage("alpha", "high", 2);
+    const pkgB = createPackage("beta", "low", 1);
+    const pkgC = createPackage("gamma", "safe", 0);
+
+    const keyA = createJengaLayoutKey([pkgA, pkgB, pkgC]);
+    const keyB = createJengaLayoutKey([pkgC, pkgA, pkgB]);
+
+    expect(keyA).toBe(keyB);
   });
 });

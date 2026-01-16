@@ -23,6 +23,14 @@ const SEVERITY_OFFSET: Record<SeverityWithSafe, number> = {
   safe: 0,
 };
 
+const SEVERITY_RANK: Record<SeverityWithSafe, number> = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+  safe: 0,
+};
+
 function seededRandom(seed: number): number {
   const x = Math.sin(seed * 9999) * 10000;
   return x - Math.floor(x);
@@ -55,6 +63,11 @@ export function createJengaLayoutKey(
     return "empty";
   }
 
+  const sortedPackages = sortPackagesForLayout(packages);
+  return buildLayoutKey(sortedPackages);
+}
+
+function buildLayoutKey(packages: PackageVulnerability[]): string {
   return packages
     .map(
       (pkg) =>
@@ -63,12 +76,35 @@ export function createJengaLayoutKey(
     .join("|");
 }
 
+function sortPackagesForLayout(
+  packages: PackageVulnerability[]
+): PackageVulnerability[] {
+  return [...packages].sort((a, b) => {
+    const nameDiff = a.packageName.localeCompare(b.packageName);
+    if (nameDiff !== 0) {
+      return nameDiff;
+    }
+    const versionDiff = a.version.localeCompare(b.version);
+    if (versionDiff !== 0) {
+      return versionDiff;
+    }
+    const severityDiff = SEVERITY_RANK[b.maxSeverity] - SEVERITY_RANK[a.maxSeverity];
+    if (severityDiff !== 0) {
+      return severityDiff;
+    }
+    return b.vulnerabilities.length - a.vulnerabilities.length;
+  });
+}
+
 export function buildJengaLayout(
   packages: PackageVulnerability[]
 ): JengaLayoutResult {
-  const key = createJengaLayoutKey(packages);
-  const vulnerablePackages = packages.filter((pkg) => pkg.maxSeverity !== "safe");
-  const safePackages = packages.filter((pkg) => pkg.maxSeverity === "safe");
+  const sortedPackages = sortPackagesForLayout(packages);
+  const key = buildLayoutKey(sortedPackages);
+  const vulnerablePackages = sortedPackages.filter(
+    (pkg) => pkg.maxSeverity !== "safe"
+  );
+  const safePackages = sortedPackages.filter((pkg) => pkg.maxSeverity === "safe");
 
   const safeInMiddleLayers = vulnerablePackages.length * 2;
   const remainingSafePackages = Math.max(

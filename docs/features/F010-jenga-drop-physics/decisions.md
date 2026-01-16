@@ -45,3 +45,11 @@
 - **Decision**: database_specific.severity를 fallback으로 사용해 심각도 분류를 보강
 - **Rationale**: 추가 의존성 없이도 분류 정확도를 올리고 샘플 분포를 확보할 수 있음
 - **Consequences**: database_specific가 없는 경우는 기존과 동일하게 기본값(`medium`) 적용
+
+## D006: 레이아웃 키 안정화를 위해 패키지 정렬 적용 (2026-01-16)
+
+- **Context**: 입력 패키지 순서에 따라 레이아웃 키가 달라져 불필요한 재빌드가 발생
+- **Options**: 입력 순서 유지, 패키지 정렬 후 키 생성, 키 생성 로직 캐시
+- **Decision**: 패키지 목록을 정렬한 뒤 레이아웃 키/그룹 분리에 사용
+- **Rationale**: 동일 집합의 입력은 동일한 키로 수렴시켜 불필요한 재스폰을 방지
+- **Consequences**: 입력 순서 기반 배치에 대한 의존성이 제거됨

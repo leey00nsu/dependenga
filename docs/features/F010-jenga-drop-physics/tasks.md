@@ -184,6 +184,30 @@
     - [x] 방향광 shadow-mapSize 축소
     - [x] 그림자 표시 정상 확인
 
+### Phase 4: 코드 리뷰 반영
+
+- [DONE][P2] T-F010-15 레이아웃 키 안정화(패키지 정렬)
+  - Owner: @me
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
+  - Acceptance:
+    - 입력 패키지 순서와 무관하게 레이아웃 키가 동일하다
+    - vulnerable/safe 분리 결과가 안정적으로 유지된다
+  - Checklist:
+    - [x] 패키지 정렬 유틸 추가
+    - [x] 정렬된 배열로 키 생성 및 그룹 분리 적용
+
+- [DOING][P2] T-F010-16 호버 중복키 개선
+  - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
+  - Acceptance:
+    - 동일 packageName의 다른 버전/블록도 정상 호버 갱신된다
+    - 기존 호버 동작이 유지된다
+  - Checklist:
+    - [ ] 호버 dedupe 키에 version 또는 고유 식별자 포함
+    - [ ] 패널 연동 영향 확인
+
 ---
 
 ## 완료 조건
