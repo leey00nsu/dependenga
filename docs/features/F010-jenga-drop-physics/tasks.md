@@ -148,18 +148,21 @@
     - [x] 최근 호버 대상 캐시로 중복 setState 방지
     - [x] 패널/블록 호버 연동 영향 확인
 
-- [DOING][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
+- [DONE][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 정착 이후 idle 렌더링이 줄어든다
     - 호버/클릭 등 상호작용 갱신이 유지된다
   - Checklist:
-    - [ ] Canvas frameloop을 상태 기반으로 전환
-    - [ ] 새 결과 로드시 항상 모드 복구 확인
+    - [x] Canvas frameloop을 상태 기반으로 전환
+    - [x] 새 결과 로드시 항상 모드 복구 확인
 
-- [TODO][P3] T-F010-13 고 DPI dpr 상한 설정
+- [DOING][P3] T-F010-13 고 DPI dpr 상한 설정
   - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
   - Acceptance:
     - 고해상도 환경에서 렌더링 비용이 감소한다
     - 시각적 품질 변화가 미미하다
