@@ -37,3 +37,11 @@
 - **Decision**: 데스크톱에서 캔버스 위치를 고정한다
 - **Rationale**: 시각적 안정감 유지, 레이아웃 이동 최소화
 - **Consequences**: 패널을 접어도 캔버스가 확장되지 않음
+
+## D005: 패널 접힘 시 접근성 트리에서 제거 (2026-01-16)
+
+- **Context**: 패널을 숨겨도 스크린 리더/키보드 접근 가능하다는 코드 리뷰 피드백
+- **Options**: height/opacity만 유지, aria-hidden + inert 적용, 닫힘 상태에서 컴포넌트 렌더 제거
+- **Decision**: 닫힘 상태에서 VulnerabilityPanel 렌더를 제거하고 래퍼에 aria-hidden을 적용한다
+- **Rationale**: 접근성 트리에서 확실히 제외하면서 추가 폴리필 없이 유지
+- **Consequences**: 패널을 다시 열 때 컴포넌트가 재마운트됨

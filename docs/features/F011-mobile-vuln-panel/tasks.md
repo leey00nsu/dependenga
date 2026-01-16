@@ -99,6 +99,16 @@
     - [x] glass-scroll 색상 대비 강화
     - [x] hover 색상 조정
 
+- [DONE][P1] T-F011-10 패널 접힘 접근성 비노출 처리
+  - Owner: @me
+  - Status Log: 2026-01-16 [TODO] → 2026-01-16 [DOING] → 2026-01-16 [DONE]
+  - Acceptance:
+    - 패널이 닫힌 상태에서 스크린 리더에 노출되지 않는다
+    - 닫힌 상태에서 내부 UI 포커스가 불가능하다
+  - Checklist:
+    - [x] 패널 닫힘 시 aria-hidden 적용
+    - [x] 패널 닫힘 시 내부 컴포넌트 렌더 제거
+
 ### Phase 2: 검증 및 문서
 
 - [DONE][P2] T-F011-02 수동 시나리오 검증

@@ -145,17 +145,20 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
               </div>
               <div
                 id="vulnerability-panel"
+                aria-hidden={!isPanelOpen}
                 className={`overflow-hidden transition-[height,opacity] duration-300 ease-out ${
                   isPanelOpen
                     ? "mt-4 h-[calc(100dvh-220px)] opacity-100 lg:mt-4 lg:flex-1 lg:min-h-0 lg:h-auto"
                     : "mt-0 h-0 opacity-0 pointer-events-none lg:mt-0 lg:h-0 lg:flex-none"
                 }`}
               >
-                <VulnerabilityPanel
-                  packages={vulnResult.packages}
-                  onPackageHover={handlePackageHover}
-                  highlightedPackage={highlightedPackage}
-                />
+                {isPanelOpen ? (
+                  <VulnerabilityPanel
+                    packages={vulnResult.packages}
+                    onPackageHover={handlePackageHover}
+                    highlightedPackage={highlightedPackage}
+                  />
+                ) : null}
               </div>
             </>
           )}
