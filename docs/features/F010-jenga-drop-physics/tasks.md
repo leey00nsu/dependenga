@@ -124,18 +124,21 @@
     - [x] 정착 감지 프레임 샘플링 적용
     - [x] 붕괴/최종 정착 흐름 정상 동작 확인
 
-- [DOING][P2] T-F010-10 블록 Suspense 경계 정리
+- [DONE][P2] T-F010-10 블록 Suspense 경계 정리
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 블록 렌더링/상호작용이 동일하게 유지된다
     - 불필요한 Suspense 트리 오버헤드가 제거된다
   - Checklist:
-    - [ ] 블록 컴포넌트의 Suspense 래핑 제거
-    - [ ] fallback 컴포넌트 유지 여부 정리
+    - [x] 블록 컴포넌트의 Suspense 래핑 제거
+    - [x] fallback 컴포넌트 유지 여부 정리
 
-- [TODO][P2] T-F010-11 호버 상태 업데이트 중복 방지
+- [DOING][P2] T-F010-11 호버 상태 업데이트 중복 방지
   - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
   - Acceptance:
     - 호버/툴팁 동작이 기존과 동일하다
     - 동일 대상에 대한 상태 업데이트가 줄어든다
