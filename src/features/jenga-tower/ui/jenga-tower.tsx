@@ -131,7 +131,9 @@ export function JengaTower({
   const handleHover = useCallback(
     (isHovered: boolean, data: BlockData) => {
       const newHovered = isHovered ? data : null;
-      const nextKey = newHovered?.packageName ?? null;
+      const nextKey = newHovered
+        ? `${newHovered.packageName}@${newHovered.version}`
+        : null;
       if (lastHoverKeyRef.current === nextKey) {
         return;
       }

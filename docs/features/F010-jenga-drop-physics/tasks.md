@@ -198,15 +198,17 @@
     - [x] 패키지 정렬 유틸 추가
     - [x] 정렬된 배열로 키 생성 및 그룹 분리 적용
 
-- [DOING][P2] T-F010-16 호버 중복키 개선
+- [DONE][P2] T-F010-16 호버 중복키 개선
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 동일 packageName의 다른 버전/블록도 정상 호버 갱신된다
     - 기존 호버 동작이 유지된다
   - Checklist:
-    - [ ] 호버 dedupe 키에 version 또는 고유 식별자 포함
-    - [ ] 패널 연동 영향 확인
+    - [x] 호버 dedupe 키에 version 또는 고유 식별자 포함
+    - [x] 패널 연동 영향 확인
 
 ---
 
