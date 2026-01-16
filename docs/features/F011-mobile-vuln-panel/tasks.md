@@ -89,6 +89,16 @@
   - Checklist:
     - [x] 캔버스 패딩을 고정값으로 복구
 
+- [DONE][P2] T-F011-09 스크롤바 시인성 개선
+  - Owner: @me
+  - Status Log: 2026-01-16 [TODO] → 2026-01-16 [DOING] → 2026-01-16 [DONE]
+  - Acceptance:
+    - 패널 내부 스크롤바가 카드 배경과 구분된다
+    - 호버 시 스크롤바가 더 선명하게 보인다
+  - Checklist:
+    - [x] glass-scroll 색상 대비 강화
+    - [x] hover 색상 조정
+
 ### Phase 2: 검증 및 문서
 
 - [DOING][P2] T-F011-02 수동 시나리오 검증
