@@ -18,24 +18,24 @@
 
 ### Phase 1: 모바일 패널 토글 UI
 
-- [TODO][P1] T-F011-01 모바일 패널 토글 및 기본 접힘
+- [DONE][P1] T-F011-01 모바일 패널 토글 및 기본 접힘
   - Owner: @me
-  - Status Log: 2026-01-16 [TODO]
+  - Status Log: 2026-01-16 [TODO] → 2026-01-16 [DOING] → 2026-01-16 [DONE]
   - Acceptance:
     - 모바일 뷰포트에서 패널이 기본적으로 접힌다
     - 토글 버튼으로 패널을 열고 닫을 수 있다
     - 데스크톱 뷰포트는 기존 레이아웃이 유지된다
   - Checklist:
-    - [ ] ResultView에 토글 상태 추가
-    - [ ] 모바일 토글 버튼 UI/문구 추가
-    - [ ] 패널 컨테이너에 반응형 표시/접힘 클래스 적용
-    - [ ] 토글 버튼 접근성(aria-expanded/controls) 적용
+    - [x] ResultView에 토글 상태 추가
+    - [x] 모바일 토글 버튼 UI/문구 추가
+    - [x] 패널 컨테이너에 반응형 표시/접힘 클래스 적용
+    - [x] 토글 버튼 접근성(aria-expanded/controls) 적용
 
 ### Phase 2: 검증 및 문서
 
-- [TODO][P2] T-F011-02 수동 시나리오 검증
+- [DOING][P2] T-F011-02 수동 시나리오 검증
   - Owner: @me
-  - Status Log: 2026-01-16 [TODO]
+  - Status Log: 2026-01-16 [TODO] → 2026-01-16 [DOING]
   - Acceptance:
     - 모바일/데스크톱 동작이 스펙과 일치한다
   - Checklist:
