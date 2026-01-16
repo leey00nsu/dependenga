@@ -81,6 +81,14 @@
     - [x] 패널 래퍼에 max-height/overflow 제한 적용
     - [x] 패널 컴포넌트 max-height를 래퍼 기준으로 조정
 
+- [DONE][P1] T-F011-08 데스크톱 캔버스 위치 고정
+  - Owner: @me
+  - Status Log: 2026-01-16 [DOING] → 2026-01-16 [DONE]
+  - Acceptance:
+    - 데스크톱에서 패널 토글 시 캔버스 위치가 유지된다
+  - Checklist:
+    - [x] 캔버스 패딩을 고정값으로 복구
+
 ### Phase 2: 검증 및 문서
 
 - [DOING][P2] T-F011-02 수동 시나리오 검증

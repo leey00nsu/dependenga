@@ -100,11 +100,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     <div className="relative min-h-screen overflow-hidden text-slate-700">
       <div className="pointer-events-none absolute inset-0 v2-background" />
 
-      <div
-        className={`absolute inset-0 z-0 transition-[padding] duration-300 ${
-          isPanelOpen ? "lg:pr-[360px]" : "lg:pr-0"
-        }`}
-      >
+      <div className="absolute inset-0 z-0 lg:pr-[360px]">
         {vulnResult && (
           <JengaScene
             packages={vulnResult.packages}
@@ -130,7 +126,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
           </div>
         </header>
 
-        <aside className="pointer-events-auto mx-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px] lg:mx-0">
+        <aside className="pointer-events-auto mx-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px] lg:mx-0 lg:flex lg:flex-col">
           {vulnResult && (
             <>
               <div>
@@ -149,10 +145,10 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
               </div>
               <div
                 id="vulnerability-panel"
-                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+                className={`overflow-hidden transition-[height,opacity] duration-300 ease-out ${
                   isPanelOpen
-                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 lg:mt-4 lg:max-h-[calc(100dvh-120px)]"
-                    : "mt-0 max-h-0 opacity-0 pointer-events-none lg:mt-0 lg:max-h-0"
+                    ? "mt-4 h-[calc(100dvh-220px)] opacity-100 lg:mt-4 lg:flex-1 lg:min-h-0 lg:h-auto"
+                    : "mt-0 h-0 opacity-0 pointer-events-none lg:mt-0 lg:h-0 lg:flex-none"
                 }`}
               >
                 <VulnerabilityPanel
