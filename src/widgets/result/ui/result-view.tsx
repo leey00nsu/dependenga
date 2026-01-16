@@ -120,7 +120,7 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
           </div>
         </header>
 
-        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px]">
+        <aside className="pointer-events-auto mx-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px] lg:mx-0">
           {vulnResult && (
             <>
               <div className="lg:hidden">
@@ -139,11 +139,11 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
               </div>
               <div
                 id="vulnerability-panel"
-                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+                className={`transition-[max-height,opacity] duration-300 ease-out ${
                   isPanelOpen
-                    ? "mt-4 max-h-[70vh] opacity-100"
-                    : "mt-0 max-h-0 opacity-0 pointer-events-none"
-                } lg:mt-0 lg:max-h-none lg:opacity-100 lg:pointer-events-auto`}
+                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 overflow-visible"
+                    : "mt-0 max-h-0 opacity-0 pointer-events-none overflow-hidden"
+                } lg:mt-0 lg:max-h-none lg:opacity-100 lg:pointer-events-auto lg:overflow-visible`}
               >
                 <VulnerabilityPanel
                   packages={vulnResult.packages}
