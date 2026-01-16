@@ -18,7 +18,7 @@
 
 ### Phase 1: 기반 구성
 
-- [DONE][P1] T-F010-01 물리 엔진 도입 및 씬 스캐폴딩
+- [DONE] (P1) T-F010-01 물리 엔진 도입 및 씬 스캐폴딩
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -28,7 +28,7 @@
     - [x] `package.json`에 `@react-three/rapier` 추가
     - [x] `JengaScene`에 `<Physics>` 래핑 및 Ground 구성
 
-- [DONE][P1] T-F010-02 레이아웃 계산 분리 및 순차 스폰
+- [DONE] (P1) T-F010-02 레이아웃 계산 분리 및 순차 스폰
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -40,7 +40,7 @@
 
 ### Phase 2: 정착 감지 및 상호작용 정리
 
-- [DONE][P1] T-F010-03 정착 감지 및 Physics 일시정지
+- [DONE] (P1) T-F010-03 정착 감지 및 Physics 일시정지
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -50,7 +50,7 @@
     - [x] 블록 sleep/속도 기준 정착 판정
     - [x] 정착 완료 시 콜백 또는 상태 플래그 처리
 
-- [DONE][P2] T-F010-04 회귀 검증 및 간단 테스트
+- [DONE] (P2) T-F010-04 회귀 검증 및 간단 테스트
   - Owner: @me
   - Status Log:
     - 2026-01-15 [REVIEW]
@@ -66,7 +66,7 @@
     - [x] 정착 이후 패널 호버/블록 호버가 정상 동작
     - [x] 새 결과 로드 시 애니메이션이 1회만 실행
 
-- [DONE][P1] T-F010-05 스폰 이펙트 Strict Mode 대응
+- [DONE] (P1) T-F010-05 스폰 이펙트 Strict Mode 대응
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -75,7 +75,7 @@
   - Checklist:
     - [x] 스폰 이펙트 가드 제거 및 재스케줄 보장
 
-- [DONE][P1] T-F010-06 취약 블록 불안정 파라미터 및 임펄스 적용
+- [DONE] (P1) T-F010-06 취약 블록 불안정 파라미터 및 임펄스 적용
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -85,7 +85,7 @@
     - [x] 심각도별 물리 파라미터 설정
     - [x] 취약 블록 임펄스 트리거 구현
 
-- [DONE][P1] T-F010-07 붕괴 후 정착 감지 및 완료 상태 전환
+- [DONE] (P1) T-F010-07 붕괴 후 정착 감지 및 완료 상태 전환
   - Owner: @me
   - Status Log:
     - 2026-01-15 [REVIEW]
@@ -99,7 +99,7 @@
     - [x] 붕괴 후 이탈 방지용 경계 콜라이더 추가
     - [x] Rapier unsafe aliasing 에러 방지
 
-- [DONE][P1] T-F010-08 OSV 심각도 매핑 보강
+- [DONE] (P1) T-F010-08 OSV 심각도 매핑 보강
   - Owner: @me
   - Status Log: 2026-01-15 [DONE]
   - Acceptance:
@@ -112,7 +112,7 @@
 
 ### Phase 3: 렌더링 성능 개선
 
-- [DONE][P2] T-F010-09 정착 감지 폴링 간격 최적화
+- [DONE] (P2) T-F010-09 정착 감지 폴링 간격 최적화
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -124,7 +124,7 @@
     - [x] 정착 감지 프레임 샘플링 적용
     - [x] 붕괴/최종 정착 흐름 정상 동작 확인
 
-- [DONE][P2] T-F010-10 블록 Suspense 경계 정리
+- [DONE] (P2) T-F010-10 블록 Suspense 경계 정리
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -136,7 +136,7 @@
     - [x] 블록 컴포넌트의 Suspense 래핑 제거
     - [x] fallback 컴포넌트 유지 여부 정리
 
-- [DONE][P2] T-F010-11 호버 상태 업데이트 중복 방지
+- [DONE] (P2) T-F010-11 호버 상태 업데이트 중복 방지
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -148,7 +148,7 @@
     - [x] 최근 호버 대상 캐시로 중복 setState 방지
     - [x] 패널/블록 호버 연동 영향 확인
 
-- [DONE][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
+- [DONE] (P2) T-F010-12 Physics pause 시 frameloop 절전 모드
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -160,7 +160,7 @@
     - [x] Canvas frameloop을 상태 기반으로 전환
     - [x] 새 결과 로드시 항상 모드 복구 확인
 
-- [DONE][P3] T-F010-13 고 DPI dpr 상한 설정
+- [DONE] (P3) T-F010-13 고 DPI dpr 상한 설정
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -172,7 +172,7 @@
     - [x] Canvas dpr 상한 설정
     - [x] 주요 UI/블록 렌더링 확인
 
-- [DONE][P3] T-F010-14 그림자 맵 해상도 조정
+- [DONE] (P3) T-F010-14 그림자 맵 해상도 조정
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -186,7 +186,7 @@
 
 ### Phase 4: 코드 리뷰 반영
 
-- [DONE][P2] T-F010-15 레이아웃 키 안정화(패키지 정렬)
+- [DONE] (P2) T-F010-15 레이아웃 키 안정화(패키지 정렬)
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
@@ -198,7 +198,7 @@
     - [x] 패키지 정렬 유틸 추가
     - [x] 정렬된 배열로 키 생성 및 그룹 분리 적용
 
-- [DONE][P2] T-F010-16 호버 중복키 개선
+- [DONE] (P2) T-F010-16 호버 중복키 개선
   - Owner: @me
   - Status Log:
     - 2026-01-16 [DOING]
