@@ -166,7 +166,7 @@
 
   .glass-scroll {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+    scrollbar-color: rgba(15, 23, 42, 0.45) transparent;
   }
 
   .glass-scroll::-webkit-scrollbar {
@@ -178,14 +178,14 @@
   }
 
   .glass-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.28);
+    background-color: rgba(15, 23, 42, 0.4);
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
 
   .glass-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(15, 23, 42, 0.6);
   }
 
   .cube-float {

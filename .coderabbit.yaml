@@ -22,13 +22,13 @@ reviews:
     drafts: false
 
   # 경로별 설정
+  path_filters:
+    - "!docs/**"
   path_instructions:
     - path: "**/*.ts"
       instructions: "TypeScript strict mode를 준수하는지 확인하세요."
     - path: "**/*.tsx"
       instructions: "React 컴포넌트가 단일 책임 원칙을 따르는지 확인하세요."
-    - path: "docs/**"
-      instructions: "문서가 명확하고 일관성 있는지 확인하세요."
 
 chat:
   auto_reply: true

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { useVulnerabilityAnalysis } from "@/features/vulnerability-analyzer/model/use-vulnerability-analysis";
@@ -30,6 +30,19 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  useEffect(() => {
+    if (!parsedResult) {
+      return;
+    }
+    if (typeof window === "undefined") {
+      setIsPanelOpen(true);
+      return;
+    }
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    setIsPanelOpen(isDesktop);
+  }, [parsedResult]);
 
   const handleBlockHover = useCallback((data: BlockData | null) => {
     setHighlightedPackage(data?.packageName ?? null);
@@ -37,6 +50,9 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
 
   const handlePackageHover = useCallback((packageName: string | null) => {
     setHighlightedPackage(packageName);
+  }, []);
+  const handlePanelToggle = useCallback(() => {
+    setIsPanelOpen((prev) => !prev);
   }, []);
 
   const {
@@ -110,13 +126,41 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
           </div>
         </header>
 
-        <aside className="pointer-events-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px]">
+        <aside className="pointer-events-auto mx-auto mt-6 w-full max-w-sm lg:absolute lg:right-10 lg:top-24 lg:bottom-6 lg:mt-0 lg:max-w-[340px] lg:mx-0 lg:flex lg:flex-col">
           {vulnResult && (
-            <VulnerabilityPanel
-              packages={vulnResult.packages}
-              onPackageHover={handlePackageHover}
-              highlightedPackage={highlightedPackage}
-            />
+            <>
+              <div>
+                <button
+                  type="button"
+                  onClick={handlePanelToggle}
+                  aria-expanded={isPanelOpen}
+                  aria-controls="vulnerability-panel"
+                  className="v2-panel v2-pressable flex w-full items-center justify-between rounded-3xl px-4 py-3 text-sm text-slate-700"
+                >
+                  <span className="font-semibold">취약점 리스트</span>
+                  <span className="text-xs text-slate-500">
+                    {isPanelOpen ? "접기" : "열기"}
+                  </span>
+                </button>
+              </div>
+              <div
+                id="vulnerability-panel"
+                aria-hidden={!isPanelOpen}
+                className={`overflow-hidden transition-[height,opacity] duration-300 ease-out ${
+                  isPanelOpen
+                    ? "mt-4 h-[calc(100dvh-220px)] opacity-100 lg:mt-4 lg:flex-1 lg:min-h-0 lg:h-auto"
+                    : "mt-0 h-0 opacity-0 pointer-events-none lg:mt-0 lg:h-0 lg:flex-none"
+                }`}
+              >
+                {isPanelOpen ? (
+                  <VulnerabilityPanel
+                    packages={vulnResult.packages}
+                    onPackageHover={handlePackageHover}
+                    highlightedPackage={highlightedPackage}
+                  />
+                ) : null}
+              </div>
+            </>
           )}
         </aside>
 
