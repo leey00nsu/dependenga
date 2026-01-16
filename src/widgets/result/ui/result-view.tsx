@@ -149,10 +149,10 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
               </div>
               <div
                 id="vulnerability-panel"
-                className={`transition-[max-height,opacity] duration-300 ease-out ${
+                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
                   isPanelOpen
-                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 overflow-visible lg:mt-4 lg:max-h-[calc(100dvh-120px)]"
-                    : "mt-0 max-h-0 opacity-0 pointer-events-none overflow-hidden lg:mt-0 lg:max-h-0"
+                    ? "mt-4 max-h-[calc(100dvh-160px)] opacity-100 lg:mt-4 lg:max-h-[calc(100dvh-120px)]"
+                    : "mt-0 max-h-0 opacity-0 pointer-events-none lg:mt-0 lg:max-h-0"
                 }`}
               >
                 <VulnerabilityPanel

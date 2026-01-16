@@ -71,6 +71,16 @@
     - [x] 캔버스 오른쪽 패딩을 패널 상태와 연동
     - [x] 데스크톱 토글 상태 전환 시 레이아웃 확인
 
+- [DONE][P1] T-F011-07 패널 최대 높이 제한
+  - Owner: @me
+  - Status Log: 2026-01-16 [DOING] → 2026-01-16 [DONE]
+  - Acceptance:
+    - 패널 콘텐츠가 뷰포트 높이를 초과하지 않는다
+    - 내부 스크롤로 목록이 확인된다
+  - Checklist:
+    - [x] 패널 래퍼에 max-height/overflow 제한 적용
+    - [x] 패널 컴포넌트 max-height를 래퍼 기준으로 조정
+
 ### Phase 2: 검증 및 문서
 
 - [DOING][P2] T-F011-02 수동 시나리오 검증
