@@ -160,18 +160,21 @@
     - [x] Canvas frameloop을 상태 기반으로 전환
     - [x] 새 결과 로드시 항상 모드 복구 확인
 
-- [DOING][P3] T-F010-13 고 DPI dpr 상한 설정
+- [DONE][P3] T-F010-13 고 DPI dpr 상한 설정
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 고해상도 환경에서 렌더링 비용이 감소한다
     - 시각적 품질 변화가 미미하다
   - Checklist:
-    - [ ] Canvas dpr 상한 설정
-    - [ ] 주요 UI/블록 렌더링 확인
+    - [x] Canvas dpr 상한 설정
+    - [x] 주요 UI/블록 렌더링 확인
 
-- [TODO][P3] T-F010-14 그림자 맵 해상도 조정
+- [DOING][P3] T-F010-14 그림자 맵 해상도 조정
   - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
   - Acceptance:
     - 그림자 품질이 크게 훼손되지 않는다
     - GPU 부하가 감소한다

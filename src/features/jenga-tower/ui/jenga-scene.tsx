@@ -68,6 +68,7 @@ export function JengaScene({
         shadows
         gl={{ antialias: true, alpha: true }}
         frameloop={isPhysicsPaused ? "demand" : "always"}
+        dpr={[1, 1.5]}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
         }}
