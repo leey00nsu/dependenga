@@ -100,7 +100,11 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     <div className="relative min-h-screen overflow-hidden text-slate-700">
       <div className="pointer-events-none absolute inset-0 v2-background" />
 
-      <div className="absolute inset-0 z-0 lg:pr-[360px]">
+      <div
+        className={`absolute inset-0 z-0 transition-[padding] duration-300 ${
+          isPanelOpen ? "lg:pr-[360px]" : "lg:pr-0"
+        }`}
+      >
         {vulnResult && (
           <JengaScene
             packages={vulnResult.packages}
