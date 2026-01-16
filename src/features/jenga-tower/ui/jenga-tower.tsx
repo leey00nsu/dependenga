@@ -1,232 +1,314 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
-import type { PackageVulnerability, SeverityWithSafe } from "@/entities/vulnerability/model/types";
+import { useFrame } from "@react-three/fiber";
+import { RigidBody, useRapier, type RapierRigidBody } from "@react-three/rapier";
 import { JengaBlock, type BlockData } from "./jenga-block";
+import type { JengaLayoutResult } from "../model/jenga-layout";
+import { BLOCK_HEIGHT } from "../model/jenga-layout";
 
 interface JengaTowerProps {
-  packages: PackageVulnerability[];
+  layout: JengaLayoutResult;
   onBlockHover?: (data: BlockData | null) => void;
   onBlockClick?: (data: BlockData) => void;
   highlightedPackage?: string | null;
+  onSettledChange?: (isSettled: boolean) => void;
 }
 
-/**
- * 심각도별 튀어나옴 오프셋 (고정값)
- * 심각할수록 더 많이 당겨져 있음
- */
-const SEVERITY_OFFSET: Record<SeverityWithSafe, number> = {
-  critical: 1.5, // 가장 많이 튀어나옴
-  high: 1.2,
-  medium: 0.8,
-  low: 0.4,
-  safe: 0,       // 안전한 블록은 튀어나오지 않음
+const SPAWN_INTERVAL_MS = 120;
+const DROP_HEIGHT = 8;
+const ZERO_VECTOR: [number, number, number] = [0, 0, 0];
+const MAX_COLLAPSE_TARGETS = 2;
+const SETTLE_CHECK_INTERVAL = 4;
+
+const SEVERITY_RANK = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+  safe: 0,
 };
 
-// 블록 크기 상수 (실제 젠가 비율: 길이 = 두께 * 3)
-const BLOCK_LENGTH = 3;  // 블록 긴 방향 길이
-const BLOCK_HEIGHT = 0.6; // 블록 높이
-const BLOCK_WIDTH = 1;   // 블록 두께 (3개가 나란히 서면 BLOCK_LENGTH와 같음)
-const BLOCK_GAP_XZ = 0.08; // 블록 사이 간격 (외곽선 가시성 확보)
-const BLOCK_GAP_Y = 0.05; // 층 사이 간격
+const PHYSICS_BY_SEVERITY = {
+  critical: { friction: 0.2, linearDamping: 0.2, angularDamping: 0.25, restitution: 0.08 },
+  high: { friction: 0.3, linearDamping: 0.25, angularDamping: 0.35, restitution: 0.06 },
+  medium: { friction: 0.45, linearDamping: 0.35, angularDamping: 0.5, restitution: 0.05 },
+  low: { friction: 0.6, linearDamping: 0.45, angularDamping: 0.6, restitution: 0.04 },
+  safe: { friction: 0.9, linearDamping: 0.6, angularDamping: 0.8, restitution: 0.05 },
+};
 
-/**
- * 시드 기반 랜덤 생성 (슬롯 위치 결정용)
- */
-function seededRandom(seed: number): number {
-  const x = Math.sin(seed * 9999) * 10000;
-  return x - Math.floor(x);
-}
+const IMPULSE_BY_SEVERITY = {
+  critical: { impulse: 6.0, torque: 4.0 },
+  high: { impulse: 4.8, torque: 3.2 },
+  medium: { impulse: 3.2, torque: 2.1 },
+  low: { impulse: 2.0, torque: 1.3 },
+  safe: { impulse: 0, torque: 0 },
+};
 
 /**
  * 패키지 목록을 젠가 타워로 렌더링
- * - 취약점 패키지: 중간층에 층당 1개씩 배치
- * - Safe 패키지: 중간층의 나머지 2개 슬롯을 채움
- * - 맨 아래/위 층: 모두 Safe 블록 (filler)
  */
-export function JengaTower({ 
-  packages, 
+export function JengaTower({
+  layout,
   onBlockHover,
-  onBlockClick, 
-  highlightedPackage 
+  onBlockClick,
+  highlightedPackage,
+  onSettledChange,
 }: JengaTowerProps) {
   const [hoveredBlock, setHoveredBlock] = useState<BlockData | null>(null);
+  const [spawnCount, setSpawnCount] = useState(0);
+  const bodiesRef = useRef<Map<string, RapierRigidBody>>(new Map());
+  const bodyHandlesRef = useRef<Map<string, number>>(new Map());
+  const settledRef = useRef(false);
+  const collapseTriggeredRef = useRef(false);
+  const spawnTimersRef = useRef<number[]>([]);
+  const settleFrameRef = useRef(0);
+  const lastHoverKeyRef = useRef<string | null>(null);
+  const { rigidBodyStates } = useRapier();
 
-  const handleHover = useCallback((isHovered: boolean, data: BlockData) => {
-    const newHovered = isHovered ? data : null;
-    setHoveredBlock(newHovered);
-    onBlockHover?.(newHovered);
-  }, [onBlockHover]);
-
-  // 취약점이 있는 패키지
-  const vulnerablePackages = useMemo(() => {
-    return packages.filter(pkg => pkg.maxSeverity !== "safe");
-  }, [packages]);
-
-  // Safe 패키지
-  const safePackages = useMemo(() => {
-    return packages.filter(pkg => pkg.maxSeverity === "safe");
-  }, [packages]);
-
-  // 층 수 계산:
-  // - 중간층에 취약 패키지 1개 + Safe 패키지 2개 배치
-  // - 취약 패키지보다 Safe 패키지가 많으면 추가 층 필요
-  // - 취약 패키지 N개 → N개 층에서 2N개 Safe 슬롯 사용
-  // - 남은 Safe 패키지 → 3개씩 추가 층에 배치
-  const safeInMiddleLayers = vulnerablePackages.length * 2;
-  const remainingSafePackages = Math.max(0, safePackages.length - safeInMiddleLayers);
-  const additionalSafeLayers = Math.ceil(remainingSafePackages / 3);
-  
-  const middleLayerCount = Math.max(vulnerablePackages.length, 1) + additionalSafeLayers;
-  const totalLayerCount = middleLayerCount + 2; // 아래/위 filler 층 추가
-
-  // 블록 생성
-  const blocks: React.ReactElement[] = [];
-  
-  // 패키지명 → 블록 위치 맵 (패널 호버 시 3D 툴팁 표시용)
-  const packagePositions = new Map<string, [number, number, number]>();
-
-  // Safe 패키지 인덱스 (중간층에서 사용)
-  let safePackageIndex = 0;
-
-  // X축 블록(짝수층)과 Z축 블록(홀수층)의 방향을 별도로 추적
-  let xAxisDirectionIndex = 0; // 짝수층: 0=동, 1=서
-  let zAxisDirectionIndex = 0; // 홀수층: 0=남, 1=북
-
-  for (let layer = 0; layer < totalLayerCount; layer++) {
-    // 층마다 90도 회전
-    const isRotated = layer % 2 === 1;
-    const y = layer * (BLOCK_HEIGHT + BLOCK_GAP_Y);
-    const rotation: [number, number, number] = isRotated
-      ? [0, Math.PI / 2, 0]
-      : [0, 0, 0];
-
-    // 첫 번째 층과 마지막 층: 모두 safe 블록 (filler)
-    const isBottomNormalLayer = layer === 0;
-    const isTopNormalLayer = layer === totalLayerCount - 1;
-    const isNormalLayer = isBottomNormalLayer || isTopNormalLayer;
-    
-    // 중간층의 취약점 패키지
-    const vulnIndex = layer - 1;
-    const vulnPkg = (!isNormalLayer && vulnIndex < vulnerablePackages.length) 
-      ? vulnerablePackages[vulnIndex] 
-      : null;
-    
-    // 랜덤으로 취약점 블록 위치 결정 (0, 1, 2 중 하나)
-    const vulnSlotIndex = vulnPkg 
-      ? Math.floor(seededRandom(layer * 7 + 1) * 3) 
-      : -1;
-    
-    // 심각도에 따른 고정 튀어나옴 거리
-    const pullOffset = vulnPkg ? SEVERITY_OFFSET[vulnPkg.maxSeverity] : 0;
-    
-    // 3개 블록 생성
-    for (let slotIndex = 0; slotIndex < 3; slotIndex++) {
-      const isVulnerableSlot = slotIndex === vulnSlotIndex;
-      
-      // 패키지 결정
-      let pkg: PackageVulnerability | null = null;
-      
-      if (isVulnerableSlot && vulnPkg) {
-        // 취약점 블록
-        pkg = vulnPkg;
-      } else if (!isNormalLayer) {
-        // 중간층의 빈 슬롯: Safe 패키지로 채움
-        if (safePackageIndex < safePackages.length) {
-          pkg = safePackages[safePackageIndex];
-          safePackageIndex++;
-        }
-        // Safe 패키지가 부족하면 null (filler 블록)
+  const spawnPositions = useMemo(
+    () =>
+      layout.blocks.map(
+        (block) =>
+          [
+            block.position[0],
+            block.position[1] + DROP_HEIGHT,
+            block.position[2],
+          ] as [number, number, number]
+      ),
+    [layout.blocks]
+  );
+  const collapseTargets = useMemo(() => {
+    const candidates = layout.blocks.filter(
+      (block) => block.package && block.package.maxSeverity !== "safe"
+    );
+    candidates.sort((a, b) => {
+      const severityDiff =
+        SEVERITY_RANK[b.package?.maxSeverity ?? "safe"] -
+        SEVERITY_RANK[a.package?.maxSeverity ?? "safe"];
+      if (severityDiff !== 0) {
+        return severityDiff;
       }
-      // Normal Layer (맨 아래/위)는 filler 블록으로 채움
-      
-      // 슬롯의 기본 오프셋 (-1, 0, +1)
-      const slotOffset = (slotIndex - 1) * (BLOCK_WIDTH + BLOCK_GAP_XZ);
+      return a.layer - b.layer;
+    });
 
-      let x = 0;
-      let z = 0;
+    return candidates.slice(0, MAX_COLLAPSE_TARGETS);
+  }, [layout.blocks]);
+  const hasVulnerableBlocks = collapseTargets.length > 0;
 
-      if (!isRotated) {
-        z = slotOffset;
-        if (isVulnerableSlot && vulnPkg) {
-          const goEast = (xAxisDirectionIndex % 2) === 0;
-          x = goEast ? pullOffset : -pullOffset;
-        }
-      } else {
-        x = slotOffset;
-        if (isVulnerableSlot && vulnPkg) {
-          const goSouth = (zAxisDirectionIndex % 2) === 0;
-          z = goSouth ? pullOffset : -pullOffset;
-        }
+  const triggerCollapse = useCallback(() => {
+    collapseTargets.forEach((block) => {
+      if (!block.package || block.package.maxSeverity === "safe") {
+        return;
       }
 
-      const blockPosition: [number, number, number] = [x, y, z];
-      const isHighlighted = pkg?.packageName === highlightedPackage;
-      
-      // 패키지 위치 저장 (패널 호버 시 툴팁용)
-      if (pkg) {
-        packagePositions.set(pkg.packageName, blockPosition);
+      const body = bodiesRef.current.get(block.id);
+      if (!body) {
+        return;
       }
 
-      blocks.push(
-        <JengaBlock
-          key={`layer-${layer}-slot-${slotIndex}`}
-          packageName={pkg?.packageName ?? "normal"}
-          version={pkg?.version ?? ""}
-          severity={pkg?.maxSeverity ?? "safe"}
-          vulnerabilityCount={pkg?.vulnerabilities.length ?? 0}
-          position={blockPosition}
-          rotation={rotation}
-          onHover={handleHover}
-          onClick={onBlockClick}
-          dimensions={[BLOCK_LENGTH, BLOCK_HEIGHT, BLOCK_WIDTH]}
-          isHighlighted={isHighlighted}
-        />
-      );
+      const { impulse, torque } = IMPULSE_BY_SEVERITY[block.package.maxSeverity];
+      if (impulse === 0 && torque === 0) {
+        return;
+      }
+
+      const direction = (block.layer + block.slot) % 2 === 0 ? 1 : -1;
+      const upward = impulse * 0.3;
+      const isRotated = Math.abs(block.rotation[1]) > 0.1;
+
+      const impulseVector: [number, number, number] = isRotated
+        ? [direction * impulse, upward, 0]
+        : [0, upward, direction * impulse];
+      const torqueVector: [number, number, number] = [0, torque * direction, torque * 0.3];
+
+      body.wakeUp();
+      body.applyImpulse(impulseVector, true);
+      body.applyTorqueImpulse(torqueVector, true);
+    });
+  }, [collapseTargets]);
+
+  const handleHover = useCallback(
+    (isHovered: boolean, data: BlockData) => {
+      const newHovered = isHovered ? data : null;
+      const nextKey = newHovered
+        ? `${newHovered.packageName}@${newHovered.version}`
+        : null;
+      if (lastHoverKeyRef.current === nextKey) {
+        return;
+      }
+      lastHoverKeyRef.current = nextKey;
+      setHoveredBlock(newHovered);
+      onBlockHover?.(newHovered);
+    },
+    [onBlockHover]
+  );
+
+  const clearSpawnTimers = useCallback(() => {
+    spawnTimersRef.current.forEach((timer) => clearTimeout(timer));
+    spawnTimersRef.current = [];
+  }, []);
+
+  useEffect(() => {
+    clearSpawnTimers();
+    bodiesRef.current.clear();
+    bodyHandlesRef.current.clear();
+    settledRef.current = false;
+    collapseTriggeredRef.current = false;
+    settleFrameRef.current = 0;
+    lastHoverKeyRef.current = null;
+    setHoveredBlock(null);
+    setSpawnCount(0);
+    onSettledChange?.(false);
+
+    if (layout.blocks.length === 0) {
+      return;
     }
-    
-    // 취약블록이 있는 층이면 방향 카운터 증가
-    if (vulnPkg) {
-      if (!isRotated) {
-        xAxisDirectionIndex++;
-      } else {
-        zAxisDirectionIndex++;
+
+    const scheduleNext = (nextIndex: number) => {
+      const delay = nextIndex === 1 ? 0 : SPAWN_INTERVAL_MS;
+      const timer = window.setTimeout(() => {
+        setSpawnCount(nextIndex);
+        if (nextIndex < layout.blocks.length) {
+          scheduleNext(nextIndex + 1);
+        }
+      }, delay);
+      spawnTimersRef.current.push(timer);
+    };
+
+    scheduleNext(1);
+
+    return () => {
+      clearSpawnTimers();
+    };
+  }, [layout.blocks.length, layout.key, clearSpawnTimers, onSettledChange]);
+
+  useFrame(() => {
+    if (settledRef.current) {
+      return;
+    }
+
+    if (spawnCount < layout.blocks.length) {
+      return;
+    }
+
+    if (bodiesRef.current.size < layout.blocks.length) {
+      return;
+    }
+
+    settleFrameRef.current = (settleFrameRef.current + 1) % SETTLE_CHECK_INTERVAL;
+    if (settleFrameRef.current !== 0) {
+      return;
+    }
+
+    let allSleeping = true;
+    for (const handle of bodyHandlesRef.current.values()) {
+      const state = rigidBodyStates.get(handle);
+      if (!state || !state.isSleeping) {
+        allSleeping = false;
+        break;
       }
     }
-  }
 
-  // 툴팁에 표시할 데이터 결정
-  // 1. 3D 블록 직접 호버 (hoveredBlock)
-  // 2. 패널에서 호버 (highlightedPackage)
-  let tooltipData: { packageName: string; version: string; vulnerabilityCount: number; position?: [number, number, number] } | null = null;
-  
+    if (allSleeping) {
+      if (hasVulnerableBlocks) {
+        if (!collapseTriggeredRef.current) {
+          collapseTriggeredRef.current = true;
+          triggerCollapse();
+          return;
+        }
+
+        if (!settledRef.current) {
+          settledRef.current = true;
+          onSettledChange?.(true);
+        }
+        return;
+      }
+
+      if (!settledRef.current) {
+        settledRef.current = true;
+        onSettledChange?.(true);
+      }
+    }
+  });
+
+  const spawnedBlocks = layout.blocks.slice(0, spawnCount);
+
+  let tooltipData:
+    | {
+        packageName: string;
+        version: string;
+        vulnerabilityCount: number;
+        position?: [number, number, number];
+      }
+    | null = null;
+
   if (hoveredBlock && hoveredBlock.packageName !== "normal") {
     tooltipData = hoveredBlock;
   } else if (highlightedPackage) {
-    const position = packagePositions.get(highlightedPackage);
-    const pkg = packages.find(p => p.packageName === highlightedPackage);
-    if (position && pkg) {
+    const block = layout.blocks.find(
+      (item) => item.package?.packageName === highlightedPackage
+    );
+    if (block?.package) {
       tooltipData = {
-        packageName: pkg.packageName,
-        version: pkg.version,
-        vulnerabilityCount: pkg.vulnerabilities.length,
-        position,
+        packageName: block.package.packageName,
+        version: block.package.version,
+        vulnerabilityCount: block.package.vulnerabilities.length,
+        position: block.position,
       };
     }
   }
 
   return (
     <group>
-      {blocks}
+      {spawnedBlocks.map((block, index) => {
+        const pkg = block.package;
+        const isHighlighted = pkg?.packageName === highlightedPackage;
+
+        return (
+          <RigidBody
+            key={block.id}
+            ref={(api) => {
+              if (api) {
+                bodiesRef.current.set(block.id, api);
+                bodyHandlesRef.current.set(block.id, api.handle);
+              } else {
+                bodiesRef.current.delete(block.id);
+                bodyHandlesRef.current.delete(block.id);
+              }
+            }}
+            position={spawnPositions[index]}
+            rotation={block.rotation}
+            colliders="cuboid"
+            friction={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].friction}
+            restitution={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].restitution}
+            linearDamping={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].linearDamping}
+            angularDamping={PHYSICS_BY_SEVERITY[pkg?.maxSeverity ?? "safe"].angularDamping}
+            canSleep
+          >
+            <JengaBlock
+              packageName={pkg?.packageName ?? "normal"}
+              version={pkg?.version ?? ""}
+              severity={pkg?.maxSeverity ?? "safe"}
+              vulnerabilityCount={pkg?.vulnerabilities.length ?? 0}
+              position={ZERO_VECTOR}
+              rotation={ZERO_VECTOR}
+              onHover={handleHover}
+              onClick={onBlockClick}
+              dimensions={block.dimensions}
+              isHighlighted={isHighlighted}
+            />
+          </RigidBody>
+        );
+      })}
 
       {/* 호버 툴팁 - 3D 블록 호버 또는 패널 호버 시 블록 위치에 표시 */}
       {tooltipData && (
         <Html
           position={[
-            tooltipData.position?.[0] ?? 0, 
-            (tooltipData.position?.[1] ?? 0) + BLOCK_HEIGHT + 0.5, 
-            tooltipData.position?.[2] ?? 0
+            tooltipData.position?.[0] ?? 0,
+            (tooltipData.position?.[1] ?? 0) + BLOCK_HEIGHT + 0.5,
+            tooltipData.position?.[2] ?? 0,
           ]}
           center
           style={{
@@ -237,9 +319,7 @@ export function JengaTower({
         >
           <div className="bg-gray-900/95 backdrop-blur-sm text-white rounded-lg px-3 py-2 shadow-xl">
             <div className="font-medium text-sm">{tooltipData.packageName}</div>
-            <div className="text-xs text-gray-300">
-              v{tooltipData.version}
-            </div>
+            <div className="text-xs text-gray-300">v{tooltipData.version}</div>
             <div className="text-xs mt-1">
               {tooltipData.vulnerabilityCount > 0 ? (
                 <span className="text-red-400">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState, Suspense } from "react";
+import { useRef, useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
 import { Edges, Outlines, RoundedBox } from "@react-three/drei";
+import { Vector3 } from "three";
 import type { Mesh } from "three";
 import type { SeverityWithSafe } from "@/entities/vulnerability/model/types";
 
@@ -64,65 +65,9 @@ export interface BlockData {
 /**
  * 젠가 블록 컴포넌트
  * 둥근 모서리 + 나무 텍스처
- * Suspense로 텍스처 로딩 처리, 에러 시 fallback
  */
 export function JengaBlock(props: JengaBlockProps) {
-  return (
-    <Suspense fallback={<JengaBlockFallback {...props} />}>
-      <JengaBlockWithTexture {...props} />
-    </Suspense>
-  );
-}
-
-/**
- * 텍스처 없는 Fallback 블록 (로딩 중 또는 에러 시)
- */
-function JengaBlockFallback({
-  severity,
-  position,
-  rotation,
-  dimensions = [3, 0.6, 1],
-}: JengaBlockProps) {
-  const { base, edge, glow } = SEVERITY_STYLES[severity];
-  
-  return (
-    <RoundedBox
-      args={dimensions}
-      radius={0.2}
-      smoothness={12}
-      position={position}
-      rotation={rotation}
-      castShadow
-      receiveShadow
-    >
-      <meshPhysicalMaterial
-        color={base}
-        roughness={0.32}
-        metalness={0}
-        transmission={0.78}
-        thickness={0.9}
-        ior={1.35}
-        clearcoat={1}
-        clearcoatRoughness={0.18}
-        specularIntensity={1}
-        specularColor="#ffffff"
-        attenuationColor={base}
-        attenuationDistance={0.6}
-        emissive={glow}
-        emissiveIntensity={0.1}
-        transparent
-        opacity={0.82}
-      />
-      <Outlines
-        thickness={0.1}
-        color={edge}
-        opacity={1}
-        transparent={false}
-        screenspace
-      />
-      <Edges scale={1.01} color={edge} linewidth={1.5} />
-    </RoundedBox>
-  );
+  return <JengaBlockWithTexture {...props} />;
 }
 
 /**
@@ -151,21 +96,40 @@ function JengaBlockWithTexture({
     position,
   };
 
+  const resolveWorldPosition = (): [number, number, number] => {
+    if (!meshRef.current) {
+      return position;
+    }
+
+    const worldPosition = new Vector3();
+    meshRef.current.getWorldPosition(worldPosition);
+    return [worldPosition.x, worldPosition.y, worldPosition.z];
+  };
+
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(true);
-    onHover?.(true, blockData);
+    onHover?.(true, {
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     setHovered(false);
-    onHover?.(false, blockData);
+    onHover?.(false, {
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    onClick?.(blockData);
+    onClick?.({
+      ...blockData,
+      position: resolveWorldPosition(),
+    });
   };
 
   const { base, edge, glow } = SEVERITY_STYLES[severity];
