@@ -136,18 +136,21 @@
     - [x] 블록 컴포넌트의 Suspense 래핑 제거
     - [x] fallback 컴포넌트 유지 여부 정리
 
-- [DOING][P2] T-F010-11 호버 상태 업데이트 중복 방지
+- [DONE][P2] T-F010-11 호버 상태 업데이트 중복 방지
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 호버/툴팁 동작이 기존과 동일하다
     - 동일 대상에 대한 상태 업데이트가 줄어든다
   - Checklist:
-    - [ ] 최근 호버 대상 캐시로 중복 setState 방지
-    - [ ] 패널/블록 호버 연동 영향 확인
+    - [x] 최근 호버 대상 캐시로 중복 setState 방지
+    - [x] 패널/블록 호버 연동 영향 확인
 
-- [TODO][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
+- [DOING][P2] T-F010-12 Physics pause 시 frameloop 절전 모드
   - Owner: @me
+  - Status Log: 2026-01-16 [DOING]
   - Acceptance:
     - 정착 이후 idle 렌더링이 줄어든다
     - 호버/클릭 등 상호작용 갱신이 유지된다

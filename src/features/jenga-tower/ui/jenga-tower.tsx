@@ -64,6 +64,7 @@ export function JengaTower({
   const collapseTriggeredRef = useRef(false);
   const spawnTimersRef = useRef<number[]>([]);
   const settleFrameRef = useRef(0);
+  const lastHoverKeyRef = useRef<string | null>(null);
   const { rigidBodyStates } = useRapier();
 
   const spawnPositions = useMemo(
@@ -130,6 +131,11 @@ export function JengaTower({
   const handleHover = useCallback(
     (isHovered: boolean, data: BlockData) => {
       const newHovered = isHovered ? data : null;
+      const nextKey = newHovered?.packageName ?? null;
+      if (lastHoverKeyRef.current === nextKey) {
+        return;
+      }
+      lastHoverKeyRef.current = nextKey;
       setHoveredBlock(newHovered);
       onBlockHover?.(newHovered);
     },
@@ -148,6 +154,7 @@ export function JengaTower({
     settledRef.current = false;
     collapseTriggeredRef.current = false;
     settleFrameRef.current = 0;
+    lastHoverKeyRef.current = null;
     setHoveredBlock(null);
     setSpawnCount(0);
     onSettledChange?.(false);
