@@ -172,21 +172,23 @@
     - [x] Canvas dpr 상한 설정
     - [x] 주요 UI/블록 렌더링 확인
 
-- [DOING][P3] T-F010-14 그림자 맵 해상도 조정
+- [DONE][P3] T-F010-14 그림자 맵 해상도 조정
   - Owner: @me
-  - Status Log: 2026-01-16 [DOING]
+  - Status Log:
+    - 2026-01-16 [DOING]
+    - 2026-01-16 [DONE]
   - Acceptance:
     - 그림자 품질이 크게 훼손되지 않는다
     - GPU 부하가 감소한다
   - Checklist:
-    - [ ] 방향광 shadow-mapSize 축소
-    - [ ] 그림자 표시 정상 확인
+    - [x] 방향광 shadow-mapSize 축소
+    - [x] 그림자 표시 정상 확인
 
 ---
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
+- [x] 모든 태스크 [DONE]
 - [ ] 모든 테스트 통과
 - [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료

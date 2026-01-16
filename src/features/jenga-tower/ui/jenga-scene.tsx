@@ -87,7 +87,7 @@ export function JengaScene({
             position={[10, 15, 5]}
             intensity={1.2}
             castShadow
-            shadow-mapSize={[2048, 2048]}
+            shadow-mapSize={[1024, 1024]}
             shadow-camera-far={50}
             shadow-camera-left={-20}
             shadow-camera-right={20}
