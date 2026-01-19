@@ -50,11 +50,32 @@
     - [x] contain 리사이즈 + 여백 적용
     - [x] 아이콘 파일 교체
 
+- [DONE][P2] T-F015-04 app 아이콘 파일 배치 (파일 컨벤션 적용)
+  - Owner: @me
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
+  - Acceptance:
+    - Next.js app icon 규칙에 맞게 favicon/icon/apple-icon이 적용된다
+    - Vercel 기본 파비콘이 더 이상 노출되지 않는다
+  - Checklist:
+    - [x] app/favicon.ico 추가
+    - [x] app/icon.png 추가
+    - [x] app/apple-icon.png 추가
+
+- [DOING][P2] T-F015-05 public 아이콘 정리 및 app 기반으로 전환
+  - Owner: @me
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING]
+  - Acceptance:
+    - metadata에서 public 아이콘 참조가 제거된다
+    - public 아이콘 파일이 정리된다
+  - Checklist:
+    - [ ] metadata icons/OG/Twitter 참조 업데이트
+    - [ ] public 아이콘 파일 삭제
+
 ---
 
 ## 완료 조건
 
-- [x] 모든 태스크 [DONE]
-- [x] 모든 테스트 통과
-- [x] 문서 업데이트 완료
+- [ ] 모든 태스크 [DONE]
+- [ ] 모든 테스트 통과
+- [ ] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
