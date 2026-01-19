@@ -20,7 +20,7 @@
 | 컴포넌트 문서 | Storybook | 10 |
 | E2E 테스트 | Playwright | latest |
 | DB | PostgreSQL | 17 |
-| ORM | Prisma | 7 |
+| ORM | TBD | 추후 결정 |
 | 컨테이너 | Docker Compose | - |
 
 ---
@@ -129,7 +129,7 @@ DATABASE_URL="postgresql://dependenga:dependenga@localhost:5432/dependenga"
     "build-storybook": "storybook build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:push": "prisma db push"
+    "db:push": "ORM 도입 후 정의"
   }
 }
 ```
@@ -145,7 +145,7 @@ DATABASE_URL="postgresql://dependenga:dependenga@localhost:5432/dependenga"
 | Storybook | `pnpm storybook` 실행 |
 | E2E | `pnpm test:e2e` 통과 |
 | Docker | `pnpm db:up` 실행 |
-| Prisma | `pnpm db:push` 성공 |
+| ORM | 마이그레이션 성공 |
 
 ---
 

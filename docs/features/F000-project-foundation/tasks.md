@@ -26,11 +26,11 @@
     - [ ] `.env` 업데이트
     - [ ] `docker compose up -d` 확인
 
-- [TODO][P1] T-F000-03 Prisma 기본 설정
+- [TODO][P1] T-F000-03 ORM 기본 설정 (보류)
   - Owner: @agent
   - Checklist:
-    - [ ] `prisma/schema.prisma` 업데이트
-    - [ ] `pnpm prisma db push` 확인
+    - [ ] ORM 선정 후 스키마/클라이언트 설정
+    - [ ] ORM 마이그레이션 확인
 
 ## Phase 2: UI 및 상태 관리
 

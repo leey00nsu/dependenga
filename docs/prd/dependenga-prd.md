@@ -34,7 +34,7 @@
 - 취약점 정보 조회 (npm audit 기반)
 - 3D 젠가 시각화 (React Three Fiber)
 - 블록별 상세 정보 (버전, 취약점, 의존 관계)
-- 분석 결과 DB 저장 (PostgreSQL + Prisma)
+- 분석 결과 DB 저장 (PostgreSQL, ORM 추후 결정)
 
 ### 제외 (향후)
 
@@ -94,7 +94,7 @@
 | Framework | Next.js 16 (App Router) | 풀스택 프레임워크, React 19 지원 |
 | 3D | React Three Fiber 9 + Drei | React 19 호환 3D 렌더링 |
 | DB | PostgreSQL 17 | 관계형 데이터 저장 |
-| ORM | Prisma 7 | 타입 안전 ORM |
+| ORM | TBD | 추후 결정 |
 | Styling | Tailwind CSS 4 | 유틸리티 CSS |
 | Validation | Zod | 스키마 검증 |
 
@@ -104,7 +104,7 @@
 
 | ID | 이름 | 설명 |
 | --- | --- | --- |
-| M0 | 프로젝트 초기화 | Next.js + R3F + Prisma 설정 |
+| M0 | 프로젝트 초기화 | Next.js + R3F + DB 설정 |
 | M1 | 입력 & 파싱 | package.json 입력 및 파싱 |
 | M2 | 취약점 분석 | npm audit 기반 취약점 조회 |
 | M3 | 3D 시각화 | 젠가 타워 렌더링 |

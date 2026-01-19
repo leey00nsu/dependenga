@@ -18,7 +18,6 @@ GitHub 프로젝트의 의존성 취약점을 3D 젠가 형태로 시각화하�
 | Next.js | 16 | 풀스택 프레임워크 |
 | React | 19 | UI 라이브러리 |
 | React Three Fiber | 9 | 3D 렌더링 |
-| Prisma | 7 | ORM |
 | PostgreSQL | 17 | 데이터베이스 |
 | Tailwind CSS | 4 | 스타일링 |
 | shadcn/ui | - | UI 컴포넌트 |
@@ -38,7 +37,6 @@ dependenga/
 │   ├── features/       # 비즈니스 기능
 │   ├── entities/       # 비즈니스 엔티티
 │   └── shared/         # 공유 리소스 (ui, lib, api)
-├── prisma/             # Prisma 스키마
 └── .storybook/         # Storybook 설정
 ```
 
@@ -54,8 +52,8 @@ dependenga/
 # 의존성 설치
 pnpm install
 
-# 데이터베이스 시작
-pnpm db:up
+# 데이터베이스 시작 (Prisma 재도입 전까지 DB 스크립트 비활성)
+# pnpm db:up
 
 # 개발 서버 실행
 pnpm dev
