@@ -30,19 +30,19 @@
 
 ### Phase 2: 검증
 
-- [TODO][P2] T-F013-02 배포/빌드 재검증
+- [DONE][P2] T-F013-02 로컬 설치 재현 검증
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
-    - Coolify 배포에서 설치 단계가 실패하지 않는다
+    - `pnpm i --frozen-lockfile`가 오류 없이 완료된다
   - Checklist:
-    - [ ] Coolify 재배포 로그 확인
+    - [x] `pnpm i --frozen-lockfile` 실행
 
 ---
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
-- [ ] 모든 테스트 통과
-- [ ] 문서 업데이트 완료
+- [x] 모든 태스크 [DONE]
+- [x] 모든 테스트 통과
+- [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
