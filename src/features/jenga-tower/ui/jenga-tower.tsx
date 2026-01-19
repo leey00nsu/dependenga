@@ -157,8 +157,6 @@ export function JengaTower({
     collapseTriggeredRef.current = false;
     settleFrameRef.current = 0;
     lastHoverKeyRef.current = null;
-    setHoveredBlock(null);
-    setSpawnCount(0);
     onSettledChange?.(false);
 
     if (layout.blocks.length === 0) {

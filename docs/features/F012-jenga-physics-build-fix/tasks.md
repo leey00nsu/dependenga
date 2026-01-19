@@ -38,6 +38,15 @@
   - Checklist:
     - [x] 빌드 실행 및 로그 확인
 
+- [DONE][P2] T-F012-03 린트 오류 수정
+  - Owner: @me
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
+  - Acceptance:
+    - `pnpm lint`가 오류 없이 통과한다
+  - Checklist:
+    - [x] 린트 실행 및 오류 파악
+    - [x] 린트 오류 수정
+
 ---
 
 ## 완료 조건

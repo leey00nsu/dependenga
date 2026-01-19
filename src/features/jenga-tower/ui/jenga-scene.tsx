@@ -1,13 +1,12 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
 import type { PackageVulnerability } from "@/entities/vulnerability/model/types";
 import {
   buildJengaLayout,
-  createJengaLayoutKey,
   BLOCK_HEIGHT,
   BLOCK_LENGTH,
   BLOCK_WIDTH,
@@ -33,13 +32,15 @@ export function JengaScene({
   onBlockClick,
   highlightedPackage 
 }: JengaSceneProps) {
-  const layoutKey = useMemo(() => createJengaLayoutKey(packages), [packages]);
-  const layout = useMemo(() => buildJengaLayout(packages), [layoutKey]);
-  const [isPhysicsPaused, setIsPhysicsPaused] = useState(false);
-
-  useEffect(() => {
-    setIsPhysicsPaused(false);
-  }, [layout.key]);
+  const layout = useMemo(() => buildJengaLayout(packages), [packages]);
+  const [settledLayoutKey, setSettledLayoutKey] = useState<string | null>(null);
+  const isPhysicsPaused = settledLayoutKey === layout.key;
+  const handleSettledChange = useCallback(
+    (isSettled: boolean) => {
+      setSettledLayoutKey(isSettled ? layout.key : null);
+    },
+    [layout.key]
+  );
 
   // 카메라 거리 계산 (패키지 수에 따라 동적 조정)
   const actualTowerHeight = layout.towerHeight;
@@ -119,12 +120,13 @@ export function JengaScene({
                 position={[wallDistance, wallCenterY, 0]}
               />
             </RigidBody>
-            <JengaTower 
+            <JengaTower
+              key={layout.key}
               layout={layout}
               onBlockHover={onBlockHover}
               onBlockClick={onBlockClick}
               highlightedPackage={highlightedPackage}
-              onSettledChange={setIsPhysicsPaused}
+              onSettledChange={handleSettledChange}
             />
           </Physics>
 

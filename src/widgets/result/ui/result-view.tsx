@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 import type { ParsedPackage } from "@/entities/dependency/model/types";
 import { VulnerabilityPanel } from "@/features/vulnerability-analyzer/ui/vulnerability-panel";
 import { useVulnerabilityAnalysis } from "@/features/vulnerability-analyzer/model/use-vulnerability-analysis";
@@ -18,6 +18,31 @@ const JengaScene = dynamic(
   { ssr: false }
 );
 
+function useMediaQuery(query: string): boolean {
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+    return window.matchMedia(query).matches;
+  }, [query]);
+
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (typeof window === "undefined") {
+        return () => {};
+      }
+      const mediaQueryList = window.matchMedia(query);
+      mediaQueryList.addEventListener("change", listener);
+      return () => {
+        mediaQueryList.removeEventListener("change", listener);
+      };
+    },
+    [query]
+  );
+
+  return useSyncExternalStore(subscribe, getSnapshot, () => true);
+}
+
 interface ResultViewProps {
   parsedResult: ParsedPackage | null;
   errorMessage?: string | null;
@@ -30,19 +55,9 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
   const [highlightedPackage, setHighlightedPackage] = useState<string | null>(
     null
   );
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  useEffect(() => {
-    if (!parsedResult) {
-      return;
-    }
-    if (typeof window === "undefined") {
-      setIsPanelOpen(true);
-      return;
-    }
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    setIsPanelOpen(isDesktop);
-  }, [parsedResult]);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [panelOverride, setPanelOverride] = useState<boolean | null>(null);
+  const isPanelOpen = panelOverride ?? isDesktop;
 
   const handleBlockHover = useCallback((data: BlockData | null) => {
     setHighlightedPackage(data?.packageName ?? null);
@@ -52,8 +67,8 @@ export function ResultView({ parsedResult, errorMessage }: ResultViewProps) {
     setHighlightedPackage(packageName);
   }, []);
   const handlePanelToggle = useCallback(() => {
-    setIsPanelOpen((prev) => !prev);
-  }, []);
+    setPanelOverride((prev) => !(prev ?? isDesktop));
+  }, [isDesktop]);
 
   const {
     data: vulnResult,
