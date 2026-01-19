@@ -22,16 +22,6 @@ const jua = Jua({
 export const metadata: Metadata = {
   title: "Dependenga",
   description: "의존성 취약점을 3D 젠가로 시각화",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
   openGraph: {
     title: "Dependenga",
     description: "의존성 취약점을 3D 젠가로 시각화",
@@ -40,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "Dependenga",
     images: [
       {
-        url: "/android-chrome-512x512.png",
+        url: "/icon.png",
         width: 512,
         height: 512,
         alt: "Dependenga",
@@ -51,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Dependenga",
     description: "의존성 취약점을 3D 젠가로 시각화",
-    images: ["/android-chrome-512x512.png"],
+    images: ["/icon.png"],
   },
 };
 
