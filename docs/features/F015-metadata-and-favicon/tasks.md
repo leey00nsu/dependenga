@@ -28,21 +28,21 @@
     - [x] landing-image.png 기반 아이콘 리사이즈
     - [x] public 아이콘 파일 추가
 
-- [TODO][P1] T-F015-02 메타데이터 설정
+- [DONE][P1] T-F015-02 메타데이터 설정
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - 기본 title/description이 설정된다
     - Open Graph/Twitter 카드 메타가 추가된다
   - Checklist:
-    - [ ] layout metadata 설정
-    - [ ] OG/Twitter 이미지 연결
+    - [x] layout metadata 설정
+    - [x] OG/Twitter 이미지 연결
 
 ---
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
-- [ ] 모든 테스트 통과
-- [ ] 문서 업데이트 완료
+- [x] 모든 태스크 [DONE]
+- [x] 모든 테스트 통과
+- [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료
