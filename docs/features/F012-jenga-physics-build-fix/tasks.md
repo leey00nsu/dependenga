@@ -18,15 +18,15 @@
 
 ### Phase 1: 빌드 타입 오류 수정
 
-- [TODO][P1] T-F012-01 임펄스 타입 오류 수정
+- [DONE][P1] T-F012-01 임펄스 타입 오류 수정
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - Next.js 빌드 타입 오류가 해소된다
     - 임펄스/토크 동작은 기존과 동일하다
   - Checklist:
-    - [ ] 임펄스/토크 벡터를 Rapier Vector 형태로 변경
-    - [ ] 관련 타입/린트 오류 확인
+    - [x] 임펄스/토크 벡터를 Rapier Vector 형태로 변경
+    - [x] 관련 타입/린트 오류 확인
 
 ### Phase 2: 검증
 
