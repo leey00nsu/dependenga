@@ -38,6 +38,18 @@
     - [x] layout metadata 설정
     - [x] OG/Twitter 이미지 연결
 
+### Phase 2: 아이콘 보정
+
+- [DONE][P2] T-F015-03 파비콘/OG 이미지 재생성 (contain)
+  - Owner: @me
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
+  - Acceptance:
+    - 파비콘에 원본 이미지 전체가 들어가고 잘리지 않는다
+    - OG 이미지도 전체 구도가 유지된다
+  - Checklist:
+    - [x] contain 리사이즈 + 여백 적용
+    - [x] 아이콘 파일 교체
+
 ---
 
 ## 완료 조건
