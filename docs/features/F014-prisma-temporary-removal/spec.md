@@ -90,3 +90,18 @@ Prisma 재도입 시 필요한 단계(의존성/스키마/스크립트)를 문�
 
 - PRD: [dependenga-prd.md](../../prd/dependenga-prd.md)
 - 관련 기능: F013 Coolify 배포 pnpm 워크스페이스 설정 보정
+
+---
+
+## Prisma 재추가 가이드
+
+1. 의존성 추가
+   - `pnpm add prisma @prisma/client`
+2. 스키마 복구
+   - `prisma/schema.prisma` 생성 및 DB 설정 반영
+3. 스크립트 복원
+   - `package.json`에 `db:push`, `db:studio` 추가
+4. 클라이언트 생성/마이그레이션
+   - `pnpm prisma db push`
+5. 문서 갱신
+   - PRD/헌장/README에 ORM 정보 업데이트

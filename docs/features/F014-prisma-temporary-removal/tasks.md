@@ -31,21 +31,21 @@
 
 ### Phase 2: 문서/가이드 정리
 
-- [TODO][P1] T-F014-02 문서 정리 및 재추가 가이드 작성
+- [DONE][P1] T-F014-02 문서 정리 및 재추가 가이드 작성
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - 문서에서 Prisma 언급이 현재 상태와 일치한다
     - Prisma 재추가 가이드가 제공된다
   - Checklist:
-    - [ ] PRD/README/헌장 등 Prisma 언급 정리
-    - [ ] 재추가 가이드 문서화
+    - [x] PRD/README/헌장 등 Prisma 언급 정리
+    - [x] 재추가 가이드 문서화
 
 ---
 
 ## 완료 조건
 
-- [ ] 모든 태스크 [DONE]
-- [ ] 모든 테스트 통과
-- [ ] 문서 업데이트 완료
+- [x] 모든 태스크 [DONE]
+- [x] 모든 테스트 통과
+- [x] 문서 업데이트 완료
 - [ ] 코드 리뷰 완료

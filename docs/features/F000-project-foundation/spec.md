@@ -113,14 +113,14 @@ volumes:
   postgres_data:
 ```
 
-### 8. Prisma 기본 설정
+### 8. ORM 기본 설정 (보류)
 
-**목표**: ORM 설정 및 DB 연결 확인
+**목표**: ORM 도입 시 DB 연결 확인
 
 **설정**:
-- `prisma/schema.prisma` 업데이트
+- ORM 선정 후 스키마/클라이언트 설정
 - DATABASE_URL 환경 변수 설정
-- `pnpm prisma db push` 테스트
+- ORM 마이그레이션/적용 테스트
 
 ---
 
@@ -131,7 +131,7 @@ volumes:
 - `pnpm storybook` 실행 가능
 - `pnpm test:e2e` (Playwright) 통과
 - `docker compose up -d` 정상 실행
-- `pnpm prisma db push` 성공
+- ORM 마이그레이션 성공
 
 ---
 
