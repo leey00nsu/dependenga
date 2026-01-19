@@ -18,16 +18,16 @@
 
 ### Phase 1: Prisma 제거
 
-- [TODO][P1] T-F014-01 Prisma 의존성/스크립트 제거
+- [DONE][P1] T-F014-01 Prisma 의존성/스크립트 제거
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - package.json에서 Prisma 관련 의존성이 제거된다
     - prisma 관련 스크립트가 제거된다
   - Checklist:
-    - [ ] package.json 의존성 제거
-    - [ ] prisma 스크립트 제거
-    - [ ] prisma 폴더 제거
+    - [x] package.json 의존성 제거
+    - [x] prisma 스크립트 제거
+    - [x] prisma 폴더 제거
 
 ### Phase 2: 문서/가이드 정리
 
