@@ -18,15 +18,15 @@
 
 ### Phase 1: 워크스페이스 설정 보정
 
-- [TODO][P1] T-F013-01 pnpm workspace 설정 수정
+- [DONE][P1] T-F013-01 pnpm workspace 설정 수정
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - `pnpm install`이 `packages field missing or empty`로 실패하지 않는다
     - 로컬 개발 워크플로우는 동일하게 유지된다
   - Checklist:
-    - [ ] pnpm-workspace.yaml에 packages 추가
-    - [ ] 로컬 pnpm install 동작 확인
+    - [x] pnpm-workspace.yaml에 packages 추가
+    - [x] 로컬 pnpm install 동작 확인
 
 ### Phase 2: 검증
 
