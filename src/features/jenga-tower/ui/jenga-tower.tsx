@@ -117,10 +117,10 @@ export function JengaTower({
       const upward = impulse * 0.3;
       const isRotated = Math.abs(block.rotation[1]) > 0.1;
 
-      const impulseVector: [number, number, number] = isRotated
-        ? [direction * impulse, upward, 0]
-        : [0, upward, direction * impulse];
-      const torqueVector: [number, number, number] = [0, torque * direction, torque * 0.3];
+      const impulseVector = isRotated
+        ? { x: direction * impulse, y: upward, z: 0 }
+        : { x: 0, y: upward, z: direction * impulse };
+      const torqueVector = { x: 0, y: torque * direction, z: torque * 0.3 };
 
       body.wakeUp();
       body.applyImpulse(impulseVector, true);
@@ -157,8 +157,6 @@ export function JengaTower({
     collapseTriggeredRef.current = false;
     settleFrameRef.current = 0;
     lastHoverKeyRef.current = null;
-    setHoveredBlock(null);
-    setSpawnCount(0);
     onSettledChange?.(false);
 
     if (layout.blocks.length === 0) {
