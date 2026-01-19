@@ -18,15 +18,15 @@
 
 ### Phase 1: 메타데이터 및 아이콘 추가
 
-- [TODO][P1] T-F015-01 파비콘 및 아이콘 생성/적용
+- [DONE][P1] T-F015-01 파비콘 및 아이콘 생성/적용
   - Owner: @me
-  - Status Log: 2026-01-19 [TODO]
+  - Status Log: 2026-01-19 [TODO] → 2026-01-19 [DOING] → 2026-01-19 [DONE]
   - Acceptance:
     - 브라우저 탭에 파비콘이 표시된다
     - 아이콘 파일들이 public에 추가된다
   - Checklist:
-    - [ ] landing-image.png 기반 아이콘 리사이즈
-    - [ ] public 아이콘 파일 추가
+    - [x] landing-image.png 기반 아이콘 리사이즈
+    - [x] public 아이콘 파일 추가
 
 - [TODO][P1] T-F015-02 메타데이터 설정
   - Owner: @me
